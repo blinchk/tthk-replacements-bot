@@ -56,6 +56,8 @@ def send_weekkeyboard(peer_id, random_id, message):
     vk.method('messages.send', {'peer_id': peer_id, 'random_id': random_id, 'keyboard': WeekDayskeyboard.get_keyboard(), 'message': message})
 def send_keyboard_nomessage(peer_id, random_id):
     vk.method('messages.send', {'peer_id': peer_id, 'random_id': random_id, 'keyboard': WeekDayskeyboard.get_keyboard()})
+# Ничего особенного.
+
 
 token = '4753258aa36e727b82691af62ec3425da7e41b82afc62cac1d0fbbf401cdaad837c069ec9ed4f5beb59c4'
 vk = vkapi.VkApi(token=token)
