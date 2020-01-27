@@ -145,8 +145,6 @@ def getmuudatusedall(user, date):
         else:
             if i[1] == date:
                 forshowall.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]} Преподаватель: {i[4]} Кабинет: {i[5]}")
-            else:
-                print("There is just nothing.")
     if len(forshowall) > 0:
         write_msg(user, event.random_id, f"В учебном заведении на {date} следующие изменения в расписании:")
         kogutunniplaan = ""
@@ -166,6 +164,7 @@ for event in longpoll.listen():
                 send_keyboard(event.peer_id, event.random_id, "Выберите вариант из клаиватуры ниже.")
                 if str(event.user_id) not in usergroup.keys():
                     write_msg(event.user_id, event.random_id, "У вас не указан код группы.")
+                    pass
             elif event.text.lower() == "указать группу" or event.text.lower() == "изменить группу":
                 write_msg(event.user_id, event.random_id, "В какой группе вы находитесь?\nУкажите код вашей группы: ")
                 writeyourgroup[event.user_id] = 1
@@ -178,11 +177,18 @@ for event in longpoll.listen():
             elif event.text.lower() == "в какой я группе?":
                 if str(event.user_id) not in usergroup.keys():
                     write_msg(event.user_id, event.random_id, "У вас не указан код группы.")
-                    pass
-                write_msg(event.user_id, event.random_id, f"Вы указали, что Ваша группа: {usergroup[str(event.user_id)]}.")
+                    write_msg(event.user_id, event.random_id, "В какой группе вы находитесь?\nУкажите код вашей группы: ")
+                    writeyourgroup[event.user_id] = 1
+                if str(event.user_id) in usergroup.keys():
+                    write_msg(event.user_id, event.random_id, f"Вы указали, что Ваша группа: {usergroup[str(event.user_id)]}.")
             elif event.text.lower() == "изменения моей группы":
-                setgroup = usergroup[str(event.user_id)]
-                lastmuudatused = getmuudatused(setgroup, usergroup, event.user_id)
+                if str(event.user_id) not in usergroup.keys():
+                    write_msg(event.user_id, event.random_id, "У вас не указан код группы.")
+                    write_msg(event.user_id, event.random_id, "В какой группе вы находитесь?\nУкажите код вашей группы: ")
+                    writeyourgroup[event.user_id] = 1
+                if str(event.user_id) in usergroup.keys():
+                    setgroup = usergroup[str(event.user_id)]
+                    lastmuudatused = getmuudatused(setgroup, usergroup, event.user_id)
             elif event.text.lower() == "изменения по датам":
                 write_msg(event.user_id, event.random_id, f"Укажите дату которую желаете найти в формате ДД.ММ.ГГГГ:")
                 writeyourdate[str(event.user_id)] = 1
