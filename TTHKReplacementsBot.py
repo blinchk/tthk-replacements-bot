@@ -4,11 +4,11 @@ from bs4 import BeautifulSoup
 from vk_api.longpoll import VkLongPoll, VkEventType
 from vk_api.keyboard import VkKeyboard, VkKeyboardColor, VkKeyboardButton
 import json
+import configparser
 output_rows = []
 writeyourgroup = {}
 writeyourdate = {}
 usergroup = {}
-# token : 4753258aa36e727b82691af62ec3425da7e41b82afc62cac1d0fbbf401cdaad837c069ec9ed4f5beb59c4
 # клавиатура
 keyboard = VkKeyboard(one_time=False, inline=False)
 
@@ -38,8 +38,9 @@ def write_msg(user_id, random_id, message):
     vk.method('messages.send', {'user_id': user_id, 'random_id': random_id, 'message': message})
 def send_keyboard(peer_id, random_id, message):
     vk.method('messages.send', {'peer_id': peer_id, 'random_id': random_id, 'keyboard': keyboard.get_keyboard(), 'message': message})
-
-token = "4753258aa36e727b82691af62ec3425da7e41b82afc62cac1d0fbbf401cdaad837c069ec9ed4f5beb59c4"
+config = configparser.ConfigParser()
+config.read('config.ini')
+token = config['DEFAULT']['Token']
 vk = vkapi.VkApi(token=token)
 
 
