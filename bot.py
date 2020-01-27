@@ -4,14 +4,13 @@ from bs4 import BeautifulSoup
 from vk_api.longpoll import VkLongPoll, VkEventType
 from vk_api.keyboard import VkKeyboard, VkKeyboardColor, VkKeyboardButton
 import json
-import os
 output_rows = []
 writeyourgroup = {}
 writeyourdate = {}
 writeyourweekday = {}
 usergroup = {}
 # клавиатура
-keyboard = VkKeyboard(one_time=False, inline=False)
+keyboard = VkKeyboard(one_time=False, inline=True)
 
 keyboard.add_button('Изменения моей группы', color=VkKeyboardColor.PRIMARY)
 keyboard.add_line()
@@ -56,8 +55,6 @@ def send_keyboard(peer_id, random_id, message):
     vk.method('messages.send', {'peer_id': peer_id, 'random_id': random_id, 'keyboard': keyboard.get_keyboard(), 'message': message})
 def send_weekkeyboard(peer_id, random_id, message):
     vk.method('messages.send', {'peer_id': peer_id, 'random_id': random_id, 'keyboard': WeekDayskeyboard.get_keyboard(), 'message': message})
-def send_keyboard_nomessage(peer_id, random_id):
-    vk.method('messages.send', {'peer_id': peer_id, 'random_id': random_id, 'keyboard': WeekDayskeyboard.get_keyboard()})
 # Ничего особенного.
 
 DayOfWeek = {'E': 'Понедельник',
@@ -121,12 +118,12 @@ def getmuudatused(setgroup, usergroup, user):
                 forshow.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]} Преподаватель: {i[4]} Кабинет: {i[5]}")
     if len(forshow) > 0:
         write_msg(event.user_id, event.random_id, f"Для группы {setgroup} на данный момент следующие изменения в расписании:")
-        send_keyboard_nomessage(event.user_id, event.random_id)
+        send_keyboard(event.user_id, event.random_id, "Что-то ещё?")
         for w in forshow:
             write_msg(event.user_id, event.random_id, w)
     elif len(forshow) == 0:
         write_msg(user, event.random_id,"Для вашей группы изменений в расписании нет. Подробнее: www.tthk.ee/tunniplaani-muudatused.")
-        send_keyboard_nomessage(event.user_id, event.random_id)
+        send_keyboard(event.user_id, event.random_id, "Что-то ещё?")
 
 def getmuudatusedall(user, date):
     forshowall = []
@@ -165,14 +162,14 @@ def getmuudatusedall(user, date):
                 forshowall.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]} Преподаватель: {i[4]} Кабинет: {i[5]}")
     if len(forshowall) > 0:
         write_msg(user, event.random_id, f"В учебном заведении на {date} следующие изменения в расписании:")
-        send_keyboard_nomessage(event.user_id, event.random_id)
+        send_keyboard(event.user_id, event.random_id, "Что-то ещё?")
         kogutunniplaan = ""
         for w in forshowall:
             kogutunniplaan += f"{w}\n"
         write_msg(user, event.random_id, kogutunniplaan)
     elif len(forshowall) == 0:
         write_msg(user, event.random_id,"В данный момент изменений в расписании нет на дату, которую вы ввели. Подробнее: www.tthk.ee/tunniplaani-muudatused.")
-        send_keyboard_nomessage(event.user_id, event.random_id)
+        send_keyboard(event.user_id, event.random_id, "Что-то ещё?")
 
 def getmuudatusedweekly(user, weekday):
     forshoweek = []
@@ -215,10 +212,10 @@ def getmuudatusedweekly(user, weekday):
         for w in forshoweek:
             kogutunniplaan += f"{w}\n"
         write_msg(user, event.random_id, kogutunniplaan)
-        send_keyboard_nomessage(event.user_id, event.random_id)
+        send_keyboard(event.user_id, event.random_id, "Что-то ещё?")
     elif len(forshoweek) == 0:
         write_msg(user, event.random_id,"В данный момент изменений в расписании нет на день недели, который вы ввели. Подробнее: www.tthk.ee/tunniplaani-muudatused.")
-        send_keyboard_nomessage(event.user_id, event.random_id)
+        send_keyboard(event.user_id, event.random_id, "Что-то ещё?")
 
 
 longpoll = VkLongPoll(vk)
@@ -239,11 +236,11 @@ for event in longpoll.listen():
                 write_msg(event.user_id, event.random_id, f"Вы указали, что Ваша группа: {usergroup[str(event.user_id)]}.")
                 writeyourgroup[event.user_id] = 0
                 usergroup = updatefile(usergroup)
-                send_keyboard_nomessage(event.user_id, event.random_id)
+                send_keyboard(event.user_id, event.random_id, "Что-то ещё?")
             elif str(event.user_id) not in writeyourgroup.keys() and event.text[-3:].lower() in ['v19', 'v18', 'v17', 'e19', 'e18', 'e17']:
                 write_msg(event.user_id, event.random_id, f"Данной команды не существует.")
                 write_msg(event.user_id, event.random_id, f"Для того, чтобы указать группу предварительно нажмите Изменить группу.")
-                send_keyboard_nomessage(event.user_id, event.random_id)
+                send_keyboard(event.user_id, event.random_id, "Что-то ещё?")
             elif event.text.lower() == "в какой я группе?":
                 if str(event.user_id) not in usergroup.keys():
                     write_msg(event.user_id, event.random_id, "У вас не указан код группы.")
