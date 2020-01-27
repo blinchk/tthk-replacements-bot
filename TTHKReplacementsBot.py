@@ -1,6 +1,6 @@
 import vk_api as vkapi
 import requests
-from bs4 import BeautifulSogFFup
+from bs4 import BeautifulSoup
 from vk_api.longpoll import VkLongPoll, VkEventType
 import json
 output_rows = []
@@ -31,7 +31,8 @@ values = []
 
 usergroup = openfromfile(usergroup)
 
-def parsepage():
+def parsepage(table):
+    print(len(table))
     for i in range(len(table)):
         muudatused = []
         my_table = table[i]
@@ -51,9 +52,10 @@ def parsepage():
 
 def getmuudatused(group, usergroup, user):
     forshow = []
-    muudatused = parsepage()
+    print(muudatused)
+    muudatused = parsepage(table)
     for i in muudatused:
-        if group == i[2]:
+        if group in i:
             if i[4] == "jääb ära":
                 forshow.append(f"{i[0]} Дата: {i[1]} Группа: {i[2]} Урок: {i[3]} не состоится")
 #                forshow.append(f"{i[0]} Дата: {i[1]} Группа: {i[2]} Урок: {i[3]} Преподаватель: {i[4]}")
@@ -65,11 +67,12 @@ def getmuudatused(group, usergroup, user):
             write_msg(event.user_id, event.random_id, w)
 #    elif len(forshow) == 0:
 #       write_msg(user, event.random_id,"Для вашей группы изменений в расписании нет. Подробнее: www.tthk.ee/tunniplaani-muudatused.")
+
 longpoll = VkLongPoll(vk)
 for event in longpoll.listen():
     if event.type == VkEventType.MESSAGE_NEW:
         if event.to_me:
-            if event.text == "Начать" or event.text == "Указать группу":
+            if event.text.lower() == "начать" or event.text.lower() == "указать группу" or event.text.lower() == "изменить группу":
                 write_msg(event.user_id, event.random_id, "В какой группе вы находитесь?")
                 writeyourgroup[event.user_id] = 1
             elif event.text[-3:].lower() in ['v19', 'v18', 'v17', 'e19', 'e18', 'e17'] and writeyourgroup[event.user_id] == 1:
