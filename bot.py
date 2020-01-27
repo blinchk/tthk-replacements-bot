@@ -175,7 +175,7 @@ def getmuudatusedall(user, date):
         write_msg(user, event.random_id,"В данный момент изменений в расписании нет на дату, которую вы ввели. Подробнее: www.tthk.ee/tunniplaani-muudatused.")
         send_keyboard_nomessage(event.user_id, event.random_id)
 
-def getmuudatusedweekly(user, weekday, ):
+def getmuudatusedweekly(user, weekday):
     forshoweek = []
     muudatused = parsepage(table)
     for i in muudatused:
