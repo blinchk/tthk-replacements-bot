@@ -24,6 +24,9 @@ keyboard.add_button('Изменить группу', color=VkKeyboardColor.NEGAT
 
 WeekDayskeyboard = VkKeyboard(one_time=True, inline=False)
 
+token = '4753258aa36e727b82691af62ec3425da7e41b82afc62cac1d0fbbf401cdaad837c069ec9ed4f5beb59c4'
+vk = vkapi.VkApi(token=token)
+
 WeekDayskeyboard.add_button("E", color=VkKeyboardColor.NEGATIVE)
 WeekDayskeyboard.add_button("T", color=VkKeyboardColor.NEGATIVE)
 WeekDayskeyboard.add_button("K", color=VkKeyboardColor.DEFAULT)
@@ -57,11 +60,6 @@ def send_weekkeyboard(peer_id, random_id, message):
 def send_keyboard_nomessage(peer_id, random_id):
     vk.method('messages.send', {'peer_id': peer_id, 'random_id': random_id, 'keyboard': WeekDayskeyboard.get_keyboard()})
 # Ничего особенного.
-
-
-token = '4753258aa36e727b82691af62ec3425da7e41b82afc62cac1d0fbbf401cdaad837c069ec9ed4f5beb59c4'
-vk = vkapi.VkApi(token=token)
-
 
 DayOfWeek = {'E': 'Понедельник',
             'T': 'Вторник',
