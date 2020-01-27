@@ -1,5 +1,6 @@
 import vk_api as vkapi
 import requests
+import os
 from bs4 import BeautifulSoup
 from vk_api.longpoll import VkLongPoll, VkEventType
 from vk_api.keyboard import VkKeyboard, VkKeyboardColor, VkKeyboardButton
@@ -55,6 +56,8 @@ def send_weekkeyboard(peer_id, random_id, message):
     vk.method('messages.send', {'peer_id': peer_id, 'random_id': random_id, 'keyboard': WeekDayskeyboard.get_keyboard(), 'message': message})
 def send_keyboard_nomessage(peer_id, random_id):
     vk.method('messages.send', {'peer_id': peer_id, 'random_id': random_id, 'keyboard': WeekDayskeyboard.get_keyboard()})
+
+token = os.getenv("token")
 vk = vkapi.VkApi(token=token)
 
 
