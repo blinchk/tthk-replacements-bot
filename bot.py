@@ -118,9 +118,13 @@ else:
 today, day2, day3, day4, day5 = keynumdays()
 
 FiveDayskeyboard.add_button(today, color=VkKeyboardColor.POSITIVE)
+FiveDayskeyboard.add_line()
 FiveDayskeyboard.add_button(day2, color=VkKeyboardColor.PRIMARY)
+FiveDayskeyboard.add_line()
 FiveDayskeyboard.add_button(day3, color=VkKeyboardColor.PRIMARY)
+FiveDayskeyboard.add_line()
 FiveDayskeyboard.add_button(day4, color=VkKeyboardColor.PRIMARY)
+FiveDayskeyboard.add_line()
 FiveDayskeyboard.add_button(day5, color=VkKeyboardColor.PRIMARY)
 
 # парсим
