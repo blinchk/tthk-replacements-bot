@@ -234,7 +234,7 @@ def getmuudatusedweekly(user, weekday):
         elif i[4].lower() == "jääb ära" and (i[5] == "" or i[5] == None):
             if i[0] == weekday:
                 forshoweek.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]} не состоится")
-        elif i[4].lower() == "söögivahetund" and (i[5] == "" or i[5] = None):
+        elif i[4].lower() == "söögivahetund" and (i[5] == "" or i[5] == None):
             if i[0] == weekday:
                 forshoweek.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]} обеденный перерыв")
         elif i[5].lower() == "iseseisev töö kodus":
