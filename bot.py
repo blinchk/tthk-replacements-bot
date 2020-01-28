@@ -1,16 +1,25 @@
 import vk_api as vkapi
 import requests
+import calendar
 from bs4 import BeautifulSoup
 from vk_api.longpoll import VkLongPoll, VkEventType
 from vk_api.keyboard import VkKeyboard, VkKeyboardColor, VkKeyboardButton
 import json
 import os
 import time
+import pymysql.cursors
 output_rows = []
 writeyourgroup = {}
 writeyourdate = {}
 writeyourweekday = {}
 usergroup = {}
+
+connection = pymysql.connect(host = 'db4free.net',
+                            user='tthkreplacevkapi',
+                            password='b99633f6',
+                            db='tthkreplacebot',
+                            cursorclass=pymysql.cursors.DictCursor)
+
 
 access_token = os.environ["ACCESS_TOKEN"]
 vk = vkapi.VkApi(token=access_token)
@@ -28,14 +37,37 @@ keyboard.add_line()  # Переход на вторую строку
 keyboard.add_button('В какой я группе?', color=VkKeyboardColor.POSITIVE)
 keyboard.add_button('Изменить группу', color=VkKeyboardColor.NEGATIVE)
 
-WeekDayskeyboard.add_button("E", color=VkKeyboardColor.DEFAULT)
-WeekDayskeyboard.add_button("T", color=VkKeyboardColor.DEFAULT)
-WeekDayskeyboard.add_button("K", color=VkKeyboardColor.DEFAULT)
+result = time.localtime()
+numdayweek = calendar.weekday(result.tm_year, result.tm_mon, result.tm_mday)
+if numdayweek == 0:
+    WeekDayskeyboard.add_button("E", color=VkKeyboardColor.POSITIVE)
+else:
+    WeekDayskeyboard.add_button("E", color=VkKeyboardColor.DEFAULT)
+if numdayweek == 1:
+    WeekDayskeyboard.add_button("T", color=VkKeyboardColor.POSITIVE)
+else:
+    WeekDayskeyboard.add_button("T", color=VkKeyboardColor.DEFAULT)
+if numdayweek == 2:
+    WeekDayskeyboard.add_button("K", color=VkKeyboardColor.POSITIVE)
+else:
+    WeekDayskeyboard.add_button("K", color=VkKeyboardColor.DEFAULT)
 WeekDayskeyboard.add_line()
-WeekDayskeyboard.add_button("N", color=VkKeyboardColor.DEFAULT)
-WeekDayskeyboard.add_button("R", color=VkKeyboardColor.DEFAULT)
-WeekDayskeyboard.add_button("L", color=VkKeyboardColor.POSITIVE)
-WeekDayskeyboard.add_button("P", color=VkKeyboardColor.POSITIVE)
+if numdayweek == 3:
+    WeekDayskeyboard.add_button("N", color=VkKeyboardColor.POSITIVE)
+else:
+    WeekDayskeyboard.add_button("N", color=VkKeyboardColor.DEFAULT)
+if numdayweek == 4:
+    WeekDayskeyboard.add_button("R", color=VkKeyboardColor.POSITIVE)
+else:
+    WeekDayskeyboard.add_button("R", color=VkKeyboardColor.DEFAULT)
+if numdayweek == 5:
+    WeekDayskeyboard.add_button("L", color=VkKeyboardColor.POSITIVE)
+else:
+    WeekDayskeyboard.add_button("L", color=VkKeyboardColor.NEGATIVE)
+if numdayweek == 6:
+    WeekDayskeyboard.add_button("P", color=VkKeyboardColor.POSITIVE)
+else:
+    WeekDayskeyboard.add_button("P", color=VkKeyboardColor.NEGATIVE)
 
 # парсим
 r = requests.get('http://www.tthk.ee/tunniplaani-muudatused/')
