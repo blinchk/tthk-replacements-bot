@@ -175,23 +175,41 @@ def parsepage(table):
             continue
     return muudatused
 
+def makemuudatused(i, kuupaev):
+    if kuupaev == True:
+        if len(i) == 6:
+            forshow.append(f"🗓 {i[0]} {i[1]}\n🦆 Группа: {i[2]} ⏰ Урок: {i[3]} \n👨‍🏫 Преподаватель: i{4}\nКабинет: {i[5]}")
+        elif i[4].lower() == "jääb ära" and len(i) < 6:
+            forshow.append(f"🗓 {i[0]} {i[1]}\n🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\nНе состоится")
+        elif i[4].lower() in "söögivahetund" and len(i) < 6:
+            forshow.append(f"🗓 {i[0]} {i[1]}\n🦆 Группа: {i[2]}\n ⏰ Урок: {i[3]}\nОбеденный перерыв")
+        elif len(i) > 5 and i[5].lower() in "iseseisev töö kodus":
+            forshow.append(f"🗓 {i[0]} {i[1]}\n🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\nСамостоятельная работа дома")
+        elif len(i) > 5 and (i[5].lower() == "" or i[5].lower() == " "):
+            forshow.append(f"🗓 {i[0]} {i[1]}\n🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n👨‍🏫 Преподаватель: {i[4]}")
+        else:
+            forshow.append(f"🗓 В {i[0]} {i[1]}\n🦆 Группа: {i[2]} ⏰ Урок: {i[3]}}\n")
+    if kuupaev == False:
+        if len(i) == 6:
+            forshow.append(f"🦆 Группа: {i[2]} ⏰ Урок: {i[3]} \n👨‍🏫 Преподаватель: i{4}\nКабинет: {i[5]}")
+        elif i[4].lower() == "jääb ära" and len(i) < 6:
+            forshow.append(f"🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\nНе состоится")
+        elif i[4].lower() in "söögivahetund" and len(i) < 6:
+            forshow.append(f"🦆 Группа: {i[2]}\n ⏰ Урок: {i[3]}\nОбеденный перерыв")
+        elif len(i) > 5 and i[5].lower() in "iseseisev töö kodus":
+            forshow.append(f"🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\nСамостоятельная работа дома")
+        elif len(i) > 5 and (i[5].lower() == "" or i[5].lower() == " "):
+            forshow.append(f"🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n👨‍🏫 Преподаватель: {i[4]}")
+        else:
+            forshow.append(f"🦆 Группа: {i[2]} ⏰ Урок: {i[3]}}\n")
+    return i
+
 def getmuudatused(setgroup, usergroup, user):
     forshow = []
-    muudatused = parsepage(table)
+    muudatused = parsepage(table, False)
     for i in muudatused:
         if setgroup.lower() in i[2].lower():
-            if len(i) == 6:
-                forshow.append(f"🦆 {i[0]} {i[1]}\nГруппа {i[2]} урок № {i[3]} с {i[4]}\nКабинет: {i[5]}")
-            elif i[4].lower() == "jääb ära" and len(i) < 6:
-                forshow.append(f"🦆 {i[0]} {i[1]}\nГруппа {i[2]} {i[3]}-й не состоится")
-            elif i[4].lower() == "söögivahetund" and len(i) < 6:
-                forshow.append(f"🦆 {i[0]} {i[1]}\nГруппа {i[2]} на уроке № {i[3]} обеденный перерыв")
-            elif len(i) > 5 and (i[5].lower() == "" or i[5].lower() == " "):
-                forshow.append(f"🦆 {i[0]} {i[1]}\nГруппа: {i[2]} Урок: {i[3]} Преподаватель: {i[4]}")
-            elif len(i) > 5 and (i[5].lower() == "iseseisev töö kodus" or i[5].lower() == "iseseisev töö kodus (vt.tahvel)"):
-                forshow.append(f"🦆 {i[0]} {i[1]}\n Группа: {i[2]} на уроке {i[3]} самостоятельная работа дома")
-            else:
-                forshow.append(f"🦆 В {i[0]} {i[1]}\n Группа: {i[2]} урок № {i[3]}\n")
+            makemuudatused(forshow, muudatused)
     if len(forshow) > 0:
         write_msg(event.user_id, event.random_id, f"Для группы {setgroup} на данный момент следующие изменения в расписании:")
         for w in forshow:
@@ -200,7 +218,7 @@ def getmuudatused(setgroup, usergroup, user):
         write_msg(user, event.random_id,"Для вашей группы изменений в расписании нет. Подробнее: www.tthk.ee/tunniplaani-muudatused.")
 
 def getmuudatusedall(user, date):
-    forshowall = []
+    forshow = []
     muudatused = parsepage(table)
     for i in muudatused:
         if i[1] == date:
@@ -216,17 +234,17 @@ def getmuudatusedall(user, date):
                 forshowall.append(f"🦆 Группа: {i[2]} на уроке № {i[3]} самостоятельная работа дома")
             else:
                 forshowall.append(f"🦆 Группа: {i[2]} урок № {i[3]}\n")
-    if len(forshowall) > 0:
+    if len(forshow) > 0:
         write_msg(user, event.random_id, f"В учебном заведении на {date} следующие изменения в расписании:")
         kogutunniplaan = ""
-        for w in forshowall:
+        for w in forshow:
             kogutunniplaan += f"{w}\n"
         write_msg(user, event.random_id, kogutunniplaan)
-    elif len(forshowall) == 0:
+    elif len(forshow) == 0:
         write_msg(user, event.random_id,"В данный момент изменений в расписании нет на дату, которую вы ввели. Подробнее: www.tthk.ee/tunniplaani-muudatused.")
 
 def getmuudatusedweekly(user, weekday):
-    forshoweek = []
+    forshow = []
     muudatused = parsepage(table)
     for i in muudatused:
         if i[0] == weekday:
@@ -237,18 +255,18 @@ def getmuudatusedweekly(user, weekday):
             elif i[4].lower() == "söögivahetund" and len(i) < 6:
                 forshoweek.append(f"🦆 Группа: {i[2]} на {i[3]}-м обеденный перерыв")
             elif len(i) > 5 and (i[5].lower() == "" or i[5].lower() == " "):
-                forshoweek.append(f"🦆 Группа: {i[2]} Урок: {i[3]}-й Преподаватель: {i[4]}")
+                forshow.append(f"🦆 Группа: {i[2]} Урок: {i[3]}-й Преподаватель: {i[4]}")
             elif len(i) > 5 and (i[5].lower() == "iseseisev töö kodus" or i[5].lower() == "iseseisev töö kodus (vt.tahvel)"):
                 forshoweek.append(f"🦆 Группа: {i[2]} Урок: {i[3]}-й самостоятельная работа дома")
             else:
                 forshoweek.append(f"🦆 Группа: {i[2]} Урок: {i[3]}-й")
-    if len(forshoweek) > 0:
+    if len(forshow) > 0:
         write_msg(user, event.random_id, f"В учебном заведении на {DayOfWeek[weekday]} следующие изменения в расписании:")
         kogutunniplaan = ""
         for w in forshoweek:
             kogutunniplaan += f"{w}\n"
         write_msg(user, event.random_id, kogutunniplaan)
-    elif len(forshoweek) == 0:
+    elif len(forshow) == 0:
         write_msg(user, event.random_id,"В данный момент изменений в расписании нет на день недели, который вы ввели. Подробнее: www.tthk.ee/tunniplaani-muudatused.")
 
 
