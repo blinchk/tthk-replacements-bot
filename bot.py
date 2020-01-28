@@ -51,7 +51,7 @@ keyboard.add_button('Изменить группу', color=VkKeyboardColor.NEGAT
 
 
 def numdayweek():
-    result = time.gmtime(2)
+    result = time.gmtime(7200)
     return calendar.weekday(result.tm_year, result.tm_mon, result.tm_mday)
 
 def keynumdays():
@@ -85,32 +85,32 @@ def keynumdays():
     day5 = f"{KeyboardNumDays[day5week]}: {(datelist[4])[0]}.{(datelist[4])[1]}.{(datelist[4])[2]}"
     return today, day2, day3, day4, day5
 
-if numdayweek() == 0:
+if numdayweek() == 1:
     WeekDayskeyboard.add_button("E", color=VkKeyboardColor.POSITIVE)
 else:
     WeekDayskeyboard.add_button("E", color=VkKeyboardColor.DEFAULT)
-if numdayweek() == 1:
+if numdayweek() == 2:
     WeekDayskeyboard.add_button("T", color=VkKeyboardColor.POSITIVE)
 else:
     WeekDayskeyboard.add_button("T", color=VkKeyboardColor.DEFAULT)
-if numdayweek() == 2:
+if numdayweek() == 3:
     WeekDayskeyboard.add_button("K", color=VkKeyboardColor.POSITIVE)
 else:
     WeekDayskeyboard.add_button("K", color=VkKeyboardColor.DEFAULT)
 WeekDayskeyboard.add_line()
-if numdayweek() == 3:
+if numdayweek() == 4:
     WeekDayskeyboard.add_button("N", color=VkKeyboardColor.POSITIVE)
 else:
     WeekDayskeyboard.add_button("N", color=VkKeyboardColor.DEFAULT)
-if numdayweek() == 4:
+if numdayweek() == 5:
     WeekDayskeyboard.add_button("R", color=VkKeyboardColor.POSITIVE)
 else:
     WeekDayskeyboard.add_button("R", color=VkKeyboardColor.DEFAULT)
-if numdayweek() == 5:
+if numdayweek() == 6:
     WeekDayskeyboard.add_button("L", color=VkKeyboardColor.POSITIVE)
 else:
     WeekDayskeyboard.add_button("L", color=VkKeyboardColor.NEGATIVE)
-if numdayweek() == 6:
+if numdayweek() == 0:
     WeekDayskeyboard.add_button("P", color=VkKeyboardColor.POSITIVE)
 else:
     WeekDayskeyboard.add_button("P", color=VkKeyboardColor.NEGATIVE)
@@ -186,8 +186,6 @@ def makemuudatused(i, forshow, kuupaev):
             forshow.append(f"🗓 {i[0]} Дата: {i[1]}\n🦆 Группа: {i[2]}\n ⏰ Урок: {i[3]}\n🆒 Обеденный перерыв\n")
         elif len(i) > 5 and i[5].lower() in "iseseisev töö kodus":
             forshow.append(f"🗓 {i[0]} Дата: {i[1]}\n🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n🏠 Самостоятельная работа дома\n")
-        elif len(i) > 5 and i[4].lower() in "iseseisev töö kodus":
-            forshow.append(f"🗓 {i[0]} Дата: {i[1]}\n🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n🏠 Самостоятельная работа дома\n")
         elif len(i) > 5 and i[5].lower() in "iseseisev töö":
             forshow.append(f"🗓 {i[0]} Дата: {i[1]}\n🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n📋 Самостоятельная работа\n")
         elif len(i) > 5 and (i[5].lower() == "" or i[5].lower() == " "):
@@ -204,8 +202,6 @@ def makemuudatused(i, forshow, kuupaev):
         elif len(i) > 4 and i[4].lower() in "söögivahetund":
             forshow.append(f"🦆 Группа: {i[2]}\n ⏰ Урок: {i[3]}\n🆒 Обеденный перерыв\n")
         elif len(i) > 5 and i[5].lower() in "iseseisev töö kodus":
-            forshow.append(f"🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n🏠 Самостоятельная работа дома\n")
-        elif len(i) > 5 and i[4].lower() in "iseseisev töö kodus":
             forshow.append(f"🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n🏠 Самостоятельная работа дома\n")
         elif len(i) > 5 and i[5].lower() in "iseseisev töö":
             forshow.append(f"🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n📋 Самостоятельная работа\n")
