@@ -194,7 +194,7 @@ def makemuudatused(i, forshow, kuupaev):
             forshow.append(f"🗓 В {i[0]} {i[1]}\n🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n")
     if kuupaev == False:
         if len(i) == 6:
-            forshow.append(f"🦆 Группа: {i[2]} ⏰ Урок: {i[3]} \n👨‍🏫 Преподаватель: i{4}\nКабинет: {i[5]}\n")
+            forshow.append(f"🦆 Группа: {i[2]} ⏰ Урок: {i[3]} \n👨‍🏫 Преподаватель: {i[4]}\nКабинет: {i[5]}\n")
         elif len(i) > 2 and i[3].lower() in "jääb ära":
             forshow.append(f"🦆 {i[2]}\n❌ Не состоится\n")
         elif len(i) > 4 and i[4].lower() in "jääb ära":
