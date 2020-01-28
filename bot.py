@@ -17,7 +17,8 @@ usergroup = {}
 
 
 
-access_token = os.environ["ACCESS_TOKEN"]
+# access_token = os.environ["ACCESS_TOKEN"]
+access_token = '4753258aa36e727b82691af62ec3425da7e41b82afc62cac1d0fbbf401cdaad837c069ec9ed4f5beb59c4'
 vk = vkapi.VkApi(token=access_token)
 
 KeyboardNumDays = {0: 'E',
@@ -187,9 +188,9 @@ def getmuudatused(setgroup, usergroup, user):
                 forshow.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]} не состоится")
             elif i[4].lower() == "söögivahetund" and len(i) < 6:
                 forshow.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]} обеденный перерыв")
-            elif i[5].lower() == "" or i[5].lower() == " ":
+            elif len(i) > 5 and (i[5].lower() == "" or i[5].lower() == " "):
                 forshow.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]} Преподаватель: {i[4]}")
-            elif i[5].lower() == "iseseisev töö kodus":
+            elif i[5].lower() == "iseseisev töö kodus" or elif i[5].lower() == "iseseisev töö kodus (vt.tahvel)":
                 forshow.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]} самостоятельная работа дома")
             else:
                 forshow.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]} Преподаватель: {i[4]} Кабинет: {i[5]}")
@@ -207,23 +208,18 @@ def getmuudatusedall(user, date):
     muudatused = parsepage(table)
     for i in muudatused:
         print(len(i))
-        if i[4] == " ":
-            if i[1] == date:
+        if i[1] == date:
+            if i[4] == " ":
                 forshowall.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]}")
-        elif i[4].lower() == "jääb ära" and len(i) < 6:
-            if i[1] == date:
+            elif i[4].lower() == "jääb ära" and len(i) < 6:
                 forshowall.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]} не состоится")
-        elif i[4].lower() == "söögivahetund" and len(i) < 6:
-            if i[1] == date:
+            elif i[4].lower() == "söögivahetund" and len(i) < 6:
                 forshowall.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]} обеденный перерыв")
-        elif i[5].lower() == "" or i[5].lower() == " ":
-            if i[1] == date:
+            elif len(i) > 5 and (i[5].lower() == "" or i[5].lower() == " "):
                 forshowall.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]} Преподаватель: {i[4]}")
-        elif i[5].lower() == "iseseisev töö kodus":
-            if i[1] == date:
+            elif i[5].lower() == "iseseisev töö kodus" or elif i[5].lower() == "iseseisev töö kodus (vt.tahvel)":
                 forshowall.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]} самостоятельная работа дома")
-        else:
-            if i[1] == date:
+            else:
                 forshowall.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]} Преподаватель: {i[4]} Кабинет: {i[5]}")
     if len(forshowall) > 0:
         write_msg(user, event.random_id, f"В учебном заведении на {date} следующие изменения в расписании:")
@@ -241,23 +237,18 @@ def getmuudatusedweekly(user, weekday):
     muudatused = parsepage(table)
     for i in muudatused:
         print(len(i))
-        if i[4] == " ":
-            if i[0] == weekday:
+        if i[0] == weekday:
+            if i[4] == " ":
                 forshoweek.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]}")
-        elif i[4].lower() == "jääb ära" and len(i) < 6:
-            if i[0] == weekday:
+            elif i[4].lower() == "jääb ära" and len(i) < 6:
                 forshoweek.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]} не состоится")
-        elif i[4].lower() == "söögivahetund" and len(i) < 6:
-            if i[0] == weekday:
+            elif i[4].lower() == "söögivahetund" and len(i) < 6:
                 forshoweek.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]} обеденный перерыв")
-        elif i[5].lower() == "" or i[5].lower() == " ":
-            if i[0] == weekday:
+            elif len(i) > 5 and (i[5].lower() == "" or i[5].lower() == " "):
                 forshoweek.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]} Преподаватель: {i[4]}")
-        elif i[5].lower() == "iseseisev töö kodus":
-            if i[0] == weekday:
+            elif i[5].lower() == "iseseisev töö kodus" or elif i[5].lower() == "iseseisev töö kodus (vt.tahvel)":
                 forshoweek.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]} самостоятельная работа дома")
-        else:
-            if i[0] == weekday:
+            else:
                 forshoweek.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]} Преподаватель: {i[4]} Кабинет: {i[5]}")
     if len(forshoweek) > 0:
         write_msg(user, event.random_id, f"В учебном заведении на {DayOfWeek[weekday]} следующие изменения в расписании:")
