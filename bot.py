@@ -31,6 +31,7 @@ keyboard.add_button('Изменить группу', color=VkKeyboardColor.NEGAT
 WeekDayskeyboard.add_button("E", color=VkKeyboardColor.DEFAULT)
 WeekDayskeyboard.add_button("T", color=VkKeyboardColor.DEFAULT)
 WeekDayskeyboard.add_button("K", color=VkKeyboardColor.DEFAULT)
+WeekDayskeyboard.add_line()
 WeekDayskeyboard.add_button("N", color=VkKeyboardColor.DEFAULT)
 WeekDayskeyboard.add_button("R", color=VkKeyboardColor.DEFAULT)
 WeekDayskeyboard.add_button("L", color=VkKeyboardColor.POSITIVE)
