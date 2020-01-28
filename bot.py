@@ -205,7 +205,7 @@ def makemuudatused(i, kuupaev):
 
 def getmuudatused(setgroup, usergroup, user):
     forshow = []
-    muudatused = parsepage(table, False)
+    muudatused = parsepage(table)
     for i in muudatused:
         if setgroup.lower() in i[2].lower():
             makemuudatused(forshow, True)
