@@ -175,16 +175,6 @@ def getmuudatused(setgroup, usergroup, user):
     muudatused = parsepage(table)
     for i in muudatused:
         if setgroup in i[2]:
-#            try:
-#                print(i[4])
-#            except IndexError:
-#                forshow.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]}")
-#                continue
-#            try:
-#                print(i[5])
-            except IndexError:
-                forshow.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]} Преподаватель: {i[4]}")
-                continue
             if i[4] == " ":
                 forshow.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]}")
             elif i[4].lower() == "jääb ära" and i[5] == "" or i[5] = None:
@@ -208,19 +198,6 @@ def getmuudatusedall(user, date):
     forshowall = []
     muudatused = parsepage(table)
     for i in muudatused:
-        try:
-            i[4]
-        except IndexError:
-            if i[1] == date:
-                forshowall.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]}")
-            continue
-        try:
-            i[5]
-        except IndexError:
-            if i[1] == date:
-                forshowall.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]} Преподаватель: {i[4]}")
-            continue
-            # other
         if i[4] == " ":
             if i[1] == date:
                 forshowall.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]}")
@@ -251,19 +228,6 @@ def getmuudatusedweekly(user, weekday):
     forshoweek = []
     muudatused = parsepage(table)
     for i in muudatused:
-        try:
-            i[4]
-        except IndexError:
-            if i[0] == weekday:
-                forshoweek.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]}")
-            continue
-        try:
-            i[5]
-        except IndexError:
-            if i[0] == weekday:
-                forshoweek.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]} Преподаватель: {i[4]}")
-            continue
-            # other
         if i[4] == " ":
             if i[0] == weekday:
                 forshoweek.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]}")
