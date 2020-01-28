@@ -14,6 +14,7 @@ writeyourgroup = {}
 writeyourdate = {}
 writeyourweekday = {}
 usergroup = {}
+datetime.timezone(2)
 
 
 
@@ -56,10 +57,10 @@ def numdayweek():
 
 def keynumdays():
     todaydate = datetime.date.today()
-    day2date = datetime.date.today() + datetime.timedelta(days=1)
-    day3date = datetime.date.today() + datetime.timedelta(days=2)
-    day4date = datetime.date.today() + datetime.timedelta(days=3)
-    day5date = datetime.date.today() + datetime.timedelta(days=4)
+    day2date = datetime.date.today() + datetime.timedelta(hours=2) + datetime.timedelta(days=1)
+    day3date = datetime.date.today() + datetime.timedelta(hours=2) + datetime.timedelta(days=2)
+    day4date = datetime.date.today() + datetime.timedelta(hours=2) + datetime.timedelta(days=3)
+    day5date = datetime.date.today() + datetime.timedelta(hours=2) + datetime.timedelta(days=4)
     todayweek = calendar.weekday(todaydate.year, todaydate.month, todaydate.day)
     day2week = calendar.weekday(day2date.year, day2date.month, day2date.day)
     day3week = calendar.weekday(day3date.year, day3date.month, day3date.day)
@@ -301,7 +302,7 @@ for event in longpoll.listen():
             elif event.text.lower() == "изменения по дню недели":
                 send_weekkeyboard(event.peer_id, event.random_id, "Выберите день недели с помощью клавиатуры: E, T, K, N, R, L, P.")
                 writeyourweekday[str(event.user_id)] = 1
-            elif event.text.upper() in ['E', 'T', 'K', 'N', 'R', 'L', 'P'] and str(event.user_id) in writeyourweekday.keys():
+            elif event.text.upper() in ['E', 'T', 'K', 'N', 'R', 'L', 'P'] and writeyourweekday[str(event.user_id)] == 1:
                 getmuudatusedweekly(event.user_id, event.text)
                 writeyourweekday[event.user_id] = 0
             elif event.text[-5:].lower() in ['.2020', '.2021', '.2022', '.2023', '.2024', '.2025', '.2026'] and writeyourdate[str(event.user_id)] == 1:
