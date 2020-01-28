@@ -302,7 +302,7 @@ for event in longpoll.listen():
             elif event.text.lower() in ['e', 't', 'k', 'n', 'r', 'l', 'p'] and str(event.user_id) in writeyourweekday.keys():
                 getmuudatusedweekly(event.user_id, event.text)
             elif event.text[-5:].lower() in ['.2020', '.2021', '.2022', '.2023', '.2024', '.2025', '.2026'] and writeyourdate[str(event.user_id)] == 1:
-                if event.text[1] = ":":
+                if event.text[1] == ":":
                     enddatetosearch = re.split(r':\s',event.text)
                     newmuudatused = getmuudatusedall(event.user_id, enddatetosearch[1])
                 else:
