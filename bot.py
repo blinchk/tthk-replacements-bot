@@ -175,7 +175,7 @@ def parsepage(table):
     return muudatused
 
 def makemuudatused(i, kuupaev):
-    i = forshow
+    forshow = i
     if kuupaev == True:
         if len(i) == 6:
             forshow.append(f"🗓 {i[0]} {i[1]}\n🦆 Группа: {i[2]} ⏰ Урок: {i[3]} \n👨‍🏫 Преподаватель: i{4}\nКабинет: {i[5]}")
