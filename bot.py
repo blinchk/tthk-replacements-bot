@@ -157,7 +157,6 @@ usergroup = openfromfile(usergroup)
 
 
 def parsepage(table):
-    print(len(table))
     muudatused = []
     for i in range(len(table)):
         my_table = table[i]
