@@ -7,18 +7,12 @@ from vk_api.keyboard import VkKeyboard, VkKeyboardColor, VkKeyboardButton
 import json
 import os
 import time
-import pymysql.cursors
 output_rows = []
 writeyourgroup = {}
 writeyourdate = {}
 writeyourweekday = {}
 usergroup = {}
 
-connection = pymysql.connect(host = 'db4free.net',
-                            user='tthkreplacevkapi',
-                            password='b99633f6',
-                            db='tthkreplacebot',
-                            cursorclass=pymysql.cursors.DictCursor)
 
 
 access_token = os.environ["ACCESS_TOKEN"]
