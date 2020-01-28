@@ -17,8 +17,7 @@ usergroup = {}
 
 
 
-# access_token = os.environ["ACCESS_TOKEN"]
-access_token = '4753258aa36e727b82691af62ec3425da7e41b82afc62cac1d0fbbf401cdaad837c069ec9ed4f5beb59c4'
+access_token = os.environ["ACCESS_TOKEN"]
 vk = vkapi.VkApi(token=access_token)
 
 KeyboardNumDays = {0: 'E',
@@ -188,7 +187,7 @@ def makemuudatused(i, kuupaev):
         elif len(i) > 5 and (i[5].lower() == "" or i[5].lower() == " "):
             forshow.append(f"🗓 {i[0]} {i[1]}\n🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n👨‍🏫 Преподаватель: {i[4]}")
         else:
-            forshow.append(f"🗓 В {i[0]} {i[1]}\n🦆 Группа: {i[2]} ⏰ Урок: {i[3]}}\n")
+            forshow.append(f"🗓 В {i[0]} {i[1]}\n🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n")
     if kuupaev == False:
         if len(i) == 6:
             forshow.append(f"🦆 Группа: {i[2]} ⏰ Урок: {i[3]} \n👨‍🏫 Преподаватель: i{4}\nКабинет: {i[5]}")
@@ -201,7 +200,7 @@ def makemuudatused(i, kuupaev):
         elif len(i) > 5 and (i[5].lower() == "" or i[5].lower() == " "):
             forshow.append(f"🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n👨‍🏫 Преподаватель: {i[4]}")
         else:
-            forshow.append(f"🦆 Группа: {i[2]} ⏰ Урок: {i[3]}}\n")
+            forshow.append(f"🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n")
     return i
 
 def getmuudatused(setgroup, usergroup, user):
