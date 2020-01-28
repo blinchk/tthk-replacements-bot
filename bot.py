@@ -7,6 +7,7 @@ from vk_api.keyboard import VkKeyboard, VkKeyboardColor, VkKeyboardButton
 import json
 import os
 import time
+import re
 output_rows = []
 writeyourgroup = {}
 writeyourdate = {}
@@ -18,9 +19,25 @@ usergroup = {}
 access_token = os.environ["ACCESS_TOKEN"]
 vk = vkapi.VkApi(token=access_token)
 
+KeyboardNumDays = {0: 'E',
+                1: 'T',
+                2: 'K',
+                3: 'N',
+                4: 'R',
+                5: 'L',
+                6: 'P'}
+DayOfWeek = {'E': 'Понедельник',
+            'T': 'Вторник',
+            'K': 'Среда',
+            'N': 'Четверг',
+            'R': 'Пятница',
+            'L': 'Суббота',
+            'P': "Воскресенье"}
+
 # клавиатура
 keyboard = VkKeyboard(one_time=False, inline=False)
 WeekDayskeyboard = VkKeyboard(one_time=False, inline=True)
+FiveDayskeyboard = VkKeyboard(one_time=False, inline=True)
 
 keyboard.add_button('Изменения моей группы', color=VkKeyboardColor.PRIMARY)
 keyboard.add_line()
@@ -31,37 +48,79 @@ keyboard.add_line()  # Переход на вторую строку
 keyboard.add_button('В какой я группе?', color=VkKeyboardColor.POSITIVE)
 keyboard.add_button('Изменить группу', color=VkKeyboardColor.NEGATIVE)
 
-result = time.localtime()
-numdayweek = calendar.weekday(result.tm_year, result.tm_mon, result.tm_mday)
-if numdayweek == 0:
+
+def numdayweek():
+    result = time.gmtime(2)
+    return calendar.weekday(result.tm_year, result.tm_mon, result.tm_mday)
+
+def keynumdays():
+    todaydate = datetime.date.today()
+    day2date = datetime.date.today() + datetime.timedelta(days=1)
+    day3date = datetime.date.today() + datetime.timedelta(days=2)
+    day4date = datetime.date.today() + datetime.timedelta(days=3)
+    day5date = datetime.date.today() + datetime.timedelta(days=4)
+    todayweek = calendar.weekday(todaydate.year, todaydate.month, todaydate.day)
+    day2week = calendar.weekday(day2date.year, day2date.month, day2date.day)
+    day3week = calendar.weekday(day3date.year, day3date.month, day3date.day)
+    day4week = calendar.weekday(day4date.year, day4date.month, day4date.day)
+    day5week = calendar.weekday(day5date.year, day5date.month, day5date.day)
+    todaydate = [todaydate.day, todaydate.month, todaydate.year]
+    day2date = [day2date.day, day2date.month, day2date.year]
+    day3date = [day3date.day, day3date.month, day3date.year]
+    day4date = [day4date.day, day4date.month, day4date.year]
+    day5date = [day5date.day, day5date.month, day5date.year]
+    datelist = [todaydate, day2date, day3date, day4date, day5date]
+    for i in datelist:
+        if i[0] < 10:
+            i[0] = str(i[0])
+            i[0] = '0' + i[0]
+        if i[1] < 10:
+            i[1] = str(i[1])
+            i[1] = '0' + i[1]
+    today = f"{KeyboardNumDays[todayweek]}: {(datelist[0])[0]}.{(datelist[0])[1]}.{(datelist[0])[2]}"
+    day2 = f"{KeyboardNumDays[day2week]}: {(datelist[1])[0]}.{(datelist[1])[1]}.{(datelist[1])[2]}"
+    day3 = f"{KeyboardNumDays[day3week]}: {(datelist[2])[0]}.{(datelist[2])[1]}.{(datelist[2])[2]}"
+    day4 = f"{KeyboardNumDays[day4week]}: {(datelist[3])[0]}.{(datelist[3])[1]}.{(datelist[3])[2]}"
+    day5 = f"{KeyboardNumDays[day5week]}: {(datelist[4])[0]}.{(datelist[4])[1]}.{(datelist[4])[2]}"
+    return today, day2, day3, day4, day5
+
+if numdayweek() == 0:
     WeekDayskeyboard.add_button("E", color=VkKeyboardColor.POSITIVE)
 else:
     WeekDayskeyboard.add_button("E", color=VkKeyboardColor.DEFAULT)
-if numdayweek == 1:
+if numdayweek() == 1:
     WeekDayskeyboard.add_button("T", color=VkKeyboardColor.POSITIVE)
 else:
     WeekDayskeyboard.add_button("T", color=VkKeyboardColor.DEFAULT)
-if numdayweek == 2:
+if numdayweek() == 2:
     WeekDayskeyboard.add_button("K", color=VkKeyboardColor.POSITIVE)
 else:
     WeekDayskeyboard.add_button("K", color=VkKeyboardColor.DEFAULT)
 WeekDayskeyboard.add_line()
-if numdayweek == 3:
+if numdayweek() == 3:
     WeekDayskeyboard.add_button("N", color=VkKeyboardColor.POSITIVE)
 else:
     WeekDayskeyboard.add_button("N", color=VkKeyboardColor.DEFAULT)
-if numdayweek == 4:
+if numdayweek() == 4:
     WeekDayskeyboard.add_button("R", color=VkKeyboardColor.POSITIVE)
 else:
     WeekDayskeyboard.add_button("R", color=VkKeyboardColor.DEFAULT)
-if numdayweek == 5:
+if numdayweek() == 5:
     WeekDayskeyboard.add_button("L", color=VkKeyboardColor.POSITIVE)
 else:
     WeekDayskeyboard.add_button("L", color=VkKeyboardColor.NEGATIVE)
-if numdayweek == 6:
+if numdayweek() == 6:
     WeekDayskeyboard.add_button("P", color=VkKeyboardColor.POSITIVE)
 else:
     WeekDayskeyboard.add_button("P", color=VkKeyboardColor.NEGATIVE)
+
+today, day2, day3, day4, day5 = keynumdays()
+
+FiveDayskeyboard.add_button(today, color=VkKeyboardColor.POSITIVE)
+FiveDayskeyboard.add_button(day2, color=VkKeyboardColor.PRIMARY)
+FiveDayskeyboard.add_button(day3, color=VkKeyboardColor.PRIMARY)
+FiveDayskeyboard.add_button(day4, color=VkKeyboardColor.PRIMARY)
+FiveDayskeyboard.add_button(day5, color=VkKeyboardColor.PRIMARY)
 
 # парсим
 r = requests.get('http://www.tthk.ee/tunniplaani-muudatused/')
@@ -84,16 +143,9 @@ def send_keyboard(peer_id, random_id, message):
     vk.method('messages.send', {'peer_id': peer_id, 'random_id': random_id, 'keyboard': keyboard.get_keyboard(), 'message': message})
 def send_weekkeyboard(peer_id, random_id, message):
     vk.method('messages.send', {'peer_id': peer_id, 'random_id': random_id, 'keyboard': WeekDayskeyboard.get_keyboard(), 'message': message})
+def send_datekeyboard(peer_id, random_id, message):
+    vk.method('messages.send', {'peer_id': peer_id, 'random_id': random_id, 'keyboard': FiveDayskeyboard.get_keyboard(), 'message': message})
 # Ничего особенного.
-
-DayOfWeek = {'E': 'Понедельник',
-            'T': 'Вторник',
-            'K': 'Среда',
-            'N': 'Четверг',
-            'R': 'Пятница',
-            'L': 'Суббота',
-            'P': "Воскресенье"}
-
 
 usergroup = openfromfile(usergroup)
 
@@ -123,21 +175,21 @@ def getmuudatused(setgroup, usergroup, user):
     muudatused = parsepage(table)
     for i in muudatused:
         if setgroup in i[2]:
-            try:
-                print(i[4])
-            except IndexError:
-                forshow.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]}")
-                continue
-            try:
-                print(i[5])
+#            try:
+#                print(i[4])
+#            except IndexError:
+#                forshow.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]}")
+#                continue
+#            try:
+#                print(i[5])
             except IndexError:
                 forshow.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]} Преподаватель: {i[4]}")
                 continue
             if i[4] == " ":
                 forshow.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]}")
-            elif i[4].lower() == "jääb ära" and i[5] == "":
+            elif i[4].lower() == "jääb ära" and i[5] == "" or i[5] = None:
                 forshow.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]} не состоится")
-            elif i[4].lower() == "söögivahetund" and i[5] == "":
+            elif i[4].lower() == "söögivahetund" and i[5] == "" or i[5] = None:
                 forshow.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]} обеденный перерыв")
             elif i[5].lower() == "iseseisev töö kodus":
                 forshow.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]} самостоятельная работа дома")
@@ -278,7 +330,7 @@ for event in longpoll.listen():
                     setgroup = usergroup[str(event.user_id)]
                     lastmuudatused = getmuudatused(setgroup, usergroup, event.user_id)
             elif event.text.lower() == "изменения по датам":
-                write_msg(event.user_id, event.random_id, f"Укажите дату которую желаете найти в формате ДД.ММ.ГГГГ:")
+                send_datekeyboard(event.peer_id, event.random_id, f"Выберите дату, которую желаете найти или укажите в формате ДД.ММ.ГГГГ:")
                 writeyourdate[str(event.user_id)] = 1
             elif event.text.lower() == "изменения по дню недели":
                 send_weekkeyboard(event.peer_id, event.random_id, "Выберите день недели с помощью клавиатуры: E, T, K, N, R, L, P.")
@@ -286,6 +338,10 @@ for event in longpoll.listen():
             elif event.text.lower() in ['e', 't', 'k', 'n', 'r', 'l', 'p'] and str(event.user_id) in writeyourweekday.keys():
                 getmuudatusedweekly(event.user_id, event.text)
             elif event.text[-5:].lower() in ['.2020', '.2021', '.2022', '.2023', '.2024', '.2025', '.2026'] and writeyourdate[str(event.user_id)] == 1:
-                newmuudatused = getmuudatusedall(event.user_id, event.text)
+                if event.text[1] = ":":
+                    enddatetosearch = re.split(r':\s',event.text)
+                    newmuudatused = getmuudatusedall(event.user_id, enddatetosearch[1])
+                else:
+                    newmuudatused = getmuudatusedall(event.user_id, event.text)
             else:
                 write_msg(event.user_id, event.random_id, f"Данной команды не существует.")
