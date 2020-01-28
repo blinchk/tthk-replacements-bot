@@ -281,7 +281,7 @@ for event in longpoll.listen():
                     write_msg(event.user_id, event.random_id, "В какой группе вы находитесь?\nУкажите код вашей группы: ")
                     writeyourgroup[event.user_id] = 1
                 if str(event.user_id) in usergroup.keys():
-                    write_msg(event.user_id, event.random_id, f"Вы указали, что Ваша группа: {usergroup[str(event.user_id)]}.")
+                    write_msg(event.user_id, event.random_id, f"Вы указали, что Ваша группа: {usergroup[str(event.user_id)]}.\nДля того, чтобы изменить свою группу нажмите \"Изменить группу\".")
             elif event.text.lower() == "изменения моей группы":
                 if str(event.user_id) not in usergroup.keys():
                     write_msg(event.user_id, event.random_id, "У вас не указан код группы.")
