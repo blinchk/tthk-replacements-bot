@@ -1,6 +1,7 @@
 import vk_api as vkapi
 import requests
 import calendar
+import datetime
 from bs4 import BeautifulSoup
 from vk_api.longpoll import VkLongPoll, VkEventType
 from vk_api.keyboard import VkKeyboard, VkKeyboardColor, VkKeyboardButton
