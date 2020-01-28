@@ -160,11 +160,11 @@ def getmuudatusedall(user, date):
                 forshowall.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]} Преподаватель: {i[4]} Кабинет: {i[5]}")
     if len(forshowall) > 0:
         write_msg(user, event.random_id, f"В учебном заведении на {date} следующие изменения в расписании:")
-        send_keyboard(event.user_id, event.random_id, "Что-то ещё?")
         kogutunniplaan = ""
         for w in forshowall:
             kogutunniplaan += f"{w}\n"
         write_msg(user, event.random_id, kogutunniplaan)
+        send_keyboard(event.user_id, event.random_id, "Что-то ещё?")
     elif len(forshowall) == 0:
         write_msg(user, event.random_id,"В данный момент изменений в расписании нет на дату, которую вы ввели. Подробнее: www.tthk.ee/tunniplaani-muudatused.")
         send_keyboard(event.user_id, event.random_id, "Что-то ещё?")
@@ -207,7 +207,6 @@ def getmuudatusedweekly(user, weekday):
         for w in forshoweek:
             kogutunniplaan += f"{w}\n"
         write_msg(user, event.random_id, kogutunniplaan)
-        time.sleep(2)
         send_keyboard(event.user_id, event.random_id, "Что-то ещё?")
     elif len(forshoweek) == 0:
         write_msg(user, event.random_id,"В данный момент изменений в расписании нет на день недели, который вы ввели. Подробнее: www.tthk.ee/tunniplaani-muudatused.")
