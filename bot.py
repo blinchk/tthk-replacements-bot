@@ -303,7 +303,7 @@ for event in longpoll.listen():
                 writeyourweekday[str(event.user_id)] = 1
             elif event.text.upper() in ['E', 'T', 'K', 'N', 'R', 'L', 'P'] and writeyourweekday[str(event.user_id)] == 1:
                 getmuudatusedweekly(event.user_id, event.text)
-                writeyourweekday[event.user_id] = 0
+                writeyourweekday[str(event.user_id)] = 0
             elif event.text[-5:].lower() in ['.2020', '.2021', '.2022', '.2023', '.2024', '.2025', '.2026'] and writeyourdate[str(event.user_id)] == 1:
                 if event.text[1] == ":":
                     enddatetosearch = re.split(r':\s',event.text)
