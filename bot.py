@@ -255,7 +255,7 @@ def getmuudatusedweekly(user, weekday):
             kogutunniplaan += f"{w}\n"
         write_msg(user, event.random_id, kogutunniplaan)
     elif len(forshow) == 0:
-        write_msg(user, event.random_id,f"В данный момент изменений в расписании нет на {weekday}, который вы ввели. Подробнее: www.tthk.ee/tunniplaani-muudatused.")
+        write_msg(user, event.random_id,f"В данный момент изменений в расписании нет на день недели, который вы ввели. Подробнее: www.tthk.ee/tunniplaani-muudatused.")
 
 
 longpoll = VkLongPoll(vk)
@@ -301,13 +301,15 @@ for event in longpoll.listen():
             elif event.text.lower() == "изменения по дню недели":
                 send_weekkeyboard(event.peer_id, event.random_id, "Выберите день недели с помощью клавиатуры: E, T, K, N, R, L, P.")
                 writeyourweekday[str(event.user_id)] = 1
-            elif event.text.lower() in ['e', 't', 'k', 'n', 'r', 'l', 'p'] and str(event.user_id) in writeyourweekday.keys():
+            elif event.text.upper() in ['E', 'T', 'K', 'N', 'R', 'L', 'P'] and str(event.user_id) in writeyourweekday.keys():
                 getmuudatusedweekly(event.user_id, event.text)
+                writeyourweekday[event.user_id] = 0
             elif event.text[-5:].lower() in ['.2020', '.2021', '.2022', '.2023', '.2024', '.2025', '.2026'] and writeyourdate[str(event.user_id)] == 1:
                 if event.text[1] == ":":
                     enddatetosearch = re.split(r':\s',event.text)
                     newmuudatused = getmuudatusedall(event.user_id, enddatetosearch[1])
                 else:
                     newmuudatused = getmuudatusedall(event.user_id, event.text)
+                writeyourdate[str(event.user_id)] = 0
             else:
                 write_msg(event.user_id, event.random_id, f"Данной команды не существует.")
