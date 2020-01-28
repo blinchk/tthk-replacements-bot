@@ -4,13 +4,19 @@ from bs4 import BeautifulSoup
 from vk_api.longpoll import VkLongPoll, VkEventType
 from vk_api.keyboard import VkKeyboard, VkKeyboardColor, VkKeyboardButton
 import json
+import os
 output_rows = []
 writeyourgroup = {}
 writeyourdate = {}
 writeyourweekday = {}
 usergroup = {}
+
+access_token = os.environ["ACCESS_TOKEN"]
+vk = vkapi.VkApi(token=access_token)
+
 # клавиатура
-keyboard = VkKeyboard(one_time=False, inline=True)
+keyboard = VkKeyboard(one_time=False, inline=False)
+WeekDayskeyboard = VkKeyboard(one_time=False, inline=True)
 
 keyboard.add_button('Изменения моей группы', color=VkKeyboardColor.PRIMARY)
 keyboard.add_line()
@@ -20,10 +26,6 @@ keyboard.add_button('Изменения по дню недели', color=VkKeybo
 keyboard.add_line()  # Переход на вторую строку
 keyboard.add_button('В какой я группе?', color=VkKeyboardColor.POSITIVE)
 keyboard.add_button('Изменить группу', color=VkKeyboardColor.NEGATIVE)
-WeekDayskeyboard = VkKeyboard(one_time=True, inline=False)
-import os
-access_token = os.environ["ACCESS_TOKEN"]
-vk = vkapi.VkApi(token=access_token)
 
 WeekDayskeyboard.add_button("E", color=VkKeyboardColor.NEGATIVE)
 WeekDayskeyboard.add_button("T", color=VkKeyboardColor.NEGATIVE)
