@@ -17,7 +17,6 @@ usergroup = {}
 
 
 
-
 access_token = os.environ["ACCESS_TOKEN"]
 vk = vkapi.VkApi(token=access_token)
 
@@ -56,7 +55,7 @@ def numdayweek():
     return calendar.weekday(result.tm_year, result.tm_mon, result.tm_mday)
 
 def keynumdays():
-    todaydate = datetime.date.today()
+    todaydate = datetime.date.today() + datetime.timedelta(hours=2)
     day2date = datetime.date.today() + datetime.timedelta(hours=2) + datetime.timedelta(days=1)
     day3date = datetime.date.today() + datetime.timedelta(hours=2) + datetime.timedelta(days=2)
     day4date = datetime.date.today() + datetime.timedelta(hours=2) + datetime.timedelta(days=3)
