@@ -180,86 +180,77 @@ def getmuudatused(setgroup, usergroup, user):
     forshow = []
     muudatused = parsepage(table)
     for i in muudatused:
-        print(len(i))
-        if setgroup in i[2]:
-            if i[4] == " ":
-                forshow.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]}")
+        if setgroup.lower() in i[2].lower():
+            if len(i) == 6:
+                forshow.append(f"🦆 {i[0]} {i[1]}\nГруппа {i[2]} урок № {i[3]} с {i[4]}\nКабинет: {i[5]}")
             elif i[4].lower() == "jääb ära" and len(i) < 6:
-                forshow.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]} не состоится")
+                forshow.append(f"🦆 {i[0]} {i[1]}\nГруппа {i[2]} {i[3]}-й не состоится")
             elif i[4].lower() == "söögivahetund" and len(i) < 6:
-                forshow.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]} обеденный перерыв")
+                forshow.append(f"🦆 {i[0]} {i[1]}\nГруппа {i[2]} на уроке № {i[3]} обеденный перерыв")
             elif len(i) > 5 and (i[5].lower() == "" or i[5].lower() == " "):
-                forshow.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]} Преподаватель: {i[4]}")
-            elif i[5].lower() == "iseseisev töö kodus" or elif i[5].lower() == "iseseisev töö kodus (vt.tahvel)":
-                forshow.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]} самостоятельная работа дома")
+                forshow.append(f"🦆 {i[0]} {i[1]}\nГруппа: {i[2]} Урок: {i[3]} Преподаватель: {i[4]}")
+            elif len(i) > 5 and (i[5].lower() == "iseseisev töö kodus" or i[5].lower() == "iseseisev töö kodus (vt.tahvel)"):
+                forshow.append(f"🦆 {i[0]} {i[1]}\n Группа: {i[2]} на уроке {i[3]} самостоятельная работа дома")
             else:
-                forshow.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]} Преподаватель: {i[4]} Кабинет: {i[5]}")
+                forshow.append(f"🦆 В {i[0]} {i[1]}\n Группа: {i[2]} урок № {i[3]}\n")
     if len(forshow) > 0:
         write_msg(event.user_id, event.random_id, f"Для группы {setgroup} на данный момент следующие изменения в расписании:")
-        send_keyboard(event.user_id, event.random_id, "Что-то ещё?")
         for w in forshow:
             write_msg(event.user_id, event.random_id, w)
     elif len(forshow) == 0:
         write_msg(user, event.random_id,"Для вашей группы изменений в расписании нет. Подробнее: www.tthk.ee/tunniplaani-muudatused.")
-        send_keyboard(event.user_id, event.random_id, "Что-то ещё?")
 
 def getmuudatusedall(user, date):
     forshowall = []
     muudatused = parsepage(table)
     for i in muudatused:
-        print(len(i))
         if i[1] == date:
-            if i[4] == " ":
-                forshowall.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]}")
+            if len(i) == 6:
+                forshowall.append(f"🦆 Группа: {i[2]} урок № {i[3]} с {i[4]}\nКабинет: {i[5]}")
             elif i[4].lower() == "jääb ära" and len(i) < 6:
-                forshowall.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]} не состоится")
+                forshowall.append(f"🦆 Группа: {i[2]} {i[3]}-й не состоится")
             elif i[4].lower() == "söögivahetund" and len(i) < 6:
-                forshowall.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]} обеденный перерыв")
+                forshowall.append(f"🦆 Группа: {i[2]} на уроке № {i[3]} обеденный перерыв")
             elif len(i) > 5 and (i[5].lower() == "" or i[5].lower() == " "):
-                forshowall.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]} Преподаватель: {i[4]}")
-            elif i[5].lower() == "iseseisev töö kodus" or elif i[5].lower() == "iseseisev töö kodus (vt.tahvel)":
-                forshowall.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]} самостоятельная работа дома")
+                forshowall.append(f"🦆 Группа: {i[2]} урок № {i[3]} с {i[4]}")
+            elif len(i) > 5 and (i[5].lower() == "iseseisev töö kodus" or i[5].lower() == "iseseisev töö kodus (vt.tahvel)"):
+                forshowall.append(f"🦆 Группа: {i[2]} на уроке № {i[3]} самостоятельная работа дома")
             else:
-                forshowall.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]} Преподаватель: {i[4]} Кабинет: {i[5]}")
+                forshowall.append(f"🦆 Группа: {i[2]} урок № {i[3]}\n")
     if len(forshowall) > 0:
         write_msg(user, event.random_id, f"В учебном заведении на {date} следующие изменения в расписании:")
         kogutunniplaan = ""
         for w in forshowall:
             kogutunniplaan += f"{w}\n"
         write_msg(user, event.random_id, kogutunniplaan)
-        send_keyboard(event.user_id, event.random_id, "Что-то ещё?")
     elif len(forshowall) == 0:
         write_msg(user, event.random_id,"В данный момент изменений в расписании нет на дату, которую вы ввели. Подробнее: www.tthk.ee/tunniplaani-muudatused.")
-        send_keyboard(event.user_id, event.random_id, "Что-то ещё?")
 
 def getmuudatusedweekly(user, weekday):
     forshoweek = []
     muudatused = parsepage(table)
     for i in muudatused:
-        print(len(i))
         if i[0] == weekday:
-            if i[4] == " ":
-                forshoweek.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]}")
+            if len(i) == 6:
+                forshoweek.append(f"🦆 Группа: {i[2]} урок № {i[3]} с {i[4]}\nКабинет: {i[5]}")
             elif i[4].lower() == "jääb ära" and len(i) < 6:
-                forshoweek.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]} не состоится")
+                forshoweek.append(f"🦆 Группа: {i[2]} {i[3]}-й урок не состоится")
             elif i[4].lower() == "söögivahetund" and len(i) < 6:
-                forshoweek.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]} обеденный перерыв")
+                forshoweek.append(f"🦆 Группа: {i[2]} на {i[3]}-м обеденный перерыв")
             elif len(i) > 5 and (i[5].lower() == "" or i[5].lower() == " "):
-                forshoweek.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]} Преподаватель: {i[4]}")
-            elif i[5].lower() == "iseseisev töö kodus" or elif i[5].lower() == "iseseisev töö kodus (vt.tahvel)":
-                forshoweek.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]} самостоятельная работа дома")
+                forshoweek.append(f"🦆 Группа: {i[2]} Урок: {i[3]}-й Преподаватель: {i[4]}")
+            elif len(i) > 5 and (i[5].lower() == "iseseisev töö kodus" or i[5].lower() == "iseseisev töö kodus (vt.tahvel)"):
+                forshoweek.append(f"🦆 Группа: {i[2]} Урок: {i[3]}-й самостоятельная работа дома")
             else:
-                forshoweek.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]} Преподаватель: {i[4]} Кабинет: {i[5]}")
+                forshoweek.append(f"🦆 Группа: {i[2]} Урок: {i[3]}-й")
     if len(forshoweek) > 0:
         write_msg(user, event.random_id, f"В учебном заведении на {DayOfWeek[weekday]} следующие изменения в расписании:")
         kogutunniplaan = ""
         for w in forshoweek:
             kogutunniplaan += f"{w}\n"
         write_msg(user, event.random_id, kogutunniplaan)
-        send_keyboard(event.user_id, event.random_id, "Что-то ещё?")
     elif len(forshoweek) == 0:
         write_msg(user, event.random_id,"В данный момент изменений в расписании нет на день недели, который вы ввели. Подробнее: www.tthk.ee/tunniplaani-muudatused.")
-        send_keyboard(event.user_id, event.random_id, "Что-то ещё?")
 
 
 longpoll = VkLongPoll(vk)
@@ -270,21 +261,20 @@ for event in longpoll.listen():
                 usergroup = openfromfile(usergroup)
                 send_keyboard(event.peer_id, event.random_id, "Выберите вариант из клаиватуры ниже.")
                 if str(event.user_id) not in usergroup.keys():
-                    write_msg(event.user_id, event.random_id, "У вас не указан код группы.")
+                    write_msg(event.user_id, event.random_id, "У вас не указан код группы, укажите его.")
+                    writeyourgroup[event.user_id] = 1
             elif event.text.lower() == "указать группу" or event.text.lower() == "изменить группу":
                 write_msg(event.user_id, event.random_id, "В какой группе вы находитесь?\nУкажите код вашей группы: ")
                 writeyourgroup[event.user_id] = 1
-            elif event.text[-3:].lower() in ['v19', 'v18', 'v17', 'e19', 'e18', 'e17'] and writeyourgroup[event.user_id] == 1:
+            elif event.text[-3:].lower() in ['v19', 'v18', 'v17', 'e19', 'e18', 'e17'] and event.user_id in writeyourgroup.keys():
                 group = event.text
                 usergroup[str(event.user_id)] = group
                 write_msg(event.user_id, event.random_id, f"Вы указали, что Ваша группа: {usergroup[str(event.user_id)]}.")
                 writeyourgroup[event.user_id] = 0
                 usergroup = updatefile(usergroup)
-                send_keyboard(event.user_id, event.random_id, "Что-то ещё?")
             elif str(event.user_id) not in writeyourgroup.keys() and event.text[-3:].lower() in ['v19', 'v18', 'v17', 'e19', 'e18', 'e17']:
                 write_msg(event.user_id, event.random_id, f"Данной команды не существует.")
                 write_msg(event.user_id, event.random_id, f"Для того, чтобы указать группу предварительно нажмите Изменить группу.")
-                send_keyboard(event.user_id, event.random_id, "Что-то ещё?")
             elif event.text.lower() == "в какой я группе?":
                 if str(event.user_id) not in usergroup.keys():
                     write_msg(event.user_id, event.random_id, "У вас не указан код группы.")
