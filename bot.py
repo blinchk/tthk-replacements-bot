@@ -177,9 +177,9 @@ def getmuudatused(setgroup, usergroup, user):
         if setgroup in i[2]:
             if i[4] == " ":
                 forshow.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]}")
-            elif i[4].lower() == "jääb ära" and i[5] == "" or i[5] = None:
+            elif i[4].lower() == "jääb ära" and (i[5] == "" or i[5] == None):
                 forshow.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]} не состоится")
-            elif i[4].lower() == "söögivahetund" and i[5] == "" or i[5] = None:
+            elif i[4].lower() == "söögivahetund" and (i[5] == "" or i[5] == None):
                 forshow.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]} обеденный перерыв")
             elif i[5].lower() == "iseseisev töö kodus":
                 forshow.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]} самостоятельная работа дома")
@@ -201,10 +201,10 @@ def getmuudatusedall(user, date):
         if i[4] == " ":
             if i[1] == date:
                 forshowall.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]}")
-        elif i[4].lower() == "jääb ära" and i[5] == "":
+        elif i[4].lower() == "jääb ära" and (i[5] == "" or i[5] == None):
             if i[1] == date:
                 forshowall.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]} не состоится")
-        elif i[4].lower() == "söögivahetund" and i[5] == "":
+        elif i[4].lower() == "söögivahetund" and (i[5] == "" or i[5] == None):
             if i[1] == date:
                 forshowall.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]} обеденный перерыв")
         elif i[5].lower() == "iseseisev töö kodus":
@@ -231,10 +231,10 @@ def getmuudatusedweekly(user, weekday):
         if i[4] == " ":
             if i[0] == weekday:
                 forshoweek.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]}")
-        elif i[4].lower() == "jääb ära" and i[5] == "":
+        elif i[4].lower() == "jääb ära" and (i[5] == "" or i[5] == None):
             if i[0] == weekday:
                 forshoweek.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]} не состоится")
-        elif i[4].lower() == "söögivahetund" and i[5] == "":
+        elif i[4].lower() == "söögivahetund" and (i[5] == "" or i[5] = None):
             if i[0] == weekday:
                 forshoweek.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]} обеденный перерыв")
         elif i[5].lower() == "iseseisev töö kodus":
