@@ -178,9 +178,9 @@ def makemuudatused(i, kuupaev):
     if kuupaev == True:
         if len(i) == 6:
             forshow.append(f"🗓 {i[0]} {i[1]}\n🦆 Группа: {i[2]} ⏰ Урок: {i[3]} \n👨‍🏫 Преподаватель: i{4}\nКабинет: {i[5]}")
-        elif i[4] in "jääb ära" and len(i) < 6:
+        elif len(i) > 4 and i[4].lower() in "jääb ära":
             forshow.append(f"🗓 {i[0]} {i[1]}\n🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n❌ Не состоится")
-        elif i[4].lower() in "söögivahetund" and len(i) < 6:
+        elif len(i) > 4 and i[4].lower() in "söögivahetund":
             forshow.append(f"🗓 {i[0]} {i[1]}\n🦆 Группа: {i[2]}\n ⏰ Урок: {i[3]}\n🆒 Обеденный перерыв")
         elif len(i) > 5 and i[5].lower() in "iseseisev töö kodus":
             forshow.append(f"🗓 {i[0]} {i[1]}\n🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n🏠 Самостоятельная работа дома")
@@ -191,9 +191,9 @@ def makemuudatused(i, kuupaev):
     if kuupaev == False:
         if len(i) == 6:
             forshow.append(f"🦆 Группа: {i[2]} ⏰ Урок: {i[3]} \n👨‍🏫 Преподаватель: i{4}\nКабинет: {i[5]}")
-        elif i[4] in "jääb ära" and len(i) < 6:
+        elif len(i) > 4 and i[4].lower() in "jääb ära":
             forshow.append(f"🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n❌ Не состоится")
-        elif i[4].lower() in "söögivahetund" and len(i) < 6:
+        elif len(i) > 4 and i[4].lower() in "söögivahetund":
             forshow.append(f"🦆 Группа: {i[2]}\n ⏰ Урок: {i[3]}\n🆒 Обеденный перерыв")
         elif len(i) > 5 and i[5].lower() in "iseseisev töö kodus":
             forshow.append(f"🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n🏠 Самостоятельная работа дома")
