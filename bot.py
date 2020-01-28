@@ -5,6 +5,7 @@ from vk_api.longpoll import VkLongPoll, VkEventType
 from vk_api.keyboard import VkKeyboard, VkKeyboardColor, VkKeyboardButton
 import json
 import os
+import time
 output_rows = []
 writeyourgroup = {}
 writeyourdate = {}
@@ -27,12 +28,11 @@ keyboard.add_line()  # Переход на вторую строку
 keyboard.add_button('В какой я группе?', color=VkKeyboardColor.POSITIVE)
 keyboard.add_button('Изменить группу', color=VkKeyboardColor.NEGATIVE)
 
-WeekDayskeyboard.add_button("E", color=VkKeyboardColor.NEGATIVE)
-WeekDayskeyboard.add_button("T", color=VkKeyboardColor.NEGATIVE)
+WeekDayskeyboard.add_button("E", color=VkKeyboardColor.DEFAULT)
+WeekDayskeyboard.add_button("T", color=VkKeyboardColor.DEFAULT)
 WeekDayskeyboard.add_button("K", color=VkKeyboardColor.DEFAULT)
 WeekDayskeyboard.add_button("N", color=VkKeyboardColor.DEFAULT)
-WeekDayskeyboard.add_line()
-WeekDayskeyboard.add_button("R", color=VkKeyboardColor.POSITIVE)
+WeekDayskeyboard.add_button("R", color=VkKeyboardColor.DEFAULT)
 WeekDayskeyboard.add_button("L", color=VkKeyboardColor.POSITIVE)
 WeekDayskeyboard.add_button("P", color=VkKeyboardColor.POSITIVE)
 
@@ -108,11 +108,9 @@ def getmuudatused(setgroup, usergroup, user):
                 continue
             if i[4] == " ":
                 forshow.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]}")
-            elif i[5] == " ":
-                forshow.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]} Преподаватель: {i[4]}")
-            elif i[4].lower() == "jääb ära":
+            elif i[4].lower() == "jääb ära" and i[5] == ""::
                 forshow.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]} не состоится")
-            elif i[4].lower() == "söögivahetund":
+            elif i[4].lower() == "söögivahetund" and i[5] == ""::
                 forshow.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]} обеденный перерыв")
             elif i[5].lower() == "iseseisev töö kodus":
                 forshow.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]} самостоятельная работа дома")
@@ -147,13 +145,10 @@ def getmuudatusedall(user, date):
         if i[4] == " ":
             if i[1] == date:
                 forshowall.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]}")
-        elif i[5] == " ":
-            if i[1] == date:
-                forshowall.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]} Преподаватель: {i[4]}")
-        elif i[4].lower() == "jääb ära":
+        elif i[4].lower() == "jääb ära" and i[5] == "":
             if i[1] == date:
                 forshowall.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]} не состоится")
-        elif i[4].lower() == "söögivahetund":
+        elif i[4].lower() == "söögivahetund" and i[5] == ""::
             if i[1] == date:
                 forshowall.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]} обеденный перерыв")
         elif i[5].lower() == "iseseisev töö kodus":
@@ -193,13 +188,10 @@ def getmuudatusedweekly(user, weekday):
         if i[4] == " ":
             if i[0] == weekday:
                 forshoweek.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]}")
-        elif i[5] == " ":
-            if i[0] == weekday:
-                forshoweek.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]} Преподаватель: {i[4]}")
-        elif i[4].lower() == "jääb ära":
+        elif i[4].lower() == "jääb ära" and i[5] == "":
             if i[0] == weekday:
                 forshoweek.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]} не состоится")
-        elif i[4].lower() == "söögivahetund":
+        elif i[4].lower() == "söögivahetund" and i[5] == "":
             if i[0] == weekday:
                 forshoweek.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]} обеденный перерыв")
         elif i[5].lower() == "iseseisev töö kodus":
@@ -214,6 +206,7 @@ def getmuudatusedweekly(user, weekday):
         for w in forshoweek:
             kogutunniplaan += f"{w}\n"
         write_msg(user, event.random_id, kogutunniplaan)
+        time.sleep(2)
         send_keyboard(event.user_id, event.random_id, "Что-то ещё?")
     elif len(forshoweek) == 0:
         write_msg(user, event.random_id,"В данный момент изменений в расписании нет на день недели, который вы ввели. Подробнее: www.tthk.ee/tunniplaani-muudatused.")
@@ -224,7 +217,7 @@ longpoll = VkLongPoll(vk)
 for event in longpoll.listen():
     if event.type == VkEventType.MESSAGE_NEW:
         if event.to_me:
-            if event.text.lower() == "начать":
+            if event.text.lower() == "начать" or event.text.lower() == 'start':
                 usergroup = openfromfile(usergroup)
                 send_keyboard(event.peer_id, event.random_id, "Выберите вариант из клаиватуры ниже.")
                 if str(event.user_id) not in usergroup.keys():
