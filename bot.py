@@ -174,8 +174,7 @@ def parsepage(table):
             continue
     return muudatused
 
-def makemuudatused(i, kuupaev):
-    forshow = i
+def makemuudatused(i, forshow, kuupaev):
     if kuupaev == True:
         if len(i) == 6:
             forshow.append(f"🗓 {i[0]} {i[1]}\n🦆 Группа: {i[2]} ⏰ Урок: {i[3]} \n👨‍🏫 Преподаватель: i{4}\nКабинет: {i[5]}")
@@ -202,14 +201,14 @@ def makemuudatused(i, kuupaev):
             forshow.append(f"🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n👨‍🏫 Преподаватель: {i[4]}")
         else:
             forshow.append(f"🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n")
-    return i
+    return forshow
 
 def getmuudatused(setgroup, usergroup, user):
     forshow = []
     muudatused = parsepage(table)
     for i in muudatused:
         if setgroup.lower() in i[2].lower():
-            makemuudatused(forshow, True)
+            makemuudatused(i, forshow, True)
     if len(forshow) > 0:
         write_msg(event.user_id, event.random_id, f"Для группы 🦆 {setgroup} на данный момент следующие изменения в расписании:")
         for w in forshow:
@@ -222,7 +221,7 @@ def getmuudatusedall(user, date):
     muudatused = parsepage(table)
     for i in muudatused:
         if i[1] == date:
-            makemuudatused(forshow, False)
+            makemuudatused(i, forshow, False)
     if len(forshow) > 0:
         kogutunniplaan = f"В учебном заведении на 🗓 {date} следующие изменения в расписании:\n"
         for w in forshow:
@@ -236,7 +235,7 @@ def getmuudatusedweekly(user, weekday):
     muudatused = parsepage(table)
     for i in muudatused:
         if i[0] == weekday:
-            makemuudatused(forshow, False)
+            makemuudatused(i, forshow, False)
     if len(forshow) > 0:
         kogutunniplaan = f"В учебном заведении на 🗓 {DayOfWeek[weekday]} следующие изменения в расписании:\n"
         for w in forshow:
