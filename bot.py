@@ -179,6 +179,7 @@ def getmuudatused(setgroup, usergroup, user):
     forshow = []
     muudatused = parsepage(table)
     for i in muudatused:
+        print(len(i))
         if setgroup in i[2]:
             if i[4] == " ":
                 forshow.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]}")
@@ -205,6 +206,7 @@ def getmuudatusedall(user, date):
     forshowall = []
     muudatused = parsepage(table)
     for i in muudatused:
+        print(len(i))
         if i[4] == " ":
             if i[1] == date:
                 forshowall.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]}")
@@ -238,6 +240,7 @@ def getmuudatusedweekly(user, weekday):
     forshoweek = []
     muudatused = parsepage(table)
     for i in muudatused:
+        print(len(i))
         if i[4] == " ":
             if i[0] == weekday:
                 forshoweek.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]}")
