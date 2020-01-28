@@ -14,7 +14,7 @@ writeyourgroup = {}
 writeyourdate = {}
 writeyourweekday = {}
 usergroup = {}
-datetime.timezone(2)
+
 
 
 
