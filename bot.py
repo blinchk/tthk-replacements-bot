@@ -21,9 +21,9 @@ keyboard.add_line()  # Переход на вторую строку
 keyboard.add_button('В какой я группе?', color=VkKeyboardColor.POSITIVE)
 keyboard.add_button('Изменить группу', color=VkKeyboardColor.NEGATIVE)
 WeekDayskeyboard = VkKeyboard(one_time=True, inline=False)
-
-authtoken = '4753258aa36e727b82691af62ec3425da7e41b82afc62cac1d0fbbf401cdaad837c069ec9ed4f5beb59c4'
-vk = vkapi.VkApi(token=authtoken)
+import os
+access_token = os.environ["ACCESS_TOKEN"]
+vk = vkapi.VkApi(token=access_token)
 
 WeekDayskeyboard.add_button("E", color=VkKeyboardColor.NEGATIVE)
 WeekDayskeyboard.add_button("T", color=VkKeyboardColor.NEGATIVE)
