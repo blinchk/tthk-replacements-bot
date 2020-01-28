@@ -186,6 +186,8 @@ def getmuudatused(setgroup, usergroup, user):
                 forshow.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]} не состоится")
             elif i[4].lower() == "söögivahetund" and len(i) < 6:
                 forshow.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]} обеденный перерыв")
+            elif i[5].lower() == "" or i[5].lower() == " ":
+                forshow.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]} Преподаватель: {i[4]}")
             elif i[5].lower() == "iseseisev töö kodus":
                 forshow.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]} самостоятельная работа дома")
             else:
@@ -212,6 +214,9 @@ def getmuudatusedall(user, date):
         elif i[4].lower() == "söögivahetund" and len(i) < 6:
             if i[1] == date:
                 forshowall.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]} обеденный перерыв")
+        elif i[5].lower() == "" or i[5].lower() == " ":
+            if i[1] == date:
+                forshowall.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]} Преподаватель: {i[4]}")
         elif i[5].lower() == "iseseisev töö kodus":
             if i[1] == date:
                 forshowall.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]} самостоятельная работа дома")
@@ -242,6 +247,9 @@ def getmuudatusedweekly(user, weekday):
         elif i[4].lower() == "söögivahetund" and len(i) < 6:
             if i[0] == weekday:
                 forshoweek.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]} обеденный перерыв")
+        elif i[5].lower() == "" or i[5].lower() == " ":
+            if i[0] == weekday:
+                forshoweek.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]} Преподаватель: {i[4]}")
         elif i[5].lower() == "iseseisev töö kodus":
             if i[0] == weekday:
                 forshoweek.append(f"{DayOfWeek[i[0]]} {i[1]} Группа: {i[2]} Урок: {i[3]} самостоятельная работа дома")
