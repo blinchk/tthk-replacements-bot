@@ -52,7 +52,7 @@ keyboard.add_line()  # Переход на вторую строку
 keyboard.add_button('В какой я группе?', color=VkKeyboardColor.POSITIVE)
 keyboard.add_button('Изменить группу', color=VkKeyboardColor.NEGATIVE)
 keyboard.add_line()  # Переход на вторую строку
-keyboard.button("Поддержать проект",color=VkKeyboardColor.DEFAULT)
+keyboard.add_button("Поддержать проект",color=VkKeyboardColor.DEFAULT)
 
 
 def numdayweek():
