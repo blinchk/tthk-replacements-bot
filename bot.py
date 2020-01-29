@@ -233,7 +233,7 @@ def getmuudatused(setgroup, user, group):
         if group == False:
             write_msg(user, event.random_id, kogutunniplaan)
     elif len(forshow) == 0:
-        if group = True:
+        if group == True:
             write_cmsg(user, event.random_id, "Для группы, которую вы указали изменений в расписании нет.")
         else:
             write_msg(user, event.random_id, "Для группы, которую вы указали изменений в расписании нет.")
@@ -344,8 +344,8 @@ for event in longpoll.listen():
             elif event.text[-3:].lower() in ['v19', 'v18', 'v17', 'e19', 'e18', 'e17'] and cid in writeyourchatgroup.keys() and writeyourchatgroup[cid] == 1:
                 chatgroupname = event.text
                 chatgroup[cid] = chatgroupname
-            elif event.text.lower() == "@tthkbot, изменения нашей беседы":
-                getmuudatused(chatgroup[cid],cid)
+            elif event.text.lower() == "@tthkbot, изменения нашей беседы" and cid in chatgroup.keys():
+                getmuudatused(chatgroup[cid],cid,True)
             else:
                 write_msg(event.chat_id, event.random_id, "Такой команды не найдено.")
         else:
