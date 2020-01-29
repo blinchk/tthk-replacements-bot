@@ -3,7 +3,7 @@ import requests
 import calendar
 import datetime
 from bs4 import BeautifulSoup
-from vk_api.longpoll import VkLongPoll, VkEventType, VkBotLongPoll
+from vk_api.longpoll import VkLongPoll, VkEventType
 from vk_api.keyboard import VkKeyboard, VkKeyboardColor, VkKeyboardButton
 import json
 import os
@@ -17,7 +17,6 @@ writesearchgroup = {}
 writeyourchatgroup = []
 usergroup = {}
 chatgroup = {}
-
 
 
 access_token = os.environ["ACCESS_TOKEN"]
@@ -54,7 +53,7 @@ keyboard.add_line()  # Переход на вторую строку
 keyboard.add_button('В какой я группе?', color=VkKeyboardColor.POSITIVE)
 keyboard.add_button('Изменить группу', color=VkKeyboardColor.NEGATIVE)
 keyboard.add_line()  # Переход на вторую строку
-keyboard.add_button("Поддержать проект",color=VkKeyboardColor.DEFAULT)
+keyboard.add_button("€ Поддержать проект €",color=VkKeyboardColor.DEFAULT)
 
 
 def numdayweek():
@@ -267,7 +266,7 @@ def getmuudatusedweekly(user, weekday):
         write_msg(user, event.random_id,f"В данный момент изменений в расписании нет на день недели, который вы ввели.")
 
 
-longpoll = VkBotLongPoll(vk)
+longpoll = VkLongPoll(vk)
 for event in longpoll.listen():
     if event.type == VkEventType.MESSAGE_NEW:
         if event.to_me:
@@ -329,23 +328,7 @@ for event in longpoll.listen():
                 else:
                     newmuudatused = getmuudatusedall(event.user_id, event.text, False)
                 writeyourdate[uid] = 0
-            elif event.text.lower() == "поддержать проект":
+            elif event.text.lower() == "€ поддержать проект €":
                 write_msg(event.peer_id, event.random_id,"https://www.paypal.me/blinchk")
             else:
                 write_msg(event.user_id, event.random_id, f"Данной команды не существует.")
-        if event.from_chat:
-            print(event.user_id, 'в беседе', event.chat_id)
-            cid = str(event.chat_id)
-            if event.text.lower() == "tthkbot, начать" or event.text.lower() == "tthkbot, start" or event.text.lower() == "tthkbot":
-                chatgroup = openfromfile('chats.txt', chatgroup)
-                write_сmsg(event.chat_id, event.random_id, "Для того, чтобы узнать изменения в расписании для вашей беседы напишите \"tthkbot, изменения нашей беседы\".")
-                if cid not in chatgroup.keys():
-                    write_msg(event.chat_id, event.random_id, "Для вашей беседы не указано название группы, укажите его ниже:")
-                    writeyourchatgroup[cid] = 1
-            elif event.text[-3:].lower() in ['v19', 'v18', 'v17', 'e19', 'e18', 'e17'] and cid in writeyourchatgroup.keys() and writeyourchatgroup[cid] == 1:
-                chatgroupname = event.text
-                chatgroup[cid] = chatgroupname
-            elif event.text.lower() == "tthkbot, изменения нашей беседы" and cid in chatgroup.keys():
-                getmuudatused(chatgroup[cid], cid, True)
-            else:
-                write_msg(event.chat_id, event.random_id, "Такой команды не найдено.")
