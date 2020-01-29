@@ -3,7 +3,7 @@ import requests
 import calendar
 import datetime
 from bs4 import BeautifulSoup
-from vk_api.longpoll import VkLongPoll, VkEventType
+from vk_api.longpoll import VkLongPoll, VkEventType, VkBotLongPoll
 from vk_api.keyboard import VkKeyboard, VkKeyboardColor, VkKeyboardButton
 import json
 import os
@@ -267,7 +267,7 @@ def getmuudatusedweekly(user, weekday):
         write_msg(user, event.random_id,f"В данный момент изменений в расписании нет на день недели, который вы ввели.")
 
 
-longpoll = VkLongPoll(vk)
+longpoll = VkBotLongPoll(vk)
 for event in longpoll.listen():
     if event.type == VkEventType.MESSAGE_NEW:
         if event.to_me:
@@ -346,6 +346,6 @@ for event in longpoll.listen():
                 chatgroupname = event.text
                 chatgroup[cid] = chatgroupname
             elif event.text.lower() == "tthkbot, изменения нашей беседы" and cid in chatgroup.keys():
-                getmuudatused(chatgroup[cid],cid,True)
+                getmuudatused(chatgroup[cid], cid, True)
             else:
                 write_msg(event.chat_id, event.random_id, "Такой команды не найдено.")
