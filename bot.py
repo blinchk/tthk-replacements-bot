@@ -294,7 +294,7 @@ for event in longpoll.listen():
                     writeyourgroup[str(event.user_id)] = 1
                 if str(event.user_id) in usergroup.keys():
                     setgroup = usergroup[str(event.user_id)]
-                    lastmuudatused = getmuudatused(setgroup, usergroup, event.user_id)
+                    lastmuudatused = getmuudatused(setgroup, event.user_id)
             elif event.text.lower() == "изменения по датам":
                 send_datekeyboard(event.peer_id, event.random_id, f"Выберите дату, которую желаете найти или укажите в формате ДД.ММ.ГГГГ:")
                 writeyourdate[str(event.user_id)] = 1
