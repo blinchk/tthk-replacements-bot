@@ -160,7 +160,7 @@ def get_servertime():
 
 usergroup = openfromfile('ids.txt',usergroup)
 print(usergroup.keys())
-print(datetime.datetime.fromtimestamp(get.get_servertime())[3])
+print(datetime.datetime.fromtimestamp(get_servertime())[3])
 
 def parsepage(table):
     muudatused = []
