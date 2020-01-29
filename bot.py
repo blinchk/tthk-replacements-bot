@@ -305,7 +305,7 @@ for event in longpoll.listen():
                     write_msg(event.user_id, event.random_id, f"Введите код группы, для которой нужно найти изменения: ")
                     writeyourgroup[str(event.user_id)] = 0
                     writesearchgroup[str(event.user_id)] = 1
-            elif event.text[-3:].lower() in ['v19', 'v18', 'v17', 'e19', 'e18', 'e17'] and event.user_id in writesearchgroup.keys():
+            elif event.text[-3:].lower() in ['v19', 'v18', 'v17', 'e19', 'e18', 'e17'] and str(event.user_id) in writesearchgroup.keys():
                 if writesearchgroup[str(event.user_id)] == 1:
                     setgroup = event.text
                     lastmuudatused = getmuudatused(setgroup, event.user_id)
