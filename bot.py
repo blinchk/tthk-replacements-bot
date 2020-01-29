@@ -333,7 +333,7 @@ for event in longpoll.listen():
                 write_msg(event.peer_id, event.random_id,"https://www.paypal.me/blinchk")
             else:
                 write_msg(event.user_id, event.random_id, f"Данной команды не существует.")
-        elif event.from_chat:
+        if event.from_chat:
             print(event.user_id, 'в беседе', event.chat_id)
             cid = str(event.chat_id)
             if event.text.lower() == "tthkbot, начать" or event.text.lower() == "tthkbot, start" or event.text.lower() == "tthkbot":
@@ -349,5 +349,3 @@ for event in longpoll.listen():
                 getmuudatused(chatgroup[cid],cid,True)
             else:
                 write_msg(event.chat_id, event.random_id, "Такой команды не найдено.")
-        else:
-            continue
