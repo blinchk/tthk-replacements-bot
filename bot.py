@@ -159,8 +159,6 @@ def send_datekeyboard(peer_id, random_id, message):
     vk.method('messages.send', {'peer_id': peer_id, 'random_id': random_id, 'keyboard': FiveDayskeyboard.get_keyboard(), 'message': message})
 # Ничего особенного.
 
-usergroup = openfromfile(usergroup)
-
 
 def parsepage(table):
     muudatused = []
