@@ -273,7 +273,7 @@ for event in longpoll.listen():
                 write_msg(event.user_id, event.random_id, "В какой группе вы находитесь?\nУкажите код вашей группы: ")
                 writeyourgroup[str(event.user_id)] = 1
                 writesearchgroup[str(event.user_id)] = 0
-            elif event.text[-3:].lower() in ['v19', 'v18', 'v17', 'e19', 'e18', 'e17'] and writeyourgroup[str(event.user_id)] == 1:
+            elif event.text[-3:].lower() in ['v19', 'v18', 'v17', 'e19', 'e18', 'e17'] and str(event.user_id) in writeyourgroup.keys() and writeyourgroup[str(event.user_id)] == 1:
                 group = event.text
                 usergroup[str(event.user_id)] = group
                 write_msg(event.user_id, event.random_id, f"Вы указали, что Ваша группа: {usergroup[str(event.user_id)]}.")
@@ -283,11 +283,11 @@ for event in longpoll.listen():
                     write_msg(event.user_id, event.random_id, f"Введите код группы, для которой нужно найти изменения: ")
                     writeyourgroup[str(event.user_id)] = 0
                     writesearchgroup[str(event.user_id)] = 1
-            elif event.text[-3:].lower() in ['v19', 'v18', 'v17', 'e19', 'e18', 'e17'] and writesearchgroup[str(event.user_id)] == 1:
+            elif event.text[-3:].lower() in ['v19', 'v18', 'v17', 'e19', 'e18', 'e17'] and str(event.user_id) in writesearchgroup.keys() and writesearchgroup[str(event.user_id)] == 1:
                 setgroup = event.text
                 lastmuudatused = getmuudatused(setgroup, event.user_id)
                 writesearchgroup[str(event.user_id)] = 0
-            elif event.text[-3:].lower() in ['v19', 'v18', 'v17', 'e19', 'e18', 'e17'] and writeyourgroup[str(event.user_id)] == 0:
+            elif event.text[-3:].lower() in ['v19', 'v18', 'v17', 'e19', 'e18', 'e17'] and str(event.user_id) in writeyourgroup.keys() and writeyourgroup[str(event.user_id)] == 0:
                 write_msg(event.user_id, event.random_id, f"Данной команды не существует.")
                 write_msg(event.user_id, event.random_id, f"Для того, чтобы указать группу предварительно нажмите Изменить группу.")
             elif event.text.lower() == "в какой я группе?":
@@ -311,10 +311,10 @@ for event in longpoll.listen():
             elif event.text.lower() == "изменения по дню недели":
                 send_weekkeyboard(event.peer_id, event.random_id, "Выберите день недели с помощью клавиатуры: E, T, K, N, R, L, P.")
                 writeyourweekday[str(event.user_id)] = 1
-            elif event.text.upper() in ['E', 'T', 'K', 'N', 'R', 'L', 'P'] and writeyourweekday[str(event.user_id)] == 1:
+            elif event.text.upper() in ['E', 'T', 'K', 'N', 'R', 'L', 'P'] and str(event.user_id) in writeyourweekday.keys() and writeyourweekday[str(event.user_id)] == 1:
                 getmuudatusedweekly(event.user_id, event.text)
                 writeyourweekday[str(event.user_id)] = 0
-            elif event.text[-5:].lower() in ['.2020', '.2021', '.2022', '.2023', '.2024', '.2025', '.2026'] and writeyourdate[str(event.user_id)] == 1:
+            elif event.text[-5:].lower() in ['.2020', '.2021', '.2022', '.2023', '.2024', '.2025', '.2026'] and str(event.user_id) in writeyourdate.keys() and writeyourdate[str(event.user_id)] == 1 :
                 if event.text[1] == ":":
                     enddatetosearch = re.split(r':\s',event.text)
                     newmuudatused = getmuudatusedall(event.user_id, enddatetosearch[1])
