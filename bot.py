@@ -327,8 +327,8 @@ for event in longpoll.listen():
                 write_msg(event.peer_id, event.random_id,"https://www.paypal.me/blinchk")
             else:
                 write_msg(event.user_id, event.random_id, f"Данной команды не существует.")
-    if datetime.datetime.fromtimestamp(get.get_servertime())[3] == 5:
-        print(datetime.datetime.fromtimestamp(get.get_servertime())[3])
+    if datetime.datetime.fromtimestamp(get_servertime())[3] == 5:
+        print(datetime.datetime.fromtimestamp(get_servertime())[3])
         for i in usergroup.keys():
             setgroup = usergroup[i]
             getmuudatused(setgroup, i)
