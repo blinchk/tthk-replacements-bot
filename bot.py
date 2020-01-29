@@ -214,7 +214,7 @@ def makemuudatused(i, forshow, kuupaev):
             forshow.append(f"🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n")
     return forshow
 
-def getmuudatused(setgroup, usergroup, user):
+def getmuudatused(setgroup, user):
     forshow = []
     muudatused = parsepage(table)
     for i in muudatused:
@@ -305,11 +305,10 @@ for event in longpoll.listen():
                     write_msg(event.user_id, event.random_id, f"Введите код группы, для которой нужно найти изменения: ")
                     writeyourgroup[str(event.user_id)] = 0
                     writesearchgroup[str(event.user_id)] = 1
-                    lastmuudatused = getmuudatused(setgroup, usergroup, event.user_id)
             elif event.text[-3:].lower() in ['v19', 'v18', 'v17', 'e19', 'e18', 'e17'] and event.user_id in writesearchgroup.keys():
                 if writesearchgroup[str(event.user_id)] == 1:
                     setgroup = event.text
-                    lastmuudatused = getmuudatused(setgroup, usergroup, event.user_id)
+                    lastmuudatused = getmuudatused(setgroup, event.user_id)
                     writesearchgroup[str(event.user_id)] = 0
                 else:
                     write_msg(event.user_id, event.random_id, f"Вы не указали код группы, для которой нужно найти изменения.")
