@@ -157,6 +157,8 @@ def send_weekkeyboard(peer_id, random_id, message):
     vk.method('messages.send', {'peer_id': peer_id, 'random_id': random_id, 'keyboard': WeekDayskeyboard.get_keyboard(), 'message': message})
 def send_datekeyboard(peer_id, random_id, message):
     vk.method('messages.send', {'peer_id': peer_id, 'random_id': random_id, 'keyboard': FiveDayskeyboard.get_keyboard(), 'message': message})
+def write_cmsg(chat_id, random_id, message):
+    vk.method('meesages.send', {'chat_id': chat_id, 'random_id': random_id, 'message': message})
 # Ничего особенного.
 
 
@@ -216,7 +218,7 @@ def makemuudatused(i, forshow, kuupaev):
             forshow.append(f"🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n")
     return forshow
 
-def getmuudatused(setgroup, user):
+def getmuudatused(setgroup, user, group):
     forshow = []
     muudatused = parsepage(table)
     for i in muudatused:
@@ -226,9 +228,15 @@ def getmuudatused(setgroup, user):
         kogutunniplaan = f"Для группы 🦆 {setgroup} на данный момент следующие изменения в расписании:\n"
         for w in forshow:
             kogutunniplaan += f"{w}\n"
-        write_msg(user, event.random_id, kogutunniplaan)
+        if group == True:
+            write_cmsg(user, event.random_id, kogutunniplaan)
+        if group == False:
+            write_msg(user, event.random_id, kogutunniplaan)
     elif len(forshow) == 0:
-        write_msg(user, event.random_id,"Для группы, которую вы указали изменений в расписании нет.")
+        if group = True:
+            write_cmsg(user, event.random_id, "Для группы, которую вы указали изменений в расписании нет.")
+        else:
+            write_msg(user, event.random_id, "Для группы, которую вы указали изменений в расписании нет.")
 
 def getmuudatusedall(user, date):
     forshow = []
@@ -325,13 +333,13 @@ for event in longpoll.listen():
                 write_msg(event.peer_id, event.random_id,"https://www.paypal.me/blinchk")
             else:
                 write_msg(event.user_id, event.random_id, f"Данной команды не существует.")
-        elif event.object.peer_id != event.object.from_id:
-            cid = str(event.peer_id)
+        elif event.from_chat:
+            cid = str(event.chat_id)
             if event.text.lower() == "@tthkbot, начать" or event.text.lower() == "@tthkbot, start":
                 chatgroup = openfromfile('chats.txt', chatgroup)
-                write_msg(event.peer_id, event.random_id, "Для того, чтобы узнать изменения в расписании для вашей беседы напишите \"@tthkbot, изменения нашей беседы\".")
+                write_сmsg(event.chat_id, ,event.random_id, "Для того, чтобы узнать изменения в расписании для вашей беседы напишите \"@tthkbot, изменения нашей беседы\".")
                 if cid not in chatgroup.keys():
-                    write_msg(event.peer_id, event.random_id, "Для вашей беседы не указано название группы, укажите его ниже:")
+                    write_msg(event.chat_id, ,event.random_id, "Для вашей беседы не указано название группы, укажите его ниже:")
                     writeyourchatgroup[cid] = 1
             elif event.text[-3:].lower() in ['v19', 'v18', 'v17', 'e19', 'e18', 'e17'] and cid in writeyourchatgroup.keys() and writeyourchatgroup[cid] == 1:
                 chatgroupname = event.text
@@ -339,6 +347,6 @@ for event in longpoll.listen():
             elif event.text.lower() == "@tthkbot, изменения нашей беседы":
                 getmuudatused(chatgroup[cid],cid)
             else:
-                write_msg(event.peer_id, event.random_id, "Такой команды не найдено.")
+                write_msg(event.chat_id, event.random_id, "Такой команды не найдено.")
         else:
             continue
