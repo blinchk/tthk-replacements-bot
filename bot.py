@@ -294,7 +294,7 @@ for event in longpoll.listen():
                 writesearchgroup[uid] = 1
             elif event.text[-3:].lower() in ['v19', 'v18', 'v17', 'e19', 'e18', 'e17'] and uid in writesearchgroup.keys() and writesearchgroup[uid] == 1:
                 setgroup = event.text
-                lastmuudatused = getmuudatused(setgroup, event.user_id)
+                lastmuudatused = getmuudatused(setgroup, event.user_id, False)
                 writesearchgroup[uid] = 0
             elif event.text[-3:].lower() in ['v19', 'v18', 'v17', 'e19', 'e18', 'e17'] and uid in writeyourgroup.keys() and writeyourgroup[uid] == 0:
                 write_msg(event.user_id, event.random_id, f"Для того, чтобы указать группу предварительно нажмите Изменить группу.")
@@ -312,7 +312,7 @@ for event in longpoll.listen():
                     writeyourgroup[uid] = 1
                 if uid in usergroup.keys():
                     setgroup = usergroup[uid]
-                    lastmuudatused = getmuudatused(setgroup, event.user_id)
+                    lastmuudatused = getmuudatused(setgroup, event.user_id, False)
             elif event.text.lower() == "изменения по датам":
                 send_datekeyboard(event.peer_id, event.random_id, f"Выберите дату, которую желаете найти или укажите в формате ДД.ММ.ГГГГ:")
                 writeyourdate[uid] = 1
@@ -325,9 +325,9 @@ for event in longpoll.listen():
             elif event.text[-5:].lower() in ['.2020', '.2021', '.2022', '.2023', '.2024', '.2025', '.2026'] and uid in writeyourdate.keys() and writeyourdate[uid] == 1 :
                 if event.text[1] == ":":
                     enddatetosearch = re.split(r':\s',event.text)
-                    newmuudatused = getmuudatusedall(event.user_id, enddatetosearch[1])
+                    newmuudatused = getmuudatusedall(event.user_id, enddatetosearch[1], False)
                 else:
-                    newmuudatused = getmuudatusedall(event.user_id, event.text)
+                    newmuudatused = getmuudatusedall(event.user_id, event.text, False)
                 writeyourdate[uid] = 0
             elif event.text.lower() == "поддержать проект":
                 write_msg(event.peer_id, event.random_id,"https://www.paypal.me/blinchk")
@@ -337,9 +337,9 @@ for event in longpoll.listen():
             cid = str(event.chat_id)
             if event.text.lower() == "@tthkbot, начать" or event.text.lower() == "@tthkbot, start":
                 chatgroup = openfromfile('chats.txt', chatgroup)
-                write_сmsg(event.chat_id, ,event.random_id, "Для того, чтобы узнать изменения в расписании для вашей беседы напишите \"@tthkbot, изменения нашей беседы\".")
+                write_сmsg(event.chat_id, event.random_id, "Для того, чтобы узнать изменения в расписании для вашей беседы напишите \"@tthkbot, изменения нашей беседы\".")
                 if cid not in chatgroup.keys():
-                    write_msg(event.chat_id, ,event.random_id, "Для вашей беседы не указано название группы, укажите его ниже:")
+                    write_msg(event.chat_id, event.random_id, "Для вашей беседы не указано название группы, укажите его ниже:")
                     writeyourchatgroup[cid] = 1
             elif event.text[-3:].lower() in ['v19', 'v18', 'v17', 'e19', 'e18', 'e17'] and cid in writeyourchatgroup.keys() and writeyourchatgroup[cid] == 1:
                 chatgroupname = event.text
