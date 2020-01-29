@@ -226,7 +226,7 @@ def getmuudatused(setgroup, user):
             kogutunniplaan += f"{w}\n"
         write_msg(user, event.random_id, kogutunniplaan)
     elif len(forshow) == 0:
-        write_msg(user, event.random_id,"Для вашей группы изменений в расписании нет. Подробнее: www.tthk.ee/tunniplaani-muudatused.")
+        write_msg(user, event.random_id,"Для группы, которую вы указали изменений в расписании нет.")
 
 def getmuudatusedall(user, date):
     forshow = []
@@ -240,7 +240,7 @@ def getmuudatusedall(user, date):
             kogutunniplaan += f"{w}\n"
         write_msg(user, event.random_id, kogutunniplaan)
     elif len(forshow) == 0:
-        write_msg(user, event.random_id,f"В данный момент изменений в расписании нет на {date}, которую вы ввели. Подробнее: www.tthk.ee/tunniplaani-muudatused.")
+        write_msg(user, event.random_id,f"В данный момент изменений в расписании нет на {date}, которую вы ввели.")
 
 def getmuudatusedweekly(user, weekday):
     forshow = []
@@ -254,7 +254,7 @@ def getmuudatusedweekly(user, weekday):
             kogutunniplaan += f"{w}\n"
         write_msg(user, event.random_id, kogutunniplaan)
     elif len(forshow) == 0:
-        write_msg(user, event.random_id,f"В данный момент изменений в расписании нет на день недели, который вы ввели. Подробнее: www.tthk.ee/tunniplaani-muudatused.")
+        write_msg(user, event.random_id,f"В данный момент изменений в расписании нет на день недели, который вы ввели.")
 
 
 longpoll = VkLongPoll(vk)
