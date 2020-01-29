@@ -13,6 +13,7 @@ output_rows = []
 writeyourgroup = {}
 writeyourdate = {}
 writeyourweekday = {}
+writesearchgroup = {}
 usergroup = {}
 
 
@@ -301,6 +302,7 @@ for event in longpoll.listen():
                 send_weekkeyboard(event.peer_id, event.random_id, "Выберите день недели с помощью клавиатуры: E, T, K, N, R, L, P.")
                 writeyourweekday[str(event.user_id)] = 1
             elif event.text.lower() == "изменения по группам":
+                    write_msg(event.user_id, event.random_id, f"Введите код группы, для которой нужно найти изменения: ")
                     writeyourgroup[str(event.user_id)] = 0
                     writesearchgroup[str(event.user_id)] = 1
                     lastmuudatused = getmuudatused(setgroup, usergroup, event.user_id)
@@ -310,7 +312,7 @@ for event in longpoll.listen():
                     lastmuudatused = getmuudatused(setgroup, usergroup, event.user_id)
                     writesearchgroup[str(event.user_id)] = 0
                 else:
-                    write_msg(event.user_id, event.random_id, f"Укажите группу, для которой нужно найти изменения.")
+                    write_msg(event.user_id, event.random_id, f"Вы не указали код группы, для которой нужно найти изменения.")
                     writesearchgroup[str(event.user_id)] = 1
             elif event.text.upper() in ['E', 'T', 'K', 'N', 'R', 'L', 'P'] and writeyourweekday[str(event.user_id)] == 1:
                 getmuudatusedweekly(event.user_id, event.text)
