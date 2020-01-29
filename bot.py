@@ -334,17 +334,18 @@ for event in longpoll.listen():
             else:
                 write_msg(event.user_id, event.random_id, f"Данной команды не существует.")
         elif event.from_chat:
+            print(event.user_id, 'в беседе', event.chat_id)
             cid = str(event.chat_id)
-            if event.text.lower() == "@tthkbot, начать" or event.text.lower() == "@tthkbot, start":
+            if event.text.lower() == "tthkbot, начать" or event.text.lower() == "tthkbot, start" or event.text.lower() == "tthkbot":
                 chatgroup = openfromfile('chats.txt', chatgroup)
-                write_сmsg(event.chat_id, event.random_id, "Для того, чтобы узнать изменения в расписании для вашей беседы напишите \"@tthkbot, изменения нашей беседы\".")
+                write_сmsg(event.chat_id, event.random_id, "Для того, чтобы узнать изменения в расписании для вашей беседы напишите \"tthkbot, изменения нашей беседы\".")
                 if cid not in chatgroup.keys():
                     write_msg(event.chat_id, event.random_id, "Для вашей беседы не указано название группы, укажите его ниже:")
                     writeyourchatgroup[cid] = 1
             elif event.text[-3:].lower() in ['v19', 'v18', 'v17', 'e19', 'e18', 'e17'] and cid in writeyourchatgroup.keys() and writeyourchatgroup[cid] == 1:
                 chatgroupname = event.text
                 chatgroup[cid] = chatgroupname
-            elif event.text.lower() == "@tthkbot, изменения нашей беседы" and cid in chatgroup.keys():
+            elif event.text.lower() == "tthkbot, изменения нашей беседы" and cid in chatgroup.keys():
                 getmuudatused(chatgroup[cid],cid,True)
             else:
                 write_msg(event.chat_id, event.random_id, "Такой команды не найдено.")
