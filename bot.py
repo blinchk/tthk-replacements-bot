@@ -15,6 +15,9 @@ writeyourdate = {}
 writeyourweekday = {}
 writesearchgroup = {}
 usergroup = {}
+usergroup = openfromfile('ids.txt',usergroup)
+print(usergroup.keys())
+print(datetime.datetime.fromtimestamp(get.get_servertime())[3])
 
 
 access_token = os.environ["ACCESS_TOKEN"]
