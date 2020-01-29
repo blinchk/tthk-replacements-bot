@@ -51,6 +51,7 @@ keyboard.add_button('Изменения по группам', color=VkKeyboardCo
 keyboard.add_line()  # Переход на вторую строку
 keyboard.add_button('В какой я группе?', color=VkKeyboardColor.POSITIVE)
 keyboard.add_button('Изменить группу', color=VkKeyboardColor.NEGATIVE)
+keyboard.add_vkapps_button(6471849,190598559,"Поддержать проект",':type hash: str :param payload:')
 
 
 def numdayweek():
