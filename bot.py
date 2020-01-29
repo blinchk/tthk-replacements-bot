@@ -15,9 +15,6 @@ writeyourdate = {}
 writeyourweekday = {}
 writesearchgroup = {}
 usergroup = {}
-usergroup = openfromfile('ids.txt',usergroup)
-print(usergroup.keys())
-print(datetime.datetime.fromtimestamp(get.get_servertime())[3])
 
 
 access_token = os.environ["ACCESS_TOKEN"]
@@ -161,6 +158,9 @@ def get_servertime():
     vk.method(utils.getServerTime)
 # Ничего особенного.
 
+usergroup = openfromfile('ids.txt',usergroup)
+print(usergroup.keys())
+print(datetime.datetime.fromtimestamp(get.get_servertime())[3])
 
 def parsepage(table):
     muudatused = []
