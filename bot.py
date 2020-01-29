@@ -52,7 +52,7 @@ keyboard.add_line()  # Переход на вторую строку
 keyboard.add_button('В какой я группе?', color=VkKeyboardColor.POSITIVE)
 keyboard.add_button('Изменить группу', color=VkKeyboardColor.NEGATIVE)
 keyboard.add_line()  # Переход на вторую строку
-keyboard.add_vkapps_button(6471849,190598559,"Поддержать проект",':type hash: str :param payload:')
+keyboard.button("Поддержать проект",color=VkKeyboardColor.DEFAULT)
 
 
 def numdayweek():
@@ -321,5 +321,7 @@ for event in longpoll.listen():
                 else:
                     newmuudatused = getmuudatusedall(event.user_id, event.text)
                 writeyourdate[str(event.user_id)] = 0
+            elif event.text.lower() == "поддержать проект":
+                write_msg(event.peer_id, event.random_id,"https://www.paypal.me/blinchk")
             else:
                 write_msg(event.user_id, event.random_id, f"Данной команды не существует.")
