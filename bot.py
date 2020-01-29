@@ -46,6 +46,8 @@ keyboard.add_button('Изменения по датам', color=VkKeyboardColor.
 keyboard.add_line()
 keyboard.add_button('Изменения по дню недели', color=VkKeyboardColor.DEFAULT)
 keyboard.add_line()  # Переход на вторую строку
+keyboard.add_button('Изменения по группам', color=VkKeyboardColor.DEFAULT)
+keyboard.add_line()  # Переход на вторую строку
 keyboard.add_button('В какой я группе?', color=VkKeyboardColor.POSITIVE)
 keyboard.add_button('Изменить группу', color=VkKeyboardColor.NEGATIVE)
 
@@ -263,15 +265,16 @@ for event in longpoll.listen():
                 send_keyboard(event.peer_id, event.random_id, "Выберите вариант из клаиватуры ниже.")
                 if str(event.user_id) not in usergroup.keys():
                     write_msg(event.user_id, event.random_id, "У вас не указан код группы, укажите его.")
-                    writeyourgroup[event.user_id] = 1
+                    writeyourgroup[str(event.user_id)] = 1
             elif event.text.lower() == "указать группу" or event.text.lower() == "изменить группу":
                 write_msg(event.user_id, event.random_id, "В какой группе вы находитесь?\nУкажите код вашей группы: ")
-                writeyourgroup[event.user_id] = 1
+                writeyourgroup[str(event.user_id)] = 1
+                writesearchgroup[str(event.user_id)] = 0
             elif event.text[-3:].lower() in ['v19', 'v18', 'v17', 'e19', 'e18', 'e17'] and event.user_id in writeyourgroup.keys():
                 group = event.text
                 usergroup[str(event.user_id)] = group
                 write_msg(event.user_id, event.random_id, f"Вы указали, что Ваша группа: {usergroup[str(event.user_id)]}.")
-                writeyourgroup[event.user_id] = 0
+                writeyourgroup[str(event.user_id)] = 0
                 usergroup = updatefile(usergroup)
             elif str(event.user_id) not in writeyourgroup.keys() and event.text[-3:].lower() in ['v19', 'v18', 'v17', 'e19', 'e18', 'e17']:
                 write_msg(event.user_id, event.random_id, f"Данной команды не существует.")
@@ -280,14 +283,14 @@ for event in longpoll.listen():
                 if str(event.user_id) not in usergroup.keys():
                     write_msg(event.user_id, event.random_id, "У вас не указан код группы.")
                     write_msg(event.user_id, event.random_id, "В какой группе вы находитесь?\nУкажите код вашей группы: ")
-                    writeyourgroup[event.user_id] = 1
+                    writeyourgroup[str(event.user_id)] = 1
                 if str(event.user_id) in usergroup.keys():
                     write_msg(event.user_id, event.random_id, f"Вы указали, что Ваша группа: {usergroup[str(event.user_id)]}.\nДля того, чтобы изменить свою группу нажмите \"Изменить группу\".")
             elif event.text.lower() == "изменения моей группы":
                 if str(event.user_id) not in usergroup.keys():
                     write_msg(event.user_id, event.random_id, "У вас не указан код группы.")
                     write_msg(event.user_id, event.random_id, "В какой группе вы находитесь?\nУкажите код вашей группы: ")
-                    writeyourgroup[event.user_id] = 1
+                    writeyourgroup[str(event.user_id)] = 1
                 if str(event.user_id) in usergroup.keys():
                     setgroup = usergroup[str(event.user_id)]
                     lastmuudatused = getmuudatused(setgroup, usergroup, event.user_id)
@@ -297,6 +300,18 @@ for event in longpoll.listen():
             elif event.text.lower() == "изменения по дню недели":
                 send_weekkeyboard(event.peer_id, event.random_id, "Выберите день недели с помощью клавиатуры: E, T, K, N, R, L, P.")
                 writeyourweekday[str(event.user_id)] = 1
+            elif event.text.lower() == "изменения по группам":
+                    writeyourgroup[str(event.user_id)] = 0
+                    writesearchgroup[str(event.user_id)] = 1
+                    lastmuudatused = getmuudatused(setgroup, usergroup, event.user_id)
+            elif event.text[-3:].lower() in ['v19', 'v18', 'v17', 'e19', 'e18', 'e17'] and event.user_id in writesearchgroup.keys():
+                if writesearchgroup[str(event.user_id)] == 1:
+                    setgroup = event.text
+                    lastmuudatused = getmuudatused(setgroup, usergroup, event.user_id)
+                    writesearchgroup[str(event.user_id)] = 0
+                else:
+                    write_msg(event.user_id, event.random_id, f"Укажите группу, для которой нужно найти изменения.")
+                    writesearchgroup[str(event.user_id)] = 1
             elif event.text.upper() in ['E', 'T', 'K', 'N', 'R', 'L', 'P'] and writeyourweekday[str(event.user_id)] == 1:
                 getmuudatusedweekly(event.user_id, event.text)
                 writeyourweekday[str(event.user_id)] = 0
