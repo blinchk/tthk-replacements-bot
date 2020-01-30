@@ -154,9 +154,9 @@ def updatefile(us):
     with connection.cursor() as cursor:
         for i in usergroup.keys():
             if i in otheruser:
-                cursor.execute(f'UPDATE users SET thkruhm=\'{usergroup[i]}\' WHERE (\'vkid\'=\'{i}\');')
+                cursor.execute(f'UPDATE `heroku_0ccfbccd1823b55`.`users` SET `thkruhm`=\'{usergroup[i]}\' WHERE (`vkid`=\'{i}\');')
             else:
-                cursor.execute(f'INSERT INTO users(vkid, thkruhm) VALUES (\'{i}\', \'{usergroup[i]}\');')
+                cursor.execute(f'INSERT INTO `heroku_0ccfbccd1823b55`.`users`(`vkid`, `thkruhm`) VALUES (\'{i}\', \'{usergroup[i]}\');')
         cursor.fetchall()
         cursor.close()
     connection.close()
