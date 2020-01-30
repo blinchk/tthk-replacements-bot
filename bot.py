@@ -9,6 +9,8 @@ import json
 import os
 import time
 import re
+import pymysql
+from pymysql.cursors import DictCursor
 output_rows = []
 writeyourgroup = {}
 writeyourdate = {}
@@ -16,10 +18,15 @@ writeyourweekday = {}
 writesearchgroup = {}
 usergroup = {}
 
-
+mysql_l = os.environ['MYSQL_LOGIN']
+mysql_p = os.environ["MYSQL_PASS"]
 access_token = os.environ["ACCESS_TOKEN"]
 vk = vkapi.VkApi(token=access_token)
-
+connection = pymysql.connect(
+    host='eu-cdbr-west-02.cleardb.net',
+    user=mysql_l,
+    password=mysql_p,
+    db='heroku_0ccfbccd1823b55')
 KeyboardNumDays = {0: 'E',
                 1: 'T',
                 2: 'K',
@@ -136,16 +143,26 @@ r = requests.get('http://www.tthk.ee/tunniplaani-muudatused/')
 html_content = r.text
 soup = BeautifulSoup(html_content, 'html.parser')
 table = soup.findChildren('table')
-def updatefile(f,e):
-    file = open(f, 'w', encoding='utf-8')
-    file.write(json.dumps(e))
-    file.close()
-    return e
-def openfromfile(f,e):
-    file = open(f, 'r', encoding='utf-8')
-    e = eval(file.read())
-    file.close()
-    return e
+def updatefile():
+    global connection
+    with connection.cursor() as cursor:
+    for i in usergroup.keys():
+        print(i)
+        if usergroup.keys() in oldusergroup.keys():
+            cursor.execute(f'UPDATE users SET thkruhm=\'{usergroup[i]}\' WHERE vkid=\'{i}\';')
+        else:
+            cursor.execute(f'INSERT INTO users(vkid, thkruhm) VALUES (\'{i}\', \'{usergroup[i]}\');')
+    connection.close()
+    return usergroup
+def openfromfile():
+    global connection
+    with connection.cursor() as cursor:
+    cursor.execute('''select * from users''')
+    cursor = cursor.fetchall()
+    for i in cursor:
+        usergroup[i[0]] = i[1]
+    connection.close()
+    return usergroup
 def write_msg(user_id, random_id, message):
     vk.method('messages.send', {'user_id': user_id, 'random_id': random_id, 'message': message})
 def send_keyboard(peer_id, random_id, message):
@@ -158,7 +175,7 @@ def get_servertime():
     return vk.method('utils.getServerTime')
 # Ничего особенного.
 
-usergroup = openfromfile('ids.txt',usergroup)
+usergroup = openfromfile()
 print(usergroup.keys())
 print(time.strftime("%D %H:%M", time.localtime()))
 
@@ -267,7 +284,8 @@ for event in longpoll.listen():
         if event.to_me:
             uid = str(event.user_id)
             if event.text.lower() == "начать" or event.text.lower() == 'start':
-                usergroup = openfromfile('ids.txt',usergroup)
+                usergroup = openfromfile()
+                oldusergroup = usergroup.copy()
                 send_keyboard(event.peer_id, event.random_id, "Выберите вариант из клаиватуры ниже.")
                 if uid not in usergroup.keys():
                     write_msg(event.user_id, event.random_id, "У вас не указан код группы, укажите его.")
@@ -281,7 +299,7 @@ for event in longpoll.listen():
                 usergroup[uid] = group
                 write_msg(event.user_id, event.random_id, f"Вы указали, что Ваша группа: {usergroup[uid]}.")
                 writeyourgroup[uid] = 0
-                usergroup = updatefile('ids.txt',usergroup)
+                usergroup = updatefile()
             elif event.text.lower() == "изменения по группам":
                 write_msg(event.user_id, event.random_id, f"Введите код группы, для которой нужно найти изменения: ")
                 writeyourgroup[uid] = 0
