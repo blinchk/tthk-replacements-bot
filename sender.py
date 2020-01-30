@@ -1,4 +1,5 @@
 from bs4 import BeautifulSoup
+import vk_api
 import time
 import requests
 import pymysql
@@ -100,7 +101,7 @@ def sendeveryday():
 
 
 while True:
-    if time.strftime("%H:%M:%S", time.localtime()) == '23:30:00':
+    if time.strftime("%H:%M:%S", time.localtime()) == '23:33:00':
         sendeveryday()
     time.sleep(1.1)
     continue
