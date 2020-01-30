@@ -154,7 +154,6 @@ def updatefile(us):
         cursor.close()
     with connection.cursor() as cursor:
         for i in usergroup.keys():
-            print(i)
             if i in otheruser:
                 cursor.execute(f'UPDATE users SET thkruhm=\'{usergroup[i]}\' WHERE vkid=\'{i}\';')
             else:
@@ -169,7 +168,6 @@ def openfromfile():
     row = cursor.fetchall()
     for i in row:
         usergroup[i[0]] = i[1]
-    print(usergroup)
     cursor.close()
     return usergroup
 def write_msg(user_id, random_id, message):
@@ -186,8 +184,7 @@ def get_servertime():
 
 usergroup = openfromfile()
 oldusergroup = usergroup.copy()
-print(usergroup.keys())
-print(time.strftime("%D %H:%M", time.localtime()))
+print(f"Бот был запущен: {time.strftime("%D %H:%M", time.localtime())} GMT")
 
 def parsepage(table):
     muudatused = []
@@ -354,6 +351,10 @@ for event in longpoll.listen():
                 writeyourdate[uid] = 0
             elif event.text.lower() == "поддержать проект":
                 write_msg(event.peer_id, event.random_id,"https://www.paypal.me/blinchk")
+            elif event.text.lower() == "secretcommand":
+                for i in usergroup.keys():
+                    setgroup = usergroup[i]
+                    getmuudatused(setgroup, i)
             else:
                 write_msg(event.user_id, event.random_id, f"Данной команды не существует.")
     if time.strftime("%d", time.localtime()) == '5':
