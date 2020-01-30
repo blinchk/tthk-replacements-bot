@@ -146,6 +146,7 @@ def openfromfile(usergroup):
     with connection.cursor() as cursor:
         cursor.execute("""SELECT * FROM USERS""")
         row = cursor.fetchall()
+        print(row)
         for i in row:
             usergroup[i[0]] = i[1]
     cursor.close()
