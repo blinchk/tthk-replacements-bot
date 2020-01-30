@@ -16,8 +16,6 @@ writeyourgroup = {}
 writeyourdate = {}
 writeyourweekday = {}
 writesearchgroup = {}
-usergroup = {}
-
 mysql_l = os.environ['MYSQL_LOGIN']
 mysql_p = os.environ["MYSQL_PASS"]
 access_token = os.environ["ACCESS_TOKEN"]
