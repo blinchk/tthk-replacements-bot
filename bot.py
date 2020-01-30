@@ -153,6 +153,28 @@ def openfromfile(usergroup):
     cursor.close()
     connection.close()
     return usergroup
+def updatefile(usergroup):
+    connection = pymysql.connect(
+        host='eu-cdbr-west-02.cleardb.net',
+        user=mysql_l,
+        password=mysql_p,
+        db='heroku_0ccfbccd1823b55',
+        cursorclass=DictCursor)
+    with connection.cursor() as cursor:
+        cursor.execute("""SELECT vkid FROM users""")
+        row = cursor.fetchall()
+        for i in row:
+            otheruser.append(i['vkid'])
+        for i in usergroup.keys():
+            if i in otheruser:
+                cursor.execute("""UPDATE `heroku_0ccfbccd1823b55`.`users` SET `thkruhm`='%s' WHERE (`vkid`='%s');""" % (usergroup[i], i))
+#                            print(f'UPDATE `heroku_0ccfbccd1823b55`.`users` SET `thkruhm`=\'{usergroup[i]}\' WHERE (`vkid`=\'{i}\');')
+            else:
+                cursor.execute("""INSERT INTO `heroku_0ccfbccd1823b55`.`users`(`vkid`, `thkruhm`) VALUES ('%s', '%s');""" % (i, usergroup[i]))
+        cursor.close()
+    connection.commit()
+    connection.close()
+    return usergroup
 def write_msg(user_id, random_id, message):
     vk.method('messages.send', {'user_id': user_id, 'random_id': random_id, 'message': message})
 def send_keyboard(peer_id, random_id, message):
@@ -288,27 +310,8 @@ for event in longpoll.listen():
                 otheruser = []
                 group = event.text
                 usergroup[str(event.user_id)] = group
-                connection = pymysql.connect(
-                    host='eu-cdbr-west-02.cleardb.net',
-                    user=mysql_l,
-                    password=mysql_p,
-                    db='heroku_0ccfbccd1823b55',
-                    cursorclass=DictCursor)
-                with connection.cursor() as cursor:
-                    cursor.execute("""SELECT vkid FROM users""")
-                    row = cursor.fetchall()
-                    for i in row:
-                        otheruser.append(i['vkid'])
-                    for i in usergroup.keys():
-                        if i in otheruser:
-                            cursor.execute("""UPDATE `heroku_0ccfbccd1823b55`.`users` SET `thkruhm`='%s' WHERE (`vkid`='%s');""" % (usergroup[i], i))
-#                            print(f'UPDATE `heroku_0ccfbccd1823b55`.`users` SET `thkruhm`=\'{usergroup[i]}\' WHERE (`vkid`=\'{i}\');')
-                        else:
-                            cursor.execute("""INSERT INTO `heroku_0ccfbccd1823b55`.`users`(`vkid`, `thkruhm`) VALUES ('%s', '%s');""" % (i, usergroup[i]))
-                    cursor.close()
-                connection.commit()
-                connection.close()
-                openfromfile(usergroup)
+                usergroup = updatefile(usergroup)
+                usergroup = openfromfile(usergroup)
                 write_msg(event.user_id, event.random_id, f"Вы указали, что Ваша группа: {usergroup[uid]}.")
                 writeyourgroup[uid] = 0
             elif event.text.lower() == "изменения по группам":
@@ -357,3 +360,8 @@ for event in longpoll.listen():
                 write_msg(event.peer_id, event.random_id,"https://www.paypal.me/blinchk")
             else:
                 write_msg(event.user_id, event.random_id, f"Данной команды не существует.")
+    if time.strftime("%H:%M:%S", time.localtime()) == '7:00:01':
+        usergroup = openfromfile(usergroup)
+        for i in usergroup.keys():
+            getmuudatused(usergroup[i], i)
+        time.sleep(1.1)
