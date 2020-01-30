@@ -145,12 +145,12 @@ def updatefile(us):
         user=mysql_l,
         password=mysql_p,
         db='heroku_0ccfbccd1823b55')
-    with connection.cursor() as cursor:
-        cursor.execute('SELECT vkid FROM users')
-        row = cursor.fetchall()
+    with connection.cursor() as some:
+        some.execute('SELECT vkid FROM users')
+        row = some.fetchall()
         for i in row:
             otheruser.append(i[0])
-        cursor.close()
+        some.close()
     with connection.cursor() as cursor:
         for i in usergroup.keys():
             if i in otheruser:
