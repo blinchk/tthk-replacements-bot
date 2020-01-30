@@ -157,8 +157,8 @@ def updatefile():
 def openfromfile():
     global connection
     with connection.cursor() as cursor:
-    cursor.execute('''select * from users''')
-    cursor = cursor.fetchall()
+        cursor.execute('''select * from users''')
+        cursor = cursor.fetchall()
     for i in cursor:
         usergroup[i[0]] = i[1]
     connection.close()
