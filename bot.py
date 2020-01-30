@@ -192,7 +192,6 @@ def get_servertime():
     return vk.method('utils.getServerTime')
 # Ничего особенного.
 
-usergroup = openfromfile()
 print("Время запуска бота:")
 print(time.strftime("%D %H:%M", time.localtime()))
 
@@ -299,9 +298,9 @@ longpoll = VkLongPoll(vk)
 for event in longpoll.listen():
     if event.type == VkEventType.MESSAGE_NEW:
         if event.to_me:
+            usergroup = openfromfile()
             uid = str(event.user_id)
             if event.text.lower() == "начать" or event.text.lower() == 'start':
-                usergroup = openfromfile()
                 send_keyboard(event.peer_id, event.random_id, "Выберите вариант из клаиватуры ниже.")
                 if uid not in usergroup.keys():
                     write_msg(event.user_id, event.random_id, "У вас не указан код группы, укажите его.")
@@ -311,7 +310,6 @@ for event in longpoll.listen():
                 writeyourgroup[uid] = 1
                 writesearchgroup[uid] = 0
             elif event.text[-3:].lower() in ['v19', 'v18', 'v17', 'e19', 'e18', 'e17'] and uid in writeyourgroup.keys() and writeyourgroup[uid] == 1:
-                usergroup = openfromfile()
                 group = event.text
                 usergroup[uid] = group
                 write_msg(event.user_id, event.random_id, f"Вы указали, что Ваша группа: {usergroup[uid]}.")
@@ -335,7 +333,6 @@ for event in longpoll.listen():
                 if uid in usergroup.keys():
                     write_msg(event.user_id, event.random_id, f"Вы указали, что Ваша группа: {usergroup[uid]}.\nДля того, чтобы изменить свою группу нажмите \"Изменить группу\".")
             elif event.text.lower() == "изменения моей группы":
-                usergroup = openfromfile()
                 if uid not in usergroup.keys():
                     write_msg(event.user_id, event.random_id, "У вас не указан код группы.")
                     write_msg(event.user_id, event.random_id, "В какой группе вы находитесь?\nУкажите код вашей группы: ")
