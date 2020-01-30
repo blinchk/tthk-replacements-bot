@@ -1,11 +1,21 @@
 
 import time
+import requests
+import pyMySQL
+import os
 print("Sender launched")
+
+mysql_l = os.environ['MYSQL_LOGIN']
+mysql_p = os.environ["MYSQL_PASS"]
+access_token = os.environ["ACCESS_TOKEN"]
 
 r = requests.get('http://www.tthk.ee/tunniplaani-muudatused/')
 html_content = r.text
 soup = BeautifulSoup(html_content, 'html.parser')
 table = soup.findChildren('table')
+
+def write_msg(user_id, random_id, message):
+    vk.method('messages.send', {'user_id': user_id, 'random_id': random_id, 'message': message})
 
 def parsepage(table):
     muudatused = []
