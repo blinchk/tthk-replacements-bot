@@ -3,6 +3,7 @@ import time
 import requests
 import pymysql
 import os
+from pymysql.cursors import DictCursor
 print("Sender launched")
 
 mysql_l = os.environ['MYSQL_LOGIN']
