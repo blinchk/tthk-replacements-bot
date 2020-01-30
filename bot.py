@@ -302,7 +302,7 @@ for event in longpoll.listen():
                     writeyourgroup[uid] = 1
             elif event.text.lower() == "указать группу" or event.text.lower() == "изменить группу":
                 usergroup = openfromfile(usergroup)
-                write_msg(event.user_id, event.random_id, "В какой группе вы находитесь?Для групп, которые делятся на подгруппы указывается только группа: MEHpv19-2 вместо MEHpv19\nУкажите код вашей группы: ")
+                write_msg(event.user_id, event.random_id, "В какой группе вы находитесь?Для групп, которые делятся на подгруппы указывается только группа: MEHpv19 вместо MEHpv19-2\nУкажите код вашей группы: ")
                 writeyourgroup[uid] = 1
                 writesearchgroup[uid] = 0
             elif event.text[-3:].lower() in ['v19', 'v18', 'v17', 'e19', 'e18', 'e17'] and uid in writeyourgroup.keys() and writeyourgroup[uid] == 1:
