@@ -299,7 +299,7 @@ for event in longpoll.listen():
                 usergroup = openfromfile(usergroup)
                 for i in usergroup.keys():
                     getmuudatused(usergroup[i], i)
-                time.sleep(1.1)
+                    time.sleep(1.1)
             elif event.text.lower() == "начать" or event.text.lower() == 'start':
                 usergroup = openfromfile(usergroup)
                 send_keyboard(event.peer_id, event.random_id, "Выберите вариант из клаиватуры ниже.")
