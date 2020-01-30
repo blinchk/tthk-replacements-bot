@@ -295,12 +295,7 @@ for event in longpoll.listen():
     if event.type == VkEventType.MESSAGE_NEW:
         if event.to_me:
             uid = str(event.user_id)
-            if time.strftime("%H:%M:%S", time.localtime()) == '21:40:00':
-                usergroup = openfromfile(usergroup)
-                for i in usergroup.keys():
-                    getmuudatused(usergroup[i], i)
-                    time.sleep(1.1)
-            elif event.text.lower() == "начать" or event.text.lower() == 'start':
+            if event.text.lower() == "начать" or event.text.lower() == 'start':
                 usergroup = openfromfile(usergroup)
                 send_keyboard(event.peer_id, event.random_id, "Выберите вариант из клаиватуры ниже.")
                 if uid not in usergroup.keys():
