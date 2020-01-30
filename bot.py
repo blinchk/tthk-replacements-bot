@@ -147,8 +147,8 @@ def openfromfile(usergroup):
         cursor.execute("""SELECT * FROM USERS""")
         row = cursor.fetchall()
         print(row)
-        for i in row.keys():
-            usergroup[i] = row[i]
+        for i in row:
+            usergroup[i[vkid]] = i[thkruhm]
     cursor.close()
     connection.close()
     return usergroup
