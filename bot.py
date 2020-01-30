@@ -150,7 +150,6 @@ def updatefile():
         row = cursor.fetchall()
         for i in row:
             otheruser.append(i[0])
-        cursor.close()
         for i in usergroup.keys():
             if i in otheruser:
                 g = usergroup[i]
@@ -158,8 +157,7 @@ def updatefile():
                 print(f'UPDATE `heroku_0ccfbccd1823b55`.`users` SET `thkruhm`=\'{g}\' WHERE (`vkid`=\'{i}\');')
             else:
                 g = usergroup[i]
-                cursor.execute(f'INSERT INTO `heroku_0ccfbccd1823b55`.`users`(`vkid`, `thkruhm`) VALUES (\'{i}\', \'{usergroup[i]}\');')
-        cursor.close()
+                cursor.execute(f'INSERT INTO `heroku_0ccfbccd1823b55`.`users`(`vkid`, `thkruhm`) VALUES (\'{i}\', \'{g}\');')
         cursor.execute('SELECT * FROM USERS')
         row = cursor.fetchall()
         for i in row:
