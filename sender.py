@@ -1,7 +1,7 @@
 
 import time
 import requests
-import pyMySQL
+import pymysql
 import os
 print("Sender launched")
 
@@ -97,7 +97,7 @@ def sendeveryday():
 
 
 while True:
-    if time.strftime("%H:%M:%S", time.localtime()) == '23:15:00':
+    if time.strftime("%H:%M:%S", time.localtime()) == '23:20:00':
         sendeveryday()
     time.sleep(1.1)
     continue
