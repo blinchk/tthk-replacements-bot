@@ -152,31 +152,6 @@ def openfromfile(usergroup):
     cursor.close()
     connection.close()
     return usergroup
-def updatefile(usergroup):
-    otheruser = []
-    connection = pymysql.connect(
-        host='eu-cdbr-west-02.cleardb.net',
-        user=mysql_l,
-        password=mysql_p,
-        db='heroku_0ccfbccd1823b55')
-    with connection.cursor() as cursor:
-        cursor.execute("""SELECT vkid FROM users""")
-        row = cursor.fetchall()
-        for i in row:
-            otheruser.append(i[0])
-        for i in usergroup.keys():
-            if i in otheruser:
-                cursor.execute("""UPDATE `heroku_0ccfbccd1823b55`.`users` SET `thkruhm`='%s' WHERE (`vkid`='%s');""" % (usergroup[i], i))
-                print(f'UPDATE `heroku_0ccfbccd1823b55`.`users` SET `thkruhm`=\'{usergroup[i]}\' WHERE (`vkid`=\'{i}\');')
-            else:
-                cursor.execute("""INSERT INTO `heroku_0ccfbccd1823b55`.`users`(`vkid`, `thkruhm`) VALUES ('%s', '%s);""" % (i, usergroup[i]))
-        cursor.execute("""SELECT * FROM USERS""")
-        row = cursor.fetchall()
-        for i in row:
-            usergroup[i[0]] = i[1]
-        cursor.close()
-    connection.close()
-    return usergroup
 def write_msg(user_id, random_id, message):
     vk.method('messages.send', {'user_id': user_id, 'random_id': random_id, 'message': message})
 def send_keyboard(peer_id, random_id, message):
@@ -310,7 +285,22 @@ for event in longpoll.listen():
             elif event.text[-3:].lower() in ['v19', 'v18', 'v17', 'e19', 'e18', 'e17'] and uid in writeyourgroup.keys() and writeyourgroup[uid] == 1:
                 group = event.text
                 usergroup[str(event.user_id)] = group
-                usergroup = updatefile(usergroup)
+                cursor.execute("""SELECT vkid FROM users""")
+                row = cursor.fetchall()
+                for i in row:
+                    otheruser.append(i[0])
+                for i in usergroup.keys():
+                    if i in otheruser:
+                        cursor.execute("""UPDATE `heroku_0ccfbccd1823b55`.`users` SET `thkruhm`='%s' WHERE (`vkid`='%s');""" % (usergroup[i], i))
+                        print(f'UPDATE `heroku_0ccfbccd1823b55`.`users` SET `thkruhm`=\'{usergroup[i]}\' WHERE (`vkid`=\'{i}\');')
+                    else:
+                        cursor.execute("""INSERT INTO `heroku_0ccfbccd1823b55`.`users`(`vkid`, `thkruhm`) VALUES ('%s', '%s);""" % (i, usergroup[i]))
+                cursor.execute("""SELECT * FROM USERS""")
+                row = cursor.fetchall()
+                for i in row:
+                    usergroup[i[0]] = i[1]
+                cursor.close()
+            connection.close()
                 usergroup = openfromfile(usergroup)
                 write_msg(event.user_id, event.random_id, f"Вы указали, что Ваша группа: {usergroup[uid]}.")
                 writeyourgroup[uid] = 0
