@@ -358,5 +358,4 @@ for event in longpoll.listen():
             elif event.text.lower() == "поддержать проект":
                 write_msg(event.peer_id, event.random_id,"https://www.paypal.me/blinchk")
             else:
-                write_msg(event.user_id, event.random_id, f"Данной команды не существует.")
-continue
+                write_msg(event.user_id, event.random_id, f"Данной команды не существует")
