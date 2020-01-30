@@ -304,14 +304,9 @@ for event in longpoll.listen():
                         else:
                             cursor.execute("""INSERT INTO `heroku_0ccfbccd1823b55`.`users`(`vkid`, `thkruhm`) VALUES ('%s', '%s');""" % (i, usergroup[i]))
                     cursor.close()
-                with connection.cursor() as cursor:
-                    cursor.execute("""SELECT * FROM `users`""")
-                    row = cursor.fetchall()
-                    for i in row:
-                        usergroup[i[0]] = i[1]
-                    cursor.close()
                 connection.commit()
                 connection.close()
+                openfromfile(usergroup)
                 write_msg(event.user_id, event.random_id, f"Вы указали, что Ваша группа: {usergroup[uid]}.")
                 writeyourgroup[uid] = 0
             elif event.text.lower() == "изменения по группам":
