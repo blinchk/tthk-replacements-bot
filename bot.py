@@ -166,10 +166,10 @@ def updatefile(usergroup):
             otheruser.append(i[0])
         for i in usergroup.keys():
             if i in otheruser:
-                cursor.execute("""UPDATE `heroku_0ccfbccd1823b55`.`users` SET `thkruhm`='{%s}' WHERE (`vkid`='{%s}');""" % (usergroup[i], i))
+                cursor.execute("""UPDATE `heroku_0ccfbccd1823b55`.`users` SET `thkruhm`='%s' WHERE (`vkid`='%s');""" % (usergroup[i], i))
                 print(f'UPDATE `heroku_0ccfbccd1823b55`.`users` SET `thkruhm`=\'{usergroup[i]}\' WHERE (`vkid`=\'{i}\');')
             else:
-                cursor.execute("""INSERT INTO `heroku_0ccfbccd1823b55`.`users`(`vkid`, `thkruhm`) VALUES ('{%s}', '{%s});""" % (i, usergroup[i]))
+                cursor.execute("""INSERT INTO `heroku_0ccfbccd1823b55`.`users`(`vkid`, `thkruhm`) VALUES ('%s', '%s);""" % (i, usergroup[i]))
         cursor.execute("""SELECT * FROM USERS""")
         row = cursor.fetchall()
         for i in row:
@@ -308,11 +308,10 @@ for event in longpoll.listen():
                 writesearchgroup[uid] = 0
             elif event.text[-3:].lower() in ['v19', 'v18', 'v17', 'e19', 'e18', 'e17'] and uid in writeyourgroup.keys() and writeyourgroup[uid] == 1:
                 group = event.text
-                usergroup[id] = group
-                write_msg(event.user_id, event.random_id, f"Вы указали, что Ваша группа: {usergroup[uid]}.")
-                writeyourgroup[uid] = 0
                 usergroup[str(event.user_id)] = group
                 usergroup = updatefile(usergroup)
+                write_msg(event.user_id, event.random_id, f"Вы указали, что Ваша группа: {usergroup[uid]}.")
+                writeyourgroup[uid] = 0
             elif event.text.lower() == "изменения по группам":
                 write_msg(event.user_id, event.random_id, f"Введите код группы, для которой нужно найти изменения: ")
                 writeyourgroup[uid] = 0
@@ -357,4 +356,3 @@ for event in longpoll.listen():
                 write_msg(event.peer_id, event.random_id,"https://www.paypal.me/blinchk")
             else:
                 write_msg(event.user_id, event.random_id, f"Данной команды не существует.")
-            usergroup = updatefile(usergroup)
