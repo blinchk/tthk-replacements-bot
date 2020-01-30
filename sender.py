@@ -3,6 +3,7 @@ import time
 import requests
 import pymysql
 import os
+import random
 from pymysql.cursors import DictCursor
 print("Sender launched")
 
@@ -84,9 +85,9 @@ def getmuudatused(setgroup, user):
         kogutunniplaan = f"Для группы 🦆 {setgroup} на данный момент следующие изменения в расписании:\n"
         for w in forshow:
             kogutunniplaan += f"{w}\n"
-        write_msg(user, event.random_id, kogutunniplaan)
+        write_msg(user, (random.getrandbits(31) * random.choice([-1, 1])), kogutunniplaan)
     elif len(forshow) == 0:
-        write_msg(user, event.random_id, "Для группы, которую вы указали изменений в расписании нет.")
+        write_msg(user, (random.getrandbits(31) * random.choice([-1, 1])), "Для группы, которую вы указали изменений в расписании нет.")
 
 def sendeveryday():
     usergroup = {}
@@ -98,7 +99,7 @@ def sendeveryday():
 
 
 while True:
-    if time.strftime("%H:%M:%S", time.localtime()) == '23:25:00':
+    if time.strftime("%H:%M:%S", time.localtime()) == '23:30:00':
         sendeveryday()
     time.sleep(1.1)
     continue
