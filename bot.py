@@ -338,8 +338,7 @@ for event in longpoll.listen():
                     write_msg(event.user_id, event.random_id, "В какой группе вы находитесь?\nУкажите код вашей группы: ")
                     writeyourgroup[uid] = 1
                 if uid in usergroup.keys():
-                    setgroup = usergroup[uid]
-                    lastmuudatused = getmuudatused(setgroup, event.user_id)
+                    lastmuudatused = getmuudatused(usergroup[uid], event.user_id)
             elif event.text.lower() == "изменения по датам":
                 send_datekeyboard(event.peer_id, event.random_id, f"Выберите дату, которую желаете найти или укажите в формате ДД.ММ.ГГГГ:")
                 writeyourdate[uid] = 1
