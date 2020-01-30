@@ -141,7 +141,8 @@ def openfromfile(usergroup):
         host='eu-cdbr-west-02.cleardb.net',
         user=mysql_l,
         password=mysql_p,
-        db='heroku_0ccfbccd1823b55')
+        db='heroku_0ccfbccd1823b55',
+        cursorclass=DictCursor)
     with connection.cursor() as cursor:
         cursor.execute("""SELECT * FROM USERS""")
         row = cursor.fetchall()
@@ -289,7 +290,8 @@ for event in longpoll.listen():
                     host='eu-cdbr-west-02.cleardb.net',
                     user=mysql_l,
                     password=mysql_p,
-                    db='heroku_0ccfbccd1823b55')
+                    db='heroku_0ccfbccd1823b55',
+                    cursorclass=DictCursor)
                 with connection.cursor() as cursor:
                     cursor.execute("""SELECT vkid FROM users""")
                     row = cursor.fetchall()
@@ -308,6 +310,7 @@ for event in longpoll.listen():
                     for i in row:
                         usergroup[i[0]] = i[1]
                     cursor.close()
+                connection.commit()
                 connection.close()
                 write_msg(event.user_id, event.random_id, f"Вы указали, что Ваша группа: {usergroup[uid]}.")
                 writeyourgroup[uid] = 0
