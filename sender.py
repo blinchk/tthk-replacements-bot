@@ -97,7 +97,7 @@ def sendeveryday():
 
 
 while True:
-    if time.strftime("%H:%M:%S", time.localtime()) == '23:12:00':
+    if time.strftime("%H:%M:%S", time.localtime()) == '23:15:00':
         sendeveryday()
     time.sleep(1.1)
     continue
