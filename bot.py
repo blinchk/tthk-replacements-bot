@@ -2,6 +2,7 @@ import vk_api as vkapi
 import requests
 import calendar
 import datetime
+import schedule
 from bs4 import BeautifulSoup
 from vk_api.longpoll import VkLongPoll, VkEventType
 from vk_api.keyboard import VkKeyboard, VkKeyboardColor, VkKeyboardButton
@@ -288,9 +289,21 @@ def getmuudatusedweekly(user, weekday):
     elif len(forshow) == 0:
         write_msg(user, event.random_id,f"В данный момент изменений в расписании нет на день недели, который вы ввели.")
 
+def sendeveryday():
+    usergroup = openfromfile(usergroup)
+    print("Запускаю рассылку:")
+    print(time.strftime("%H:%M:%S"))
+    for i in usergroup.keys():
+        getmuudatused(usergroup[i], i)
+        time.sleep(1.1)
+
+schedule.every.day.at("21:08:00").do(sendeveryday)
+
 longpoll = VkLongPoll(vk)
 for event in longpoll.listen():
     usergroup = {}
+    print(work)
+    schedule.run.pending()
     if event.type == VkEventType.MESSAGE_NEW:
         if event.to_me:
             uid = str(event.user_id)
