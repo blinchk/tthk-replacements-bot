@@ -297,12 +297,12 @@ def sendeveryday():
         getmuudatused(usergroup[i], i)
         time.sleep(1.1)
 
-schedule.every.day.at("21:08:00").do(sendeveryday)
+schedule.every.day.at("21:09:00").do(sendeveryday)
 
 longpoll = VkLongPoll(vk)
 for event in longpoll.listen():
     usergroup = {}
-    print(work)
+    print("I'm working.")
     schedule.run.pending()
     if event.type == VkEventType.MESSAGE_NEW:
         if event.to_me:
