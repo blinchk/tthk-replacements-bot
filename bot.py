@@ -157,7 +157,12 @@ def updatefile(us):
                 cursor.execute(f'UPDATE `heroku_0ccfbccd1823b55`.`users` SET `thkruhm`=\'{usergroup[i]}\' WHERE (`vkid`=\'{i}\');')
             else:
                 cursor.execute(f'INSERT INTO `heroku_0ccfbccd1823b55`.`users`(`vkid`, `thkruhm`) VALUES (\'{i}\', \'{usergroup[i]}\');')
-        cursor.fetchall()
+        cursor.close()
+    with connection.cursor() as cursor:
+        cursor.execute('SELECT * FROM USERS')
+        row = cursor.fetchall()
+        for i in row:
+            usergroup[i[0]] = i[1]
         cursor.close()
     connection.close()
     return usergroup
@@ -169,9 +174,9 @@ def openfromfile():
         db='heroku_0ccfbccd1823b55')
     with connection.cursor() as cursor:
         cursor.execute('SELECT * FROM USERS')
-    row = cursor.fetchall()
-    for i in row:
-        usergroup[i[0]] = i[1]
+        row = cursor.fetchall()
+        for i in row:
+            usergroup[i[0]] = i[1]
     cursor.close()
     connection.close()
     return usergroup
