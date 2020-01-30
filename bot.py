@@ -284,6 +284,11 @@ for event in longpoll.listen():
             elif event.text[-3:].lower() in ['v19', 'v18', 'v17', 'e19', 'e18', 'e17'] and uid in writeyourgroup.keys() and writeyourgroup[uid] == 1:
                 group = event.text
                 usergroup[str(event.user_id)] = group
+                connection = pymysql.connect(
+                    host='eu-cdbr-west-02.cleardb.net',
+                    user=mysql_l,
+                    password=mysql_p,
+                    db='heroku_0ccfbccd1823b55')
                 with connection.cursor() as cursor:
                     cursor.execute("""SELECT vkid FROM users""")
                     row = cursor.fetchall()
