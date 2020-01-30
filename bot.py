@@ -351,14 +351,5 @@ for event in longpoll.listen():
                 writeyourdate[uid] = 0
             elif event.text.lower() == "поддержать проект":
                 write_msg(event.peer_id, event.random_id,"https://www.paypal.me/blinchk")
-            elif event.text.lower() == "secretcommand":
-                for i in usergroup.keys():
-                    setgroup = usergroup[i]
-                    getmuudatused(setgroup, i)
             else:
                 write_msg(event.user_id, event.random_id, f"Данной команды не существует.")
-    if time.strftime("%d", time.localtime()) == '5':
-        print(time.strftime("%D %H:%M", time.localtime()))
-        for i in usergroup.keys():
-            setgroup = usergroup[i]
-            getmuudatused(setgroup, i)
