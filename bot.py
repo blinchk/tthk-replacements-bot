@@ -291,6 +291,11 @@ def getmuudatusedweekly(user, weekday):
 
 longpoll = VkLongPoll(vk)
 for event in longpoll.listen():
+    if time.strftime("%H:%M:%S", time.localtime()) == '21:45:00':
+        usergroup = openfromfile(usergroup)
+        for i in usergroup.keys():
+            getmuudatused(usergroup[i], i)
+            time.sleep(1.1)
     usergroup = {}
     if event.type == VkEventType.MESSAGE_NEW:
         if event.to_me:
