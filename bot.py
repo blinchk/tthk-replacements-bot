@@ -309,7 +309,6 @@ for event in longpoll.listen():
                         usergroup[i[0]] = i[1]
                     cursor.close()
                 connection.close()
-                usergroup = openfromfile(usergroup)
                 write_msg(event.user_id, event.random_id, f"Вы указали, что Ваша группа: {usergroup[uid]}.")
                 writeyourgroup[uid] = 0
             elif event.text.lower() == "изменения по группам":
