@@ -295,14 +295,15 @@ longpoll = VkLongPoll(vk)
 for event in longpoll.listen():
     if event.type == VkEventType.MESSAGE_NEW:
         if event.to_me:
-            usergroup = openfromfile(usergroup)
             uid = str(event.user_id)
             if event.text.lower() == "начать" or event.text.lower() == 'start':
+                usergroup = openfromfile(usergroup)
                 send_keyboard(event.peer_id, event.random_id, "Выберите вариант из клаиватуры ниже.")
                 if uid not in usergroup.keys():
                     write_msg(event.user_id, event.random_id, "У вас не указан код группы, укажите его.")
                     writeyourgroup[uid] = 1
             elif event.text.lower() == "указать группу" or event.text.lower() == "изменить группу":
+                usergroup = openfromfile(usergroup)
                 write_msg(event.user_id, event.random_id, "В какой группе вы находитесь?\nУкажите код вашей группы: ")
                 writeyourgroup[uid] = 1
                 writesearchgroup[uid] = 0
@@ -310,6 +311,7 @@ for event in longpoll.listen():
                 group = event.text
                 usergroup[str(event.user_id)] = group
                 usergroup = updatefile(usergroup)
+                usergroup = openfromfile(usergroup)
                 write_msg(event.user_id, event.random_id, f"Вы указали, что Ваша группа: {usergroup[uid]}.")
                 writeyourgroup[uid] = 0
             elif event.text.lower() == "изменения по группам":
@@ -323,6 +325,7 @@ for event in longpoll.listen():
             elif event.text[-3:].lower() in ['v19', 'v18', 'v17', 'e19', 'e18', 'e17'] and uid in writeyourgroup.keys() and writeyourgroup[uid] == 0:
                 write_msg(event.user_id, event.random_id, f"Для того, чтобы указать группу предварительно нажмите Изменить группу.")
             elif event.text.lower() == "в какой я группе?":
+                usergroup = openfromfile(usergroup)
                 if uid not in usergroup.keys():
                     write_msg(event.user_id, event.random_id, "У вас не указан код группы.")
                     write_msg(event.user_id, event.random_id, "В какой группе вы находитесь?\nУкажите код вашей группы: ")
@@ -330,6 +333,7 @@ for event in longpoll.listen():
                 if uid in usergroup.keys():
                     write_msg(event.user_id, event.random_id, f"Вы указали, что Ваша группа: {usergroup[uid]}.\nДля того, чтобы изменить свою группу нажмите \"Изменить группу\".")
             elif event.text.lower() == "изменения моей группы":
+                usergroup = openfromfile(usergroup)
                 if uid not in usergroup.keys():
                     write_msg(event.user_id, event.random_id, "У вас не указан код группы.")
                     write_msg(event.user_id, event.random_id, "В какой группе вы находитесь?\nУкажите код вашей группы: ")
