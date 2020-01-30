@@ -1,2 +1,1 @@
-bot: python3 bot.py
-bot: python3 sender.py
+bot: python3 bot.py python3 sender.py
