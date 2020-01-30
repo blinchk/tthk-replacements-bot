@@ -148,6 +148,7 @@ def openfromfile(usergroup):
         row = cursor.fetchall()
         print(row)
         for i in row:
+            print(i)
             usergroup[i[vkid]] = i[thkruhm]
     cursor.close()
     connection.close()
