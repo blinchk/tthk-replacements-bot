@@ -300,7 +300,7 @@ for event in longpoll.listen():
                             cursor.execute("""UPDATE `heroku_0ccfbccd1823b55`.`users` SET `thkruhm`='%s' WHERE (`vkid`='%s');""" % (usergroup[i], i))
                             print(f'UPDATE `heroku_0ccfbccd1823b55`.`users` SET `thkruhm`=\'{usergroup[i]}\' WHERE (`vkid`=\'{i}\');')
                         else:
-                            cursor.execute("""INSERT INTO `heroku_0ccfbccd1823b55`.`users`(`vkid`, `thkruhm`) VALUES ('%s', '%s);""" % (i, usergroup[i]))
+                            cursor.execute("""INSERT INTO `heroku_0ccfbccd1823b55`.`users`(`vkid`, `thkruhm`) VALUES ('%s', '%s');""" % (i, usergroup[i]))
                     cursor.close()
                 with connection.cursor() as cursor:
                     cursor.execute("""SELECT * FROM `users`""")
