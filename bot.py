@@ -297,7 +297,7 @@ def sendeveryday():
         getmuudatused(usergroup[i], i)
         time.sleep(1.1)
 
-schedule.every().day.at("22:15:00").do(sendeveryday)
+schedule.every().day.at("22:25:00").do(sendeveryday)
 while True:
     print("I'm working.")
     schedule.run.pending()
