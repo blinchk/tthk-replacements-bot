@@ -152,16 +152,16 @@ def updatefile(oldusergroup):
                 cursor.execute(f'UPDATE users SET thkruhm=\'{usergroup[i]}\' WHERE vkid=\'{i}\';')
             else:
                 cursor.execute(f'INSERT INTO users(vkid, thkruhm) VALUES (\'{i}\', \'{usergroup[i]}\');')
-    connection.close()
+        cursor.close()
     return usergroup
 def openfromfile():
     global connection
     with connection.cursor() as cursor:
         cursor.execute('SELECT * FROM USERS')
     cursor.fetchall()
+    cursor.close()
     for i in cursor:
         usergroup[i[0]] = i[1]
-    connection.close()
     return usergroup
 def write_msg(user_id, random_id, message):
     vk.method('messages.send', {'user_id': user_id, 'random_id': random_id, 'message': message})
