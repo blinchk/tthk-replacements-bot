@@ -1,10 +1,6 @@
 from bot import *
 import time
-
-mysql_l = os.environ['MYSQL_LOGIN']
-mysql_p = os.environ["MYSQL_PASS"]
-access_token = os.environ["ACCESS_TOKEN"]
-vk = vkapi.VkApi(token=access_token)
+print("Sender launched")
 
 def sendeveryday():
     usergroup = openfromfile(usergroup)
