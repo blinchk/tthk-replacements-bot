@@ -99,9 +99,8 @@ def sendeveryday():
     for i in usergroup.keys():
         getmuudatused(usergroup[i], i)
 
-
 while True:
-    if time.strftime("%H:%M:%S", time.localtime()) == '23:36:00':
+    if time.strftime("%H:%M:%S", time.localtime()) == '23:40:00':
         sendeveryday()
     time.sleep(1.1)
     continue
