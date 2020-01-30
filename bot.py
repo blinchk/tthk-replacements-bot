@@ -160,7 +160,7 @@ def get_servertime():
 
 usergroup = openfromfile('ids.txt',usergroup)
 print(usergroup.keys())
-print(time.strftime("%D %H:%M", time.localtime())
+print(time.strftime("%D %H:%M", time.localtime()))
 
 def parsepage(table):
     muudatused = []
@@ -328,7 +328,7 @@ for event in longpoll.listen():
             else:
                 write_msg(event.user_id, event.random_id, f"Данной команды не существует.")
     if time.strftime("%d", time.localtime()) == '5':
-        print(time.strftime("%D %H:%M", time.localtime())
+        print(time.strftime("%D %H:%M", time.localtime()))
         for i in usergroup.keys():
             setgroup = usergroup[i]
             getmuudatused(setgroup, i)
