@@ -148,8 +148,8 @@ def updatefile(us):
     global connection
     with connection.cursor() as cursor:
         cursor.execute('SELECT vkid FROM users')
-        cursor.fetchall()
-        for i in cursor:
+        row = cursor.fetchall()
+        for i in row:
             otheruser.append(i[0])
         cursor.close()
     with connection.cursor() as cursor:
@@ -166,11 +166,11 @@ def openfromfile():
     global connection
     with connection.cursor() as cursor:
         cursor.execute('SELECT * FROM USERS')
-    cursor.fetchall()
-    cursor.close()
-    for i in cursor:
+    row = cursor.fetchall()
+    for i in row:
         usergroup[i[0]] = i[1]
     print(usergroup)
+    cursor.close()
     return usergroup
 def write_msg(user_id, random_id, message):
     vk.method('messages.send', {'user_id': user_id, 'random_id': random_id, 'message': message})
