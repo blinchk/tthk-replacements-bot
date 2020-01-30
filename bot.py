@@ -149,7 +149,7 @@ def openfromfile(usergroup):
         print(row)
         for i in row:
             print(i)
-            usergroup[i[vkid]] = i[thkruhm]
+            usergroup[i['vkid']] = i['thkruhm']
     cursor.close()
     connection.close()
     return usergroup
