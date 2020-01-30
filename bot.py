@@ -58,7 +58,7 @@ keyboard.add_line()  # Переход на вторую строку
 keyboard.add_button('В какой я группе?', color=VkKeyboardColor.POSITIVE)
 keyboard.add_button('Изменить группу', color=VkKeyboardColor.NEGATIVE)
 keyboard.add_line()  # Переход на вторую строку
-keyboard.add_button("€ Поддержать проект €",color=VkKeyboardColor.DEFAULT)
+keyboard.add_button("Поддержать проект",color=VkKeyboardColor.DEFAULT)
 
 
 def numdayweek():
@@ -143,7 +143,7 @@ r = requests.get('http://www.tthk.ee/tunniplaani-muudatused/')
 html_content = r.text
 soup = BeautifulSoup(html_content, 'html.parser')
 table = soup.findChildren('table')
-def updatefile():
+def updatefile(oldusergroup):
     global connection
     with connection.cursor() as cursor:
         for i in usergroup.keys():
@@ -176,6 +176,7 @@ def get_servertime():
 # Ничего особенного.
 
 usergroup = openfromfile()
+oldusergroup = usergroup.copy()
 print(usergroup.keys())
 print(time.strftime("%D %H:%M", time.localtime()))
 
@@ -299,7 +300,7 @@ for event in longpoll.listen():
                 usergroup[uid] = group
                 write_msg(event.user_id, event.random_id, f"Вы указали, что Ваша группа: {usergroup[uid]}.")
                 writeyourgroup[uid] = 0
-                usergroup = updatefile()
+                usergroup = updatefile(oldusergroup)
             elif event.text.lower() == "изменения по группам":
                 write_msg(event.user_id, event.random_id, f"Введите код группы, для которой нужно найти изменения: ")
                 writeyourgroup[uid] = 0
@@ -341,7 +342,7 @@ for event in longpoll.listen():
                 else:
                     newmuudatused = getmuudatusedall(event.user_id, event.text)
                 writeyourdate[uid] = 0
-            elif event.text.lower() == "€ поддержать проект €":
+            elif event.text.lower() == "поддержать проект":
                 write_msg(event.peer_id, event.random_id,"https://www.paypal.me/blinchk")
             else:
                 write_msg(event.user_id, event.random_id, f"Данной команды не существует.")
