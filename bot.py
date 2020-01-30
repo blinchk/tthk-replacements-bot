@@ -138,6 +138,20 @@ r = requests.get('http://www.tthk.ee/tunniplaani-muudatused/')
 html_content = r.text
 soup = BeautifulSoup(html_content, 'html.parser')
 table = soup.findChildren('table')
+def openfromfile(usergroup):
+    connection = pymysql.connect(
+        host='eu-cdbr-west-02.cleardb.net',
+        user=mysql_l,
+        password=mysql_p,
+        db='heroku_0ccfbccd1823b55')
+    with connection.cursor() as cursor:
+        cursor.execute("""SELECT * FROM USERS""")
+        row = cursor.fetchall()
+        for i in row:
+            usergroup[i[0]] = i[1]
+    cursor.close()
+    connection.close()
+    return usergroup
 def updatefile(usergroup):
     otheruser = []
     connection = pymysql.connect(
@@ -146,37 +160,21 @@ def updatefile(usergroup):
         password=mysql_p,
         db='heroku_0ccfbccd1823b55')
     with connection.cursor() as cursor:
-        cursor.execute('SELECT vkid FROM users')
+        cursor.execute("""SELECT vkid FROM users""")
         row = cursor.fetchall()
         for i in row:
             otheruser.append(i[0])
         for i in usergroup.keys():
             if i in otheruser:
-                g = usergroup[i]
-                cursor.execute(f'UPDATE `heroku_0ccfbccd1823b55`.`users` SET `thkruhm`=\'{g}\' WHERE (`vkid`=\'{i}\');')
+                cursor.execute("""UPDATE `heroku_0ccfbccd1823b55`.`users` SET `thkruhm`='?' WHERE (`vkid`='?');""", usergroup[i], i)
                 print(f'UPDATE `heroku_0ccfbccd1823b55`.`users` SET `thkruhm`=\'{g}\' WHERE (`vkid`=\'{i}\');')
             else:
-                g = usergroup[i]
-                cursor.execute(f'INSERT INTO `heroku_0ccfbccd1823b55`.`users`(`vkid`, `thkruhm`) VALUES (\'{i}\', \'{g}\');')
-        cursor.execute('SELECT * FROM USERS')
+                cursor.execute("""INSERT INTO `heroku_0ccfbccd1823b55`.`users`(`vkid`, `thkruhm`) VALUES ('?', '?');""", i, usergroup[i])
+        cursor.execute("""SELECT * FROM USERS""")
         row = cursor.fetchall()
         for i in row:
             usergroup[i[0]] = i[1]
         cursor.close()
-    connection.close()
-    return usergroup
-def openfromfile(usergroup):
-    connection = pymysql.connect(
-        host='eu-cdbr-west-02.cleardb.net',
-        user=mysql_l,
-        password=mysql_p,
-        db='heroku_0ccfbccd1823b55')
-    with connection.cursor() as cursor:
-        cursor.execute('SELECT * FROM USERS')
-        row = cursor.fetchall()
-        for i in row:
-            usergroup[i[0]] = i[1]
-    cursor.close()
     connection.close()
     return usergroup
 def write_msg(user_id, random_id, message):
@@ -333,13 +331,11 @@ for event in longpoll.listen():
                 if uid in usergroup.keys():
                     write_msg(event.user_id, event.random_id, f"Вы указали, что Ваша группа: {usergroup[uid]}.\nДля того, чтобы изменить свою группу нажмите \"Изменить группу\".")
             elif event.text.lower() == "изменения моей группы":
-                usergroup = openfromfile(usergroup)
                 if uid not in usergroup.keys():
                     write_msg(event.user_id, event.random_id, "У вас не указан код группы.")
                     write_msg(event.user_id, event.random_id, "В какой группе вы находитесь?\nУкажите код вашей группы: ")
                     writeyourgroup[uid] = 1
                 if uid in usergroup.keys():
-                    usergroup = openfromfile(usergroup)
                     lastmuudatused = getmuudatused(usergroup[uid], event.user_id)
             elif event.text.lower() == "изменения по датам":
                 send_datekeyboard(event.peer_id, event.random_id, f"Выберите дату, которую желаете найти или укажите в формате ДД.ММ.ГГГГ:")
