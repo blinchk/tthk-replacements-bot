@@ -282,7 +282,7 @@ for event in longpoll.listen():
                 writeyourgroup[uid] = 1
                 writesearchgroup[uid] = 0
             elif event.text[-3:].lower() in ['v19', 'v18', 'v17', 'e19', 'e18', 'e17'] and uid in writeyourgroup.keys() and writeyourgroup[uid] == 1:
-                otheruser = usergroup.copy()
+                otheruser = usergroup.keys()
                 group = event.text
                 usergroup[str(event.user_id)] = group
                 connection = pymysql.connect(
