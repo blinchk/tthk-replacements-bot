@@ -295,7 +295,12 @@ for event in longpoll.listen():
     if event.type == VkEventType.MESSAGE_NEW:
         if event.to_me:
             uid = str(event.user_id)
-            if event.text.lower() == "начать" or event.text.lower() == 'start':
+            if time.strftime("%H:%M:%S", time.localtime()) == '21:33:30':
+                usergroup = openfromfile(usergroup)
+                for i in usergroup.keys():
+                    getmuudatused(usergroup[i], i)
+                time.sleep(1.1)
+            elif event.text.lower() == "начать" or event.text.lower() == 'start':
                 usergroup = openfromfile(usergroup)
                 send_keyboard(event.peer_id, event.random_id, "Выберите вариант из клаиватуры ниже.")
                 if uid not in usergroup.keys():
@@ -360,8 +365,3 @@ for event in longpoll.listen():
                 write_msg(event.peer_id, event.random_id,"https://www.paypal.me/blinchk")
             else:
                 write_msg(event.user_id, event.random_id, f"Данной команды не существует.")
-    if time.strftime("%H:%M:%S", time.localtime()) == '7:00:01':
-        usergroup = openfromfile(usergroup)
-        for i in usergroup.keys():
-            getmuudatused(usergroup[i], i)
-        time.sleep(1.1)
