@@ -156,7 +156,7 @@ def updatefile(us):
             print(i)
             if i in otheruser:
                 cursor.execute(f'UPDATE users SET thkruhm=\'{usergroup[i]}\' WHERE vkid=\'{i}\';')
-            if else:
+            else:
                 cursor.execute(f'INSERT INTO users(vkid, thkruhm) VALUES (\'{i}\', \'{usergroup[i]}\');')
         cursor.close()
     return usergroup
