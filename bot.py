@@ -297,7 +297,7 @@ def sendeveryday():
         getmuudatused(usergroup[i], i)
         time.sleep(1.1)
 
-schedule.every.day.at("21:09:00").do(sendeveryday)
+schedule.every().day.at("21:09:00").do(sendeveryday)
 
 longpoll = VkLongPoll(vk)
 for event in longpoll.listen():
