@@ -297,10 +297,12 @@ for event in longpoll.listen():
                         otheruser.append(i[0])
                     for i in usergroup.keys():
                         if i in otheruser:
-                            cursor.execute("""UPDATE `heroku_0ccfbccd1823b55`.`users` SET `thkruhm`='%s' WHERE (`vkid`='%s');""" % (usergroup[i], i))
+                            cursor.execute("""SELECT * FROM `users`;
+                            UPDATE `heroku_0ccfbccd1823b55`.`users` SET `thkruhm`='%s' WHERE (`vkid`='%s');""" % (usergroup[i], i))
                             print(f'UPDATE `heroku_0ccfbccd1823b55`.`users` SET `thkruhm`=\'{usergroup[i]}\' WHERE (`vkid`=\'{i}\');')
                         else:
-                            cursor.execute("""INSERT INTO `heroku_0ccfbccd1823b55`.`users`(`vkid`, `thkruhm`) VALUES ('%s', '%s);""" % (i, usergroup[i]))
+                            cursor.execute("""SELECT * FROM `users`;
+                            INSERT INTO `heroku_0ccfbccd1823b55`.`users`(`vkid`, `thkruhm`) VALUES ('%s', '%s);""" % (i, usergroup[i]))
                     cursor.close()
                 with connection.cursor() as cursor:
                     cursor.execute("""SELECT * FROM `users`""")
