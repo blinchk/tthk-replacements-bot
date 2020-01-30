@@ -146,12 +146,12 @@ table = soup.findChildren('table')
 def updatefile():
     global connection
     with connection.cursor() as cursor:
-    for i in usergroup.keys():
-        print(i)
-        if usergroup.keys() in oldusergroup.keys():
-            cursor.execute(f'UPDATE users SET thkruhm=\'{usergroup[i]}\' WHERE vkid=\'{i}\';')
-        else:
-            cursor.execute(f'INSERT INTO users(vkid, thkruhm) VALUES (\'{i}\', \'{usergroup[i]}\');')
+        for i in usergroup.keys():
+            print(i)
+            if usergroup.keys() in oldusergroup.keys():
+                cursor.execute(f'UPDATE users SET thkruhm=\'{usergroup[i]}\' WHERE vkid=\'{i}\';')
+            else:
+                cursor.execute(f'INSERT INTO users(vkid, thkruhm) VALUES (\'{i}\', \'{usergroup[i]}\');')
     connection.close()
     return usergroup
 def openfromfile():
