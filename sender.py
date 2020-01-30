@@ -16,7 +16,7 @@ def sendeveryday():
     for i in usergroup.keys():
         getmuudatused(usergroup[i], i)
 
-schedule.every().day.at("22:45:00").do(sendeveryday)
+schedule.every().day.at("22:46:00").do(sendeveryday)
 while True:
     schedule.run_pending()
     time.sleep(1.1)

@@ -288,7 +288,7 @@ def getmuudatusedweekly(user, weekday):
         write_msg(user, event.random_id, kogutunniplaan)
     elif len(forshow) == 0:
         write_msg(user, event.random_id,f"В данный момент изменений в расписании нет на день недели, который вы ввели.")
-
+longpoll = VkLongPoll(vk)
 for event in longpoll.listen():
     usergroup = {}
     if event.type == VkEventType.MESSAGE_NEW:
