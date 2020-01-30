@@ -1,4 +1,4 @@
-from bot import *
+from bot import openfromfile, getmuudatused, sendeveryday
 import time
 print("Sender launched")
 
