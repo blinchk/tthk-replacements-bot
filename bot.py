@@ -22,11 +22,6 @@ mysql_l = os.environ['MYSQL_LOGIN']
 mysql_p = os.environ["MYSQL_PASS"]
 access_token = os.environ["ACCESS_TOKEN"]
 vk = vkapi.VkApi(token=access_token)
-connection = pymysql.connect(
-    host='eu-cdbr-west-02.cleardb.net',
-    user=mysql_l,
-    password=mysql_p,
-    db='heroku_0ccfbccd1823b55')
 KeyboardNumDays = {0: 'E',
                 1: 'T',
                 2: 'K',
@@ -145,7 +140,11 @@ soup = BeautifulSoup(html_content, 'html.parser')
 table = soup.findChildren('table')
 def updatefile(us):
     otheruser = []
-    global connection
+    connection = pymysql.connect(
+        host='eu-cdbr-west-02.cleardb.net',
+        user=mysql_l,
+        password=mysql_p,
+        db='heroku_0ccfbccd1823b55')
     with connection.cursor() as cursor:
         cursor.execute('SELECT vkid FROM users')
         row = cursor.fetchall()
@@ -160,15 +159,21 @@ def updatefile(us):
                 cursor.execute(f'INSERT INTO users(vkid, thkruhm) VALUES (\'{i}\', \'{usergroup[i]}\');')
         cursor.fetchall()
         cursor.close()
+    connection.close()
     return usergroup
 def openfromfile():
-    global connection
+    connection = pymysql.connect(
+        host='eu-cdbr-west-02.cleardb.net',
+        user=mysql_l,
+        password=mysql_p,
+        db='heroku_0ccfbccd1823b55')
     with connection.cursor() as cursor:
         cursor.execute('SELECT * FROM USERS')
     row = cursor.fetchall()
     for i in row:
         usergroup[i[0]] = i[1]
     cursor.close()
+    connection.close()
     return usergroup
 def write_msg(user_id, random_id, message):
     vk.method('messages.send', {'user_id': user_id, 'random_id': random_id, 'message': message})
