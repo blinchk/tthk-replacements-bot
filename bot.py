@@ -285,7 +285,6 @@ for event in longpoll.listen():
                 writeyourgroup[uid] = 1
                 writesearchgroup[uid] = 0
             elif event.text[-3:].lower() in ['v19', 'v18', 'v17', 'e19', 'e18', 'e17'] and uid in writeyourgroup.keys() and writeyourgroup[uid] == 1:
-                otheruser = list(usergroup.keys())
                 group = event.text
                 usergroup[str(event.user_id)] = group
                 connection = pymysql.connect(
@@ -298,7 +297,7 @@ for event in longpoll.listen():
                     cursor.execute("""SELECT vkid FROM users""")
                     row = cursor.fetchall()
                     for i in row:
-                        otheruser.append(i[0])
+                        otheruser.append(i['vkid'])
                     for i in usergroup.keys():
                         if i in otheruser:
                             cursor.execute("""UPDATE `heroku_0ccfbccd1823b55`.`users` SET `thkruhm`='%s' WHERE (`vkid`='%s');""" % (usergroup[i], i))
