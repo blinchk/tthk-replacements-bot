@@ -10,6 +10,7 @@ print("Sender launched")
 mysql_l = os.environ['MYSQL_LOGIN']
 mysql_p = os.environ["MYSQL_PASS"]
 access_token = os.environ["ACCESS_TOKEN"]
+vk = vk_api.VkApi(token=token)
 
 r = requests.get('http://www.tthk.ee/tunniplaani-muudatused/')
 html_content = r.text
