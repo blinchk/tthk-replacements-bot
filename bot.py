@@ -300,7 +300,7 @@ def sendeveryday():
 schedule.every().day.at("22:25:00").do(sendeveryday)
 while True:
     print("I'm working.")
-    schedule.run.pending()
+    schedule.run_pending()
     longpoll = VkLongPoll(vk)
     for event in longpoll.listen():
         usergroup = {}
