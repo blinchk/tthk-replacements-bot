@@ -223,7 +223,7 @@ def getmuudatused(setgroup, user):
     muudatused = parsepage(table)
     for i in muudatused:
         if setgroup.lower() in i[2].lower():
-            makemuudatused(i, forshow)
+            makemuudatused(i, forshow, True)
     if len(forshow) > 0:
         kogutunniplaan = f"Для группы 🦆 {setgroup} на данный момент следующие изменения в расписании:\n"
         for w in forshow:
@@ -237,7 +237,7 @@ def getmuudatusedall(user, date):
     muudatused = parsepage(table)
     for i in muudatused:
         if i[1] == date:
-            makemuudatused(i, forshow)
+            makemuudatused(i, forshow, False)
     if len(forshow) > 0:
         kogutunniplaan = f"В учебном заведении на 🗓 {date} следующие изменения в расписании:\n"
         for w in forshow:
@@ -251,7 +251,7 @@ def getmuudatusedweekly(user, weekday):
     muudatused = parsepage(table)
     for i in muudatused:
         if i[0] == weekday:
-            makemuudatused(i, forshow)
+            makemuudatused(i, forshow, False)
     if len(forshow) > 0:
         kogutunniplaan = f"В учебном заведении на 🗓 {DayOfWeek[weekday]} следующие изменения в расписании:\n"
         for w in forshow:
