@@ -138,7 +138,7 @@ r = requests.get('http://www.tthk.ee/tunniplaani-muudatused/')
 html_content = r.text
 soup = BeautifulSoup(html_content, 'html.parser')
 table = soup.findChildren('table')
-def updatefile():
+def updatefile(usergroup):
     otheruser = []
     connection = pymysql.connect(
         host='eu-cdbr-west-02.cleardb.net',
@@ -359,4 +359,4 @@ for event in longpoll.listen():
                 write_msg(event.peer_id, event.random_id,"https://www.paypal.me/blinchk")
             else:
                 write_msg(event.user_id, event.random_id, f"Данной команды не существует.")
-            usergroup = updatefile()
+            usergroup = updatefile(usergroup)
