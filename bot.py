@@ -288,14 +288,17 @@ def getmuudatusedweekly(user, weekday):
     elif len(forshow) == 0:
         write_msg(user, event.random_id,f"В данный момент изменений в расписании нет на день недели, который вы ввели.")
 
-
-longpoll = VkLongPoll(vk)
-for event in longpoll.listen():
-    if time.strftime("%H:%M:%S") == '21:50:00':
-        usergroup = openfromfile(usergroup)
+def sendeveryday(usergroup):
+    if time.strftime("%H:%M:%S") == '21:57:00':
+        print("Запускаю рассылку:")
+        print(time.strftime("%H:%M:%S"))
         for i in usergroup.keys():
             getmuudatused(usergroup[i], i)
             time.sleep(1.1)
+
+
+longpoll = VkLongPoll(vk)
+for event in longpoll.listen():
     usergroup = {}
     if event.type == VkEventType.MESSAGE_NEW:
         if event.to_me:
