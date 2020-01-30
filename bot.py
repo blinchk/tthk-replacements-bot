@@ -148,9 +148,10 @@ def updatefile(us):
     global connection
     with connection.cursor() as cursor:
         cursor.execute('SELECT vkid FROM users')
-        cursor.close()
+        cursor.fetchall()
         for i in cursor:
             otheruser.append(i[0])
+        cursor.close()
     with connection.cursor() as cursor:
         for i in usergroup.keys():
             print(i)
@@ -158,6 +159,7 @@ def updatefile(us):
                 cursor.execute(f'UPDATE users SET thkruhm=\'{usergroup[i]}\' WHERE vkid=\'{i}\';')
             else:
                 cursor.execute(f'INSERT INTO users(vkid, thkruhm) VALUES (\'{i}\', \'{usergroup[i]}\');')
+        cursor.fetchall()
         cursor.close()
     return usergroup
 def openfromfile():
