@@ -289,87 +289,74 @@ def getmuudatusedweekly(user, weekday):
     elif len(forshow) == 0:
         write_msg(user, event.random_id,f"В данный момент изменений в расписании нет на день недели, который вы ввели.")
 
-def sendeveryday():
-    usergroup = openfromfile(usergroup)
-    print("Запускаю рассылку:")
-    print(time.strftime("%H:%M:%S"))
-    for i in usergroup.keys():
-        getmuudatused(usergroup[i], i)
-        time.sleep(1.1)
-
-schedule.every().day.at("22:25:00").do(sendeveryday)
-while True:
-    print("I'm working.")
-    schedule.run_pending()
-    longpoll = VkLongPoll(vk)
-    for event in longpoll.listen():
-        usergroup = {}
-        if event.type == VkEventType.MESSAGE_NEW:
-            if event.to_me:
-                uid = str(event.user_id)
-                if event.text.lower() == "начать" or event.text.lower() == 'start':
-                    usergroup = openfromfile(usergroup)
-                    send_keyboard(event.peer_id, event.random_id, "Выберите вариант из клаиватуры ниже.")
-                    if uid not in usergroup.keys():
-                        write_msg(event.user_id, event.random_id, "У вас не указан код группы, укажите его.")
-                        writeyourgroup[uid] = 1
-                elif event.text.lower() == "указать группу" or event.text.lower() == "изменить группу":
-                    usergroup = openfromfile(usergroup)
+for event in longpoll.listen():
+    usergroup = {}
+    if event.type == VkEventType.MESSAGE_NEW:
+        if event.to_me:
+            uid = str(event.user_id)
+            if event.text.lower() == "начать" or event.text.lower() == 'start':
+                usergroup = openfromfile(usergroup)
+                send_keyboard(event.peer_id, event.random_id, "Выберите вариант из клаиватуры ниже.")
+                if uid not in usergroup.keys():
+                    write_msg(event.user_id, event.random_id, "У вас не указан код группы, укажите его.")
+                    writeyourgroup[uid] = 1
+            elif event.text.lower() == "указать группу" or event.text.lower() == "изменить группу":
+                usergroup = openfromfile(usergroup)
+                write_msg(event.user_id, event.random_id, "В какой группе вы находитесь?\nУкажите код вашей группы: ")
+                writeyourgroup[uid] = 1
+                writesearchgroup[uid] = 0
+            elif event.text[-3:].lower() in ['v19', 'v18', 'v17', 'e19', 'e18', 'e17'] and uid in writeyourgroup.keys() and writeyourgroup[uid] == 1:
+                otheruser = []
+                group = event.text
+                usergroup[str(event.user_id)] = group
+                usergroup = updatefile(usergroup)
+                usergroup = openfromfile(usergroup)
+                write_msg(event.user_id, event.random_id, f"Вы указали, что Ваша группа: {usergroup[uid]}.")
+                writeyourgroup[uid] = 0
+            elif event.text.lower() == "изменения по группам":
+                write_msg(event.user_id, event.random_id, f"Введите код группы, для которой нужно найти изменения: ")
+                writeyourgroup[uid] = 0
+                writesearchgroup[uid] = 1
+            elif event.text[-3:].lower() in ['v19', 'v18', 'v17', 'e19', 'e18', 'e17'] and uid in writesearchgroup.keys() and writesearchgroup[uid] == 1:
+                setgroup = event.text
+                lastmuudatused = getmuudatused(setgroup, event.user_id)
+                writesearchgroup[uid] = 0
+            elif event.text[-3:].lower() in ['v19', 'v18', 'v17', 'e19', 'e18', 'e17'] and uid in writeyourgroup.keys() and writeyourgroup[uid] == 0:
+                write_msg(event.user_id, event.random_id, f"Для того, чтобы указать группу предварительно нажмите Изменить группу.")
+            elif event.text.lower() == "в какой я группе?":
+                usergroup = openfromfile(usergroup)
+                if uid not in usergroup.keys():
+                    write_msg(event.user_id, event.random_id, "У вас не указан код группы.")
                     write_msg(event.user_id, event.random_id, "В какой группе вы находитесь?\nУкажите код вашей группы: ")
                     writeyourgroup[uid] = 1
-                    writesearchgroup[uid] = 0
-                elif event.text[-3:].lower() in ['v19', 'v18', 'v17', 'e19', 'e18', 'e17'] and uid in writeyourgroup.keys() and writeyourgroup[uid] == 1:
-                    otheruser = []
-                    group = event.text
-                    usergroup[str(event.user_id)] = group
-                    usergroup = updatefile(usergroup)
-                    usergroup = openfromfile(usergroup)
-                    write_msg(event.user_id, event.random_id, f"Вы указали, что Ваша группа: {usergroup[uid]}.")
-                    writeyourgroup[uid] = 0
-                elif event.text.lower() == "изменения по группам":
-                    write_msg(event.user_id, event.random_id, f"Введите код группы, для которой нужно найти изменения: ")
-                    writeyourgroup[uid] = 0
-                    writesearchgroup[uid] = 1
-                elif event.text[-3:].lower() in ['v19', 'v18', 'v17', 'e19', 'e18', 'e17'] and uid in writesearchgroup.keys() and writesearchgroup[uid] == 1:
-                    setgroup = event.text
-                    lastmuudatused = getmuudatused(setgroup, event.user_id)
-                    writesearchgroup[uid] = 0
-                elif event.text[-3:].lower() in ['v19', 'v18', 'v17', 'e19', 'e18', 'e17'] and uid in writeyourgroup.keys() and writeyourgroup[uid] == 0:
-                    write_msg(event.user_id, event.random_id, f"Для того, чтобы указать группу предварительно нажмите Изменить группу.")
-                elif event.text.lower() == "в какой я группе?":
-                    usergroup = openfromfile(usergroup)
-                    if uid not in usergroup.keys():
-                        write_msg(event.user_id, event.random_id, "У вас не указан код группы.")
-                        write_msg(event.user_id, event.random_id, "В какой группе вы находитесь?\nУкажите код вашей группы: ")
-                        writeyourgroup[uid] = 1
-                    if uid in usergroup.keys():
-                        write_msg(event.user_id, event.random_id, f"Вы указали, что Ваша группа: {usergroup[uid]}.\nДля того, чтобы изменить свою группу нажмите \"Изменить группу\".")
-                elif event.text.lower() == "изменения моей группы":
-                    usergroup = openfromfile(usergroup)
-                    if uid not in usergroup.keys():
-                        write_msg(event.user_id, event.random_id, "У вас не указан код группы.")
-                        write_msg(event.user_id, event.random_id, "В какой группе вы находитесь?\nУкажите код вашей группы: ")
-                        writeyourgroup[uid] = 1
-                    if uid in usergroup.keys():
-                        lastmuudatused = getmuudatused(usergroup[uid], event.user_id)
-                elif event.text.lower() == "изменения по датам":
-                    send_datekeyboard(event.peer_id, event.random_id, f"Выберите дату, которую желаете найти или укажите в формате ДД.ММ.ГГГГ:")
-                    writeyourdate[uid] = 1
-                elif event.text.lower() == "изменения по дню недели":
-                    send_weekkeyboard(event.peer_id, event.random_id, "Выберите день недели с помощью клавиатуры: E, T, K, N, R, L, P.")
-                    writeyourweekday[uid] = 1
-                elif event.text.upper() in ['E', 'T', 'K', 'N', 'R', 'L', 'P'] and uid in writeyourweekday.keys() and writeyourweekday[uid] == 1:
-                    getmuudatusedweekly(event.user_id, event.text)
-                    writeyourweekday[uid] = 0
-                elif event.text[-5:].lower() in ['.2020', '.2021', '.2022', '.2023', '.2024', '.2025', '.2026'] and uid in writeyourdate.keys() and writeyourdate[uid] == 1 :
-                    if event.text[1] == ":":
-                        enddatetosearch = re.split(r':\s',event.text)
-                        newmuudatused = getmuudatusedall(event.user_id, enddatetosearch[1])
-                    else:
-                        newmuudatused = getmuudatusedall(event.user_id, event.text)
-                    writeyourdate[uid] = 0
-                elif event.text.lower() == "поддержать проект":
-                    write_msg(event.peer_id, event.random_id,"https://www.paypal.me/blinchk")
+                if uid in usergroup.keys():
+                    write_msg(event.user_id, event.random_id, f"Вы указали, что Ваша группа: {usergroup[uid]}.\nДля того, чтобы изменить свою группу нажмите \"Изменить группу\".")
+            elif event.text.lower() == "изменения моей группы":
+                usergroup = openfromfile(usergroup)
+                if uid not in usergroup.keys():
+                    write_msg(event.user_id, event.random_id, "У вас не указан код группы.")
+                    write_msg(event.user_id, event.random_id, "В какой группе вы находитесь?\nУкажите код вашей группы: ")
+                    writeyourgroup[uid] = 1
+                if uid in usergroup.keys():
+                    lastmuudatused = getmuudatused(usergroup[uid], event.user_id)
+            elif event.text.lower() == "изменения по датам":
+                send_datekeyboard(event.peer_id, event.random_id, f"Выберите дату, которую желаете найти или укажите в формате ДД.ММ.ГГГГ:")
+                writeyourdate[uid] = 1
+            elif event.text.lower() == "изменения по дню недели":
+                send_weekkeyboard(event.peer_id, event.random_id, "Выберите день недели с помощью клавиатуры: E, T, K, N, R, L, P.")
+                writeyourweekday[uid] = 1
+            elif event.text.upper() in ['E', 'T', 'K', 'N', 'R', 'L', 'P'] and uid in writeyourweekday.keys() and writeyourweekday[uid] == 1:
+                getmuudatusedweekly(event.user_id, event.text)
+                writeyourweekday[uid] = 0
+            elif event.text[-5:].lower() in ['.2020', '.2021', '.2022', '.2023', '.2024', '.2025', '.2026'] and uid in writeyourdate.keys() and writeyourdate[uid] == 1 :
+                if event.text[1] == ":":
+                    enddatetosearch = re.split(r':\s',event.text)
+                    newmuudatused = getmuudatusedall(event.user_id, enddatetosearch[1])
                 else:
-                    write_msg(event.user_id, event.random_id, f"Данной команды не существует.")
-    continue
+                    newmuudatused = getmuudatusedall(event.user_id, event.text)
+                writeyourdate[uid] = 0
+            elif event.text.lower() == "поддержать проект":
+                write_msg(event.peer_id, event.random_id,"https://www.paypal.me/blinchk")
+            else:
+                write_msg(event.user_id, event.random_id, f"Данной команды не существует.")
+continue
