@@ -143,14 +143,20 @@ r = requests.get('http://www.tthk.ee/tunniplaani-muudatused/')
 html_content = r.text
 soup = BeautifulSoup(html_content, 'html.parser')
 table = soup.findChildren('table')
-def updatefile(oldusergroup):
+def updatefile(us):
+    otheruser = []
     global connection
+    with connection.cursor() as cursor:
+        cursor.execute('SELECT vkid FROM users')
+        cursor.close()
+        for i in cursor:
+            otheruser.append(i[0])
     with connection.cursor() as cursor:
         for i in usergroup.keys():
             print(i)
-            if i in oldusergroup.keys():
+            if i in otheruser:
                 cursor.execute(f'UPDATE users SET thkruhm=\'{usergroup[i]}\' WHERE vkid=\'{i}\';')
-            else:
+            if else:
                 cursor.execute(f'INSERT INTO users(vkid, thkruhm) VALUES (\'{i}\', \'{usergroup[i]}\');')
         cursor.close()
     return usergroup
@@ -281,12 +287,12 @@ def getmuudatusedweekly(user, weekday):
 
 longpoll = VkLongPoll(vk)
 for event in longpoll.listen():
+    usergroup = openfromfile()
+    oldusergroup = usergroup.copy()
     if event.type == VkEventType.MESSAGE_NEW:
         if event.to_me:
             uid = str(event.user_id)
             if event.text.lower() == "начать" or event.text.lower() == 'start':
-                usergroup = openfromfile()
-                oldusergroup = usergroup.copy()
                 send_keyboard(event.peer_id, event.random_id, "Выберите вариант из клаиватуры ниже.")
                 if uid not in usergroup.keys():
                     write_msg(event.user_id, event.random_id, "У вас не указан код группы, укажите его.")
@@ -300,7 +306,7 @@ for event in longpoll.listen():
                 usergroup[uid] = group
                 write_msg(event.user_id, event.random_id, f"Вы указали, что Ваша группа: {usergroup[uid]}.")
                 writeyourgroup[uid] = 0
-                usergroup = updatefile(oldusergroup)
+                usergroup = updatefile(uid)
             elif event.text.lower() == "изменения по группам":
                 write_msg(event.user_id, event.random_id, f"Введите код группы, для которой нужно найти изменения: ")
                 writeyourgroup[uid] = 0
