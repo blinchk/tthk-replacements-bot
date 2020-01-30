@@ -138,27 +138,26 @@ r = requests.get('http://www.tthk.ee/tunniplaani-muudatused/')
 html_content = r.text
 soup = BeautifulSoup(html_content, 'html.parser')
 table = soup.findChildren('table')
-def updatefile(us):
+def updatefile():
     otheruser = []
     connection = pymysql.connect(
         host='eu-cdbr-west-02.cleardb.net',
         user=mysql_l,
         password=mysql_p,
         db='heroku_0ccfbccd1823b55')
-    with connection.cursor() as some:
-        some.execute('SELECT vkid FROM users')
-        row = some.fetchall()
+    with connection.cursor() as cursor:
+        cursor.execute('SELECT vkid FROM users')
+        row = cursor.fetchall()
         for i in row:
             otheruser.append(i[0])
-        some.close()
-    with connection.cursor() as cursor:
+        cursor.close()
         for i in usergroup.keys():
             if i in otheruser:
                 cursor.execute(f'UPDATE `heroku_0ccfbccd1823b55`.`users` SET `thkruhm`=\'{usergroup[i]}\' WHERE (`vkid`=\'{i}\');')
+                print(f'UPDATE `heroku_0ccfbccd1823b55`.`users` SET `thkruhm`=\'{usergroup[i]}\' WHERE (`vkid`=\'{i}\');')
             else:
                 cursor.execute(f'INSERT INTO `heroku_0ccfbccd1823b55`.`users`(`vkid`, `thkruhm`) VALUES (\'{i}\', \'{usergroup[i]}\');')
         cursor.close()
-    with connection.cursor() as cursor:
         cursor.execute('SELECT * FROM USERS')
         row = cursor.fetchall()
         for i in row:
@@ -314,7 +313,6 @@ for event in longpoll.listen():
                 usergroup[uid] = group
                 write_msg(event.user_id, event.random_id, f"Вы указали, что Ваша группа: {usergroup[uid]}.")
                 writeyourgroup[uid] = 0
-                usergroup = updatefile(uid)
             elif event.text.lower() == "изменения по группам":
                 write_msg(event.user_id, event.random_id, f"Введите код группы, для которой нужно найти изменения: ")
                 writeyourgroup[uid] = 0
@@ -333,11 +331,13 @@ for event in longpoll.listen():
                 if uid in usergroup.keys():
                     write_msg(event.user_id, event.random_id, f"Вы указали, что Ваша группа: {usergroup[uid]}.\nДля того, чтобы изменить свою группу нажмите \"Изменить группу\".")
             elif event.text.lower() == "изменения моей группы":
+                usergroup = openfromfile()
                 if uid not in usergroup.keys():
                     write_msg(event.user_id, event.random_id, "У вас не указан код группы.")
                     write_msg(event.user_id, event.random_id, "В какой группе вы находитесь?\nУкажите код вашей группы: ")
                     writeyourgroup[uid] = 1
                 if uid in usergroup.keys():
+                    usergroup = openfromfile()
                     lastmuudatused = getmuudatused(usergroup[uid], event.user_id)
             elif event.text.lower() == "изменения по датам":
                 send_datekeyboard(event.peer_id, event.random_id, f"Выберите дату, которую желаете найти или укажите в формате ДД.ММ.ГГГГ:")
@@ -359,3 +359,4 @@ for event in longpoll.listen():
                 write_msg(event.peer_id, event.random_id,"https://www.paypal.me/blinchk")
             else:
                 write_msg(event.user_id, event.random_id, f"Данной команды не существует.")
+            usergroup = uploadfile()
