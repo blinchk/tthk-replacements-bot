@@ -155,7 +155,7 @@ def send_weekkeyboard(peer_id, random_id, message):
 def send_datekeyboard(peer_id, random_id, message):
     vk.method('messages.send', {'peer_id': peer_id, 'random_id': random_id, 'keyboard': FiveDayskeyboard.get_keyboard(), 'message': message})
 def get_servertime():
-    vk.method(utils.getServerTime)
+    return vk.method('utils.getServerTime')
 # Ничего особенного.
 
 usergroup = openfromfile('ids.txt',usergroup)
