@@ -100,7 +100,7 @@ def sendeveryday():
         getmuudatused(usergroup[i], i)
 
 while True:
-    if time.strftime("%H:%M:%S", time.localtime()) == '05:00:00' and time.strftime("%w", time.localtime()) in ['1','2','3','4','5']:
+    if time.strftime("%H:%M:%S", time.localtime()) == '05:00:00' and time.strftime("%w", time.localtime()) in ['1','2','3','4','5']:я
         sendeveryday()
     time.sleep(1.1)
     continue
