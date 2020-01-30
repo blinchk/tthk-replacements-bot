@@ -184,7 +184,8 @@ def get_servertime():
 
 usergroup = openfromfile()
 oldusergroup = usergroup.copy()
-print(f"Бот был запущен: {time.strftime("%D %H:%M", time.localtime())} GMT")
+print("Время запуска бота:")
+print(time.strftime("%D %H:%M", time.localtime()))
 
 def parsepage(table):
     muudatused = []
@@ -288,7 +289,6 @@ def getmuudatusedweekly(user, weekday):
 longpoll = VkLongPoll(vk)
 for event in longpoll.listen():
     usergroup = openfromfile()
-    print(usergroup)
     oldusergroup = usergroup.copy()
     if event.type == VkEventType.MESSAGE_NEW:
         if event.to_me:
