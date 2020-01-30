@@ -165,7 +165,7 @@ def updatefile(usergroup):
         cursor.close()
     connection.close()
     return usergroup
-def openfromfile():
+def openfromfile(usergroup):
     connection = pymysql.connect(
         host='eu-cdbr-west-02.cleardb.net',
         user=mysql_l,
@@ -297,7 +297,7 @@ longpoll = VkLongPoll(vk)
 for event in longpoll.listen():
     if event.type == VkEventType.MESSAGE_NEW:
         if event.to_me:
-            usergroup = openfromfile()
+            usergroup = openfromfile(usergroup)
             uid = str(event.user_id)
             if event.text.lower() == "начать" or event.text.lower() == 'start':
                 send_keyboard(event.peer_id, event.random_id, "Выберите вариант из клаиватуры ниже.")
@@ -310,9 +310,11 @@ for event in longpoll.listen():
                 writesearchgroup[uid] = 0
             elif event.text[-3:].lower() in ['v19', 'v18', 'v17', 'e19', 'e18', 'e17'] and uid in writeyourgroup.keys() and writeyourgroup[uid] == 1:
                 group = event.text
-                usergroup[uid] = group
+                usergroup[id] = group
                 write_msg(event.user_id, event.random_id, f"Вы указали, что Ваша группа: {usergroup[uid]}.")
                 writeyourgroup[uid] = 0
+                usergroup[str(event.user_id)] = group
+                usergroup = updatefile(usergroup)
             elif event.text.lower() == "изменения по группам":
                 write_msg(event.user_id, event.random_id, f"Введите код группы, для которой нужно найти изменения: ")
                 writeyourgroup[uid] = 0
