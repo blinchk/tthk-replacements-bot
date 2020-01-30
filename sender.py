@@ -2,6 +2,30 @@
 import time
 print("Sender launched")
 
+r = requests.get('http://www.tthk.ee/tunniplaani-muudatused/')
+html_content = r.text
+soup = BeautifulSoup(html_content, 'html.parser')
+table = soup.findChildren('table')
+
+def parsepage(table):
+    muudatused = []
+    for i in range(len(table)):
+        my_table = table[i]
+        rows = my_table.find_all('tr')
+        for row in rows:
+            muudatus = []
+            cells = row.find_all('td')
+            for cell in cells:
+                if cell.text not in ["\xa0", "Kuupäev", "Rühm", "Tund", "Õpetaja", "Ruum"]:
+                    data = cell.text
+                    muudatus.append(data)
+            # здесь есть полноценный список muudatus
+            if muudatus != []:
+                muudatused.append(muudatus)
+        else:
+            continue
+    return muudatused
+
 def openfromfile(usergroup):
     connection = pymysql.connect(
         host='eu-cdbr-west-02.cleardb.net',
