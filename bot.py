@@ -295,7 +295,7 @@ for event in longpoll.listen():
     if event.type == VkEventType.MESSAGE_NEW:
         if event.to_me:
             uid = str(event.user_id)
-            if time.strftime("%H:%M:%S", time.localtime()) == '21:33:30':
+            if time.strftime("%H:%M:%S", time.localtime()) == '21:36:50':
                 usergroup = openfromfile(usergroup)
                 for i in usergroup.keys():
                     getmuudatused(usergroup[i], i)
