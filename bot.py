@@ -298,7 +298,7 @@ for event in longpoll.listen():
                 usergroup = openfromfile(usergroup)
                 send_keyboard(event.peer_id, event.random_id, "Выберите вариант из клаиватуры ниже.")
                 if uid not in usergroup.keys():
-                    write_msg(event.user_id, event.random_id, "У вас не указан код группы, укажите его.")
+                    write_msg(event.user_id, event.random_id, "У вас не указан код группы, укажите его без подгруппы. Вместо MEHpv19-2 - напишите MEHpv19.")
                     writeyourgroup[uid] = 1
             elif event.text.lower() == "указать группу" or event.text.lower() == "изменить группу":
                 usergroup = openfromfile(usergroup)
