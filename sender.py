@@ -89,7 +89,7 @@ def getmuudatused(setgroup, user):
             kogutunniplaan += f"{w}\n"
         write_msg(user, (random.getrandbits(31) * random.choice([-1, 1])), kogutunniplaan)
     elif len(forshow) == 0:
-        write_msg(user, (random.getrandbits(31) * random.choice([-1, 1])), "Для группы, которую вы указали изменений в расписании нет.")
+        pass
 
 def sendeveryday():
     usergroup = {}
