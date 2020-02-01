@@ -84,7 +84,7 @@ def getmuudatused(setgroup, user):
         if setgroup.lower() in i[2].lower():
             makemuudatused(i, forshow)
     if len(forshow) > 0:
-        kogutunniplaan = f"Для группы 🦆 {setgroup} на данный момент следующие изменения в расписании:\n"
+        kogutunniplaan = f"Доброе утро! Для группы 🦆 {setgroup} на данный момент следующие изменения в расписании:\n"
         for w in forshow:
             kogutunniplaan += f"{w}\n"
         write_msg(user, (random.getrandbits(31) * random.choice([-1, 1])), kogutunniplaan)
