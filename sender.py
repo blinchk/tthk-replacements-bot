@@ -84,7 +84,7 @@ def getmuudatused(setgroup, user):
         if setgroup.lower() in i[2].lower():
             makemuudatused(i, forshow)
     if len(forshow) > 0:
-        userfname = (vk.method('users.get', {'user_ids': 'blinchkofficial', 'fields': 'first_name'})[0])["first_name"]
+        userfname = (vk.method('users.get', {'user_ids': user, 'fields': 'first_name'})[0])["first_name"]
         kogutunniplaan = f"Доброе утро, {userfname}! Для группы 🦆 {setgroup} на данный момент следующие изменения в расписании:\n"
         for w in forshow:
             kogutunniplaan += f"{w}\n"
