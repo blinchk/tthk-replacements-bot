@@ -133,11 +133,6 @@ FiveDayskeyboard.add_button(day4, color=VkKeyboardColor.PRIMARY)
 FiveDayskeyboard.add_line()
 FiveDayskeyboard.add_button(day5, color=VkKeyboardColor.PRIMARY)
 
-# парсим
-r = requests.get('http://www.tthk.ee/tunniplaani-muudatused/')
-html_content = r.text
-soup = BeautifulSoup(html_content, 'html.parser')
-table = soup.findChildren('table')
 
 
 def openfromfile(usergroup):
@@ -212,7 +207,11 @@ print("Время запуска бота:")
 print(time.strftime("%D %H:%M", time.localtime()))
 
 
-def parsepage(table):
+def parsepage():
+    r = requests.get('http://www.tthk.ee/tunniplaani-muudatused/')
+    html_content = r.text
+    soup = BeautifulSoup(html_content, 'html.parser')
+    table = soup.findChildren('table')
     muudatused = []
     for i in range(len(table)):
         my_table = table[i]
@@ -274,7 +273,7 @@ def makemuudatused(i, forshow, kuupaev):
 
 def getmuudatused(setgroup, user):
     forshow = []
-    muudatused = parsepage(table)
+    muudatused = parsepage()
     for i in muudatused:
         if setgroup.lower() in i[2].lower():
             makemuudatused(i, forshow, True)
@@ -289,7 +288,7 @@ def getmuudatused(setgroup, user):
 
 def getmuudatusedall(user, date):
     forshow = []
-    muudatused = parsepage(table)
+    muudatused = parsepage()
     for i in muudatused:
         if i[1] == date:
             makemuudatused(i, forshow, False)
@@ -304,7 +303,7 @@ def getmuudatusedall(user, date):
 
 def getmuudatusedweekly(user, weekday):
     forshow = []
-    muudatused = parsepage(table)
+    muudatused = parsepage()
     for i in muudatused:
         if i[0] == weekday:
             makemuudatused(i, forshow, False)
