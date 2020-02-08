@@ -91,35 +91,14 @@ def keynumdays():
     return today, day2, day3, day4, day5
 
 
-if numdayweek() == 1:
-    WeekDayskeyboard.add_button("E", color=VkKeyboardColor.POSITIVE)
-else:
-    WeekDayskeyboard.add_button("E", color=VkKeyboardColor.DEFAULT)
-if numdayweek() == 2:
-    WeekDayskeyboard.add_button("T", color=VkKeyboardColor.POSITIVE)
-else:
-    WeekDayskeyboard.add_button("T", color=VkKeyboardColor.DEFAULT)
-if numdayweek() == 3:
-    WeekDayskeyboard.add_button("K", color=VkKeyboardColor.POSITIVE)
-else:
-    WeekDayskeyboard.add_button("K", color=VkKeyboardColor.DEFAULT)
+WeekDayskeyboard.add_button("E", color=VkKeyboardColor.DEFAULT)
+WeekDayskeyboard.add_button("T", color=VkKeyboardColor.DEFAULT)
+WeekDayskeyboard.add_button("K", color=VkKeyboardColor.DEFAULT)
+WeekDayskeyboard.add_button("N", color=VkKeyboardColor.DEFAULT)
 WeekDayskeyboard.add_line()
-if numdayweek() == 4:
-    WeekDayskeyboard.add_button("N", color=VkKeyboardColor.POSITIVE)
-else:
-    WeekDayskeyboard.add_button("N", color=VkKeyboardColor.DEFAULT)
-if numdayweek() == 5:
-    WeekDayskeyboard.add_button("R", color=VkKeyboardColor.POSITIVE)
-else:
-    WeekDayskeyboard.add_button("R", color=VkKeyboardColor.DEFAULT)
-if numdayweek() == 6:
-    WeekDayskeyboard.add_button("L", color=VkKeyboardColor.POSITIVE)
-else:
-    WeekDayskeyboard.add_button("L", color=VkKeyboardColor.NEGATIVE)
-if numdayweek() == 0:
-    WeekDayskeyboard.add_button("P", color=VkKeyboardColor.POSITIVE)
-else:
-    WeekDayskeyboard.add_button("P", color=VkKeyboardColor.NEGATIVE)
+WeekDayskeyboard.add_button("R", color=VkKeyboardColor.DEFAULT)
+WeekDayskeyboard.add_button("L", color=VkKeyboardColor.NEGATIVE)
+WeekDayskeyboard.add_button("P", color=VkKeyboardColor.NEGATIVE)
 
 today, day2, day3, day4, day5 = keynumdays()
 
