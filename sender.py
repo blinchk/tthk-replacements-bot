@@ -96,11 +96,11 @@ def sendeveryday(justtable):
         getmuudatused(usergroup[i], i, justtable)
 
 while True:
-    r = requests.get('http://www.tthk.ee/tunniplaani-muudatused/')
-    html_content = r.text
-    soup = BeautifulSoup(html_content, 'html.parser')
-    justtable = soup.findChildren('table')
     if time.strftime("%H:%M:%S", time.localtime()) == '05:00:00' and time.strftime("%w", time.localtime()) in ['1','2','3','4','5']:
+        r = requests.get('http://www.tthk.ee/tunniplaani-muudatused/')
+        html_content = r.text
+        soup = BeautifulSoup(html_content, 'html.parser')
+        justtable = soup.findChildren('table')
         sendeveryday(justtable)
     time.sleep(1.1)
     continue
