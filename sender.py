@@ -13,11 +13,6 @@ mysql_p = os.environ["MYSQL_PASS"]
 access_token = os.environ["ACCESS_TOKEN"]
 vk = vk_api.VkApi(token=access_token)
 
-r = requests.get('http://www.tthk.ee/tunniplaani-muudatused/')
-html_content = r.text
-soup = BeautifulSoup(html_content, 'html.parser')
-table = soup.findChildren('table')
-
 def write_msg(user_id, random_id, message):
     vk.method('messages.send', {'user_id': user_id, 'random_id': random_id, 'message': message})
 
@@ -77,9 +72,9 @@ def makemuudatused(i, forshow):
         forshow.append(f"🗓 В {i[0]} Дата: {i[1]}\n🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n")
     return forshow
 
-def getmuudatused(setgroup, user):
+def getmuudatused(setgroup, user, justtable):
     forshow = []
-    muudatused = parsepage(table)
+    muudatused = parsepage(justtable)
     for i in muudatused:
         if setgroup.lower() in i[2].lower():
             makemuudatused(i, forshow)
@@ -92,16 +87,20 @@ def getmuudatused(setgroup, user):
     elif len(forshow) == 0:
         pass
 
-def sendeveryday():
+def sendeveryday(justtable):
     usergroup = {}
     usergroup = openfromfile(usergroup)
     print("Запускаю рассылку:")
     print(time.strftime("%H:%M:%S"))
     for i in usergroup.keys():
-        getmuudatused(usergroup[i], i)
+        getmuudatused(usergroup[i], i, justtable)
 
 while True:
+    r = requests.get('http://www.tthk.ee/tunniplaani-muudatused/')
+    html_content = r.text
+    soup = BeautifulSoup(html_content, 'html.parser')
+    justtable = soup.findChildren('table')
     if time.strftime("%H:%M:%S", time.localtime()) == '05:00:00' and time.strftime("%w", time.localtime()) in ['1','2','3','4','5']:
-        sendeveryday()
+        sendeveryday(justtable)
     time.sleep(1.1)
     continue
