@@ -303,7 +303,7 @@ longpoll = VkLongPoll(vk)
 for event in longpoll.listen():
     usergroup = {}
     if event.type == VkEventType.MESSAGE_NEW:
-        if event.to_me or event.from_chat:
+        if event.to_me:
             uid = str(event.user_id)
             print(event.text)
             if event.text.lower() == "начать" or event.text.lower() == 'start':
@@ -394,7 +394,7 @@ for event in longpoll.listen():
                 writeyourdate[uid] = 0
             elif event.text.lower() == "поддержать проект":
                 write_msg(event.peer_id, event.random_id, "https://www.paypal.me/blinchk")
-            elif "covid-19" in event.text.lower():
+            elif event.text.lower() == "covid-19":
                 covid = parse.getdata()
                 write_msg(event.peer_id, event.random_id,
                           f"🦠 COVID-19 в Эстонии:\n☣ {covid[0]} случаев заражения из 🧪 {covid[1]} тестов\n"
