@@ -2,5 +2,4 @@ vk_api
 bs4
 pyMySQL
 schedule
-json
 urllib
