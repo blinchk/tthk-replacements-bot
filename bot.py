@@ -54,7 +54,7 @@ keyboard.add_button('Изменить группу', color=VkKeyboardColor.NEGAT
 keyboard.add_button('Рассылка', color=VkKeyboardColor.DEFAULT)
 
 
-
+###
 def numdayweek():
     result = time.gmtime(7200)
     return calendar.weekday(result.tm_year, result.tm_mon, result.tm_mday)
@@ -379,7 +379,7 @@ for event in longpoll.listen():
                 writeyourdate[uid] = 0
             elif event.text.lower() == "поддержать проект":
                 write_msg(event.peer_id, event.random_id, "https://www.paypal.me/blinchk")
-            elif event.text.lower() == "COVID-19":
+            elif event.text.lower() == "covid-19":
                 covid = COVIDParser.getdata()
                 write_msg(event.peer_id, event.random_id, f"🦠 COVID-19 в Эстонии:\n☣ {covid[0]} случаев заражения из 🧪 {covid[1]} тестов\n"
                                                           f"😷 {covid[5]} болеет на данный момент и 💉 {covid[2]} выздоровели\n☠ {covid[3]} человек умерло.\n\n"
