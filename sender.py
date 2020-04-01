@@ -81,6 +81,7 @@ def getmuudatused(setgroup, user, justtable):
     forshow = []
     muudatused = parsepage(justtable)
     for i in muudatused:
+        print(i)
         if setgroup.lower() in i[2].lower():
             makemuudatused(i, forshow)
     if len(forshow) > 0:
