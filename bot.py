@@ -301,11 +301,11 @@ def getmuudatusedweekly(user, weekday):
 
 longpoll = VkLongPoll(vk)
 for event in longpoll.listen():
-    print(event)
     usergroup = {}
     if event.type == VkEventType.MESSAGE_NEW:
         if event.to_me or event.from_chat:
             uid = str(event.user_id)
+            print(event.text)
             if event.text.lower() == "начать" or event.text.lower() == 'start':
                 usergroup = openfromfile(usergroup)
                 send_keyboard(event.peer_id, event.random_id, "Выберите вариант из клаиватуры ниже.")
