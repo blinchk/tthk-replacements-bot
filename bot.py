@@ -405,16 +405,20 @@ for event in longpoll.listen():
                     password=mysql_p,
                     db='heroku_0ccfbccd1823b55',
                     cursorclass=DictCursor)
-                with event.user_id as i, connection.cursor() as cursor:
-                    cursor.execute("""SELECT sendStatus FROM users WHERE `vkid`=%s;""" % (i))
+                with connection.cursor() as cursor:
+                    cursor.execute("""SELECT sendStatus FROM users WHERE `vkid`=%s;""" % (event.user_id))
                     row = cursor.fetchone()
                     sendStatus = row['sendStatus'];
                     if sendStatus == 1:
-                        cursor.execute("""UPDATE `heroku_0ccfbccd1823b55`.`users` SET `sendStatus`=0 WHERE (`vkid`='%s');""" % (i))
-                        write_msg(i, event.random_id, "Рассылка была выключена.")
+                        cursor.execute(
+                            """UPDATE `heroku_0ccfbccd1823b55`.`users` SET `sendStatus`=0 WHERE (`vkid`='%s');""" % (
+                                event.user_id))
+                        write_msg(event.user_id, event.random_id, "Рассылка была выключена.")
                     else:
-                        cursor.execute("""UPDATE `heroku_0ccfbccd1823b55`.`users` SET `sendStatus`=1 WHERE (`vkid`='%s');""" % (i))
-                        write_msg(i, event.random_id, "Рассылка была включена.")
+                        cursor.execute(
+                            """UPDATE `heroku_0ccfbccd1823b55`.`users` SET `sendStatus`=1 WHERE (`vkid`='%s');""" % (
+                                event.user_id))
+                        write_msg(event.user_id, event.random_id, "Рассылка была включена.")
                     cursor.close()
                 connection.commit()
                 connection.close()
