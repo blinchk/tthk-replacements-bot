@@ -93,24 +93,24 @@ def sendeveryday(justtable):
     usergroup = openfromfile(usergroup)
     print("Запускаю рассылку:")
     print(time.strftime("%H:%M:%S"))
-    connection = pymysql.connect(
-        host='eu-cdbr-west-02.cleardb.net',
-        user=mysql_l,
-        password=mysql_p,
-        db='heroku_0ccfbccd1823b55',
-        cursorclass=DictCursor)
-    with event.user_id as i, connection.cursor() as cursor:
-        cursor.execute("""SELECT sendStatus FROM users WHERE `vkid`=%s;""" % (i))
-        row = cursor.fetchone()
-        sendStatus = row['sendStatus']
     for i in usergroup.keys():
+        connection = pymysql.connect(
+            host='eu-cdbr-west-02.cleardb.net',
+            user=mysql_l,
+            password=mysql_p,
+            db='heroku_0ccfbccd1823b55',
+            cursorclass=DictCursor)
+        with connection.cursor() as cursor:
+            cursor.execute("""SELECT sendStatus FROM users WHERE `vkid`=%s;""" % (i))
+            row = cursor.fetchone()
+            sendStatus = row['sendStatus']
         if sendStatus == 1:
             covid = COVIDParser.getdata()
-            write_msg(i, event.random_id,
+            write_msg(i, (random.getrandbits(31) * random.choice([-1, 1])),
                       f"🦠 COVID-19 в Эстонии:\n☣ {covid[0]} случаев заражения из 🧪 {covid[1]} тестов\n"
                       f"😷 {covid[5]} болеет на данный момент и 💉 {covid[2]} выздоровели\n☠ {covid[3]} человек умерло.\n\n"
                       f"⚠️В общественнах местах разрешено находится лишь вдвоём и держать дистанцию 2 метра от других людей. ⚠️"
-                      f"TTHK закрыт с 16 марта с чрезвычайным положением в Эстонской Республике.")
+                      f"TTHK закрыт с 16 марта, в связи с чрезвычайным положением в Эстонской Республике.")
 #           getmuudatused(usergroup[i], i, justtable)
         else:
             pass
