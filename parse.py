@@ -6,7 +6,6 @@ def getdata():
     url = 'https://raw.githubusercontent.com/okestonia/koroonakaart/master/koroonakaart/src/data.json'
     data = urllib.request.urlopen(url).read()
     self.data = json.loads(data)
-    global data
     covid = [data['confirmedCasesNumber'], data['testsAdministeredNumber'], data['recoveredNumber'],
              data['deceasedNumber'], data['activeCasesNumber']]
     print(covid)
