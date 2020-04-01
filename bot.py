@@ -3,15 +3,16 @@ import datetime
 import os
 import re
 import time
+
 import pymysql
 import requests
-import json
 import vk_api as vkapi
-from parse import COVIDParser
 from bs4 import BeautifulSoup
 from pymysql.cursors import DictCursor
 from vk_api.keyboard import VkKeyboard, VkKeyboardColor
 from vk_api.longpoll import VkLongPoll, VkEventType
+
+import parse
 
 output_rows = []
 writeyourgroup = {}
@@ -380,7 +381,7 @@ for event in longpoll.listen():
             elif event.text.lower() == "поддержать проект":
                 write_msg(event.peer_id, event.random_id, "https://www.paypal.me/blinchk")
             elif event.text.lower() == "covid-19":
-                covid = COVIDParser.getdata()
+                covid = parse.getdata()
                 write_msg(event.peer_id, event.random_id, f"🦠 COVID-19 в Эстонии:\n☣ {covid[0]} случаев заражения из 🧪 {covid[1]} тестов\n"
                                                           f"😷 {covid[5]} болеет на данный момент и 💉 {covid[2]} выздоровели\n☠ {covid[3]} человек умерло.\n\n"
                                                           f"⚠️В общественнах местах разрешено находится лишь вдвоём и держать дистанцию 2 метра от других людей. ⚠️")

@@ -1,18 +1,22 @@
-from bs4 import BeautifulSoup
-import vk_api
-import time
-import requests
-import pymysql
 import os
 import random
-from parse import COVIDParser
+import time
+
+import pymysql
+import requests
+import vk_api
+from bs4 import BeautifulSoup
 from pymysql.cursors import DictCursor
+
+import parse
+
 print("Sender launched")
 
 mysql_l = os.environ['MYSQL_LOGIN']
 mysql_p = os.environ["MYSQL_PASS"]
 access_token = os.environ["ACCESS_TOKEN"]
 vk = vk_api.VkApi(token=access_token)
+
 
 def write_msg(user_id, random_id, message):
     vk.method('messages.send', {'user_id': user_id, 'random_id': random_id, 'message': message})
@@ -105,7 +109,7 @@ def sendeveryday(justtable):
             row = cursor.fetchone()
             sendStatus = row['sendStatus']
         if sendStatus == 1:
-            covid = COVIDParser.getdata()
+            covid = parse.getdata()
             write_msg(i, (random.getrandbits(31) * random.choice([-1, 1])),
                       f"🦠 COVID-19 в Эстонии:\n☣ {covid[0]} случаев заражения из 🧪 {covid[1]} тестов\n"
                       f"😷 {covid[5]} болеет на данный момент и 💉 {covid[2]} выздоровели\n☠ {covid[3]} человек умерло.\n\n"
