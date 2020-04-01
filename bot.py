@@ -364,8 +364,8 @@ for event in longpoll.listen():
                     writeyourgroup[uid] = 1
                 if uid in usergroup.keys():
                     #                    lastmuudatused = getmuudatused(usergroup[uid], event.user_id)
-                    write_msg(event.user_id, event.random_id,
-                              f"Вы указали, что Ваша группа: {usergroup[uid]}.\nДля того, чтобы изменить свою группу нажмите \"Изменить группу\".")
+                    write_msg(uid, event.random_id,
+                              "В связи с коронавирусом COVID-19 и закрытием учебного заведения, изменений в расписании на данный момент нет.")
             elif event.text.lower() == "по датам":
                 send_datekeyboard(event.peer_id, event.random_id,
                                   f"Выберите дату, которую желаете найти или укажите в формате ДД.ММ.ГГГГ:")
