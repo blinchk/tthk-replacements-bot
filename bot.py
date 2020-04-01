@@ -5,7 +5,9 @@ import re
 import time
 import pymysql
 import requests
+import json
 import vk_api as vkapi
+from parse import COVIDParser
 from bs4 import BeautifulSoup
 from pymysql.cursors import DictCursor
 from vk_api.keyboard import VkKeyboard, VkKeyboardColor
@@ -40,18 +42,18 @@ keyboard = VkKeyboard(one_time=False, inline=False)
 WeekDayskeyboard = VkKeyboard(one_time=False, inline=True)
 FiveDayskeyboard = VkKeyboard(one_time=False, inline=True)
 
-keyboard.add_button('Изменения моей группы', color=VkKeyboardColor.PRIMARY)
+keyboard.add_button('Моя группа', color=VkKeyboardColor.PRIMARY)
+keyboard.add_button('COVID-19', color=VkKeyboardColor.NEGATIVE)
 keyboard.add_line()
-keyboard.add_button('Изменения по датам', color=VkKeyboardColor.DEFAULT)
-keyboard.add_line()
-keyboard.add_button('Изменения по дню недели', color=VkKeyboardColor.DEFAULT)
-keyboard.add_line()  # Переход на вторую строку
-keyboard.add_button('Изменения по группам', color=VkKeyboardColor.DEFAULT)
+keyboard.add_button('По датам', color=VkKeyboardColor.DEFAULT)
+keyboard.add_button('По дню недели', color=VkKeyboardColor.DEFAULT)
+keyboard.add_button('По группам', color=VkKeyboardColor.DEFAULT)
 keyboard.add_line()  # Переход на вторую строку
 keyboard.add_button('В какой я группе?', color=VkKeyboardColor.POSITIVE)
 keyboard.add_button('Изменить группу', color=VkKeyboardColor.NEGATIVE)
+keyboard.add_button('Рассылка', color=VkKeyboardColor.DEFAULT)
 keyboard.add_line()  # Переход на вторую строку
-keyboard.add_button("Поддержать проект", color=VkKeyboardColor.DEFAULT)
+
 
 
 def numdayweek():
@@ -324,7 +326,7 @@ for event in longpoll.listen():
                 usergroup = openfromfile(usergroup)
                 write_msg(event.user_id, event.random_id, f"Вы указали, что Ваша группа: {usergroup[uid]}.")
                 writeyourgroup[uid] = 0
-            elif event.text.lower() == "изменения по группам":
+            elif event.text.lower() == "по группам":
                 write_msg(event.user_id, event.random_id, f"Введите код группы, для которой нужно найти изменения: ")
                 writeyourgroup[uid] = 0
                 writesearchgroup[uid] = 1
@@ -347,7 +349,7 @@ for event in longpoll.listen():
                 if uid in usergroup.keys():
                     write_msg(event.user_id, event.random_id,
                               f"Вы указали, что Ваша группа: {usergroup[uid]}.\nДля того, чтобы изменить свою группу нажмите \"Изменить группу\".")
-            elif event.text.lower() == "изменения моей группы":
+            elif event.text.lower() == "моя группа":
                 usergroup = openfromfile(usergroup)
                 if uid not in usergroup.keys():
                     write_msg(event.user_id, event.random_id, "У вас не указан код группы.")
@@ -356,11 +358,11 @@ for event in longpoll.listen():
                     writeyourgroup[uid] = 1
                 if uid in usergroup.keys():
                     lastmuudatused = getmuudatused(usergroup[uid], event.user_id)
-            elif event.text.lower() == "изменения по датам":
+            elif event.text.lower() == "по датам":
                 send_datekeyboard(event.peer_id, event.random_id,
                                   f"Выберите дату, которую желаете найти или укажите в формате ДД.ММ.ГГГГ:")
                 writeyourdate[uid] = 1
-            elif event.text.lower() == "изменения по дню недели":
+            elif event.text.lower() == "по дню недели":
                 send_weekkeyboard(event.peer_id, event.random_id,
                                   "Выберите день недели с помощью клавиатуры: E, T, K, N, R, L, P.")
                 writeyourweekday[uid] = 1
@@ -378,6 +380,30 @@ for event in longpoll.listen():
                 writeyourdate[uid] = 0
             elif event.text.lower() == "поддержать проект":
                 write_msg(event.peer_id, event.random_id, "https://www.paypal.me/blinchk")
+            elif event.text.lower() == "COVID-19":
+                covid = COVIDParser.getdata()
+                write_msg(event.peer_id, event.random_id, f"🦠 COVID-19 в Эстонии:\n☣ {covid[0]} случаев заражения из 🧪 {covid[1]} тестов\n"
+                                                          f"😷 {covid[5]} болеет на данный момент и 💉 {covid[2]} выздоровели\n☠ {covid[3]} человек умерло.\n\n"
+                                                          f"⚠️В общественнах местах разрешено находится лишь вдвоём и держать дистанцию 2 метра от других людей. ⚠️")
+            elif event.text.lower() == "рассылка":
+                connection = pymysql.connect(
+                    host='eu-cdbr-west-02.cleardb.net',
+                    user=mysql_l,
+                    password=mysql_p,
+                    db='heroku_0ccfbccd1823b55',
+                    cursorclass=DictCursor)
+                with event.user_id as i, connection.cursor() as cursor:
+                    cursor.execute("""SELECT sendStatus FROM users WHERE `vkid`=%s;""" % (i))
+                    row = cursor.fetchone()
+                    sendStatus = row['sendStatus'];
+                    if sendStatus == 1:
+                        cursor.execute("""UPDATE `heroku_0ccfbccd1823b55`.`users` SET `sendStatus`=0 WHERE (`vkid`='%s');""" % (i))
+                        write_msg(i, event.random_id, "Рассылка была выключена.")
+                    else:
+                        cursor.execute("""UPDATE `heroku_0ccfbccd1823b55`.`users` SET `sendStatus`=1 WHERE (`vkid`='%s');""" % (i))
+                        write_msg(i, event.random_id, "Рассылка была включена.")
+                    cursor.close()
+                connection.commit()
+                connection.close()
             else:
                 write_msg(event.user_id, event.random_id, f"Данной команды не существует")
-# enddatetosearch

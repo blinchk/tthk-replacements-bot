@@ -5,6 +5,7 @@ import requests
 import pymysql
 import os
 import random
+from parse import COVIDParser
 from pymysql.cursors import DictCursor
 print("Sender launched")
 
@@ -92,11 +93,30 @@ def sendeveryday(justtable):
     usergroup = openfromfile(usergroup)
     print("Запускаю рассылку:")
     print(time.strftime("%H:%M:%S"))
+    connection = pymysql.connect(
+        host='eu-cdbr-west-02.cleardb.net',
+        user=mysql_l,
+        password=mysql_p,
+        db='heroku_0ccfbccd1823b55',
+        cursorclass=DictCursor)
+    with event.user_id as i, connection.cursor() as cursor:
+        cursor.execute("""SELECT sendStatus FROM users WHERE `vkid`=%s;""" % (i))
+        row = cursor.fetchone()
+        sendStatus = row['sendStatus']
     for i in usergroup.keys():
-        getmuudatused(usergroup[i], i, justtable)
+        if sendStatus == 1:
+            covid = COVIDParser.getdata()
+            write_msg(i, event.random_id,
+                      f"🦠 COVID-19 в Эстонии:\n☣ {covid[0]} случаев заражения из 🧪 {covid[1]} тестов\n"
+                      f"😷 {covid[5]} болеет на данный момент и 💉 {covid[2]} выздоровели\n☠ {covid[3]} человек умерло.\n\n"
+                      f"⚠️В общественнах местах разрешено находится лишь вдвоём и держать дистанцию 2 метра от других людей. ⚠️"
+                      f"TTHK закрыт с 16 марта с чрезвычайным положением в Эстонской Республике.")
+#           getmuudatused(usergroup[i], i, justtable)
+        else:
+            pass
 
 while True:
-    if time.strftime("%H:%M:%S", time.localtime()) == '05:00:00' and time.strftime("%w", time.localtime()) in ['1','2','3','4','5']:
+    if time.strftime("%H:%M:%S", time.localtime()) == '10:30:00' and time.strftime("%w", time.localtime()) in ['1','2','3','4','5']:
         r = requests.get('http://www.tthk.ee/tunniplaani-muudatused/')
         html_content = r.text
         soup = BeautifulSoup(html_content, 'html.parser')
