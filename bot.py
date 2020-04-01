@@ -301,6 +301,7 @@ def getmuudatusedweekly(user, weekday):
 
 longpoll = VkLongPoll(vk)
 for event in longpoll.listen():
+    print(event)
     usergroup = {}
     if event.type == VkEventType.MESSAGE_NEW:
         if event.to_me:
