@@ -304,7 +304,7 @@ for event in longpoll.listen():
     print(event)
     usergroup = {}
     if event.type == VkEventType.MESSAGE_NEW:
-        if event.to_me:
+        if event.to_me or event.from_chat:
             uid = str(event.user_id)
             if event.text.lower() == "начать" or event.text.lower() == 'start':
                 usergroup = openfromfile(usergroup)
@@ -425,9 +425,3 @@ for event in longpoll.listen():
                 connection.close()
             else:
                 write_msg(event.user_id, event.random_id, f"Данной команды не существует")
-        if event.peer_id != event.from_id:
-            if event.object.text.lower() in "COVID-19":
-                write_msg(event.peer_id, event.random_id,
-                          f"🦠 COVID-19 в Эстонии:\n☣ {covid[0]} случаев заражения из 🧪 {covid[1]} тестов\n"
-                          f"😷 {covid[4]} болеет на данный момент и 💉 {covid[2]} выздоровели\n☠ {covid[3]} человек умерло.\n\n"
-                          f"⚠️В общественнах местах разрешено находится лишь вдвоём и держать дистанцию 2 метра от других людей. ⚠️")
