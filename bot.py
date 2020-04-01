@@ -124,7 +124,7 @@ def openfromfile(usergroup):
         db='heroku_0ccfbccd1823b55',
         cursorclass=DictCursor)
     with connection.cursor() as cursor:
-        cursor.execute("""SELECT * FROM USERS""")
+        cursor.execute("""SELECT vkid, thkruhm FROM USERS""")
         row = cursor.fetchall()
         for i in row:
             usergroup[i['vkid']] = i['thkruhm']
@@ -141,7 +141,7 @@ def updatefile(usergroup):
         db='heroku_0ccfbccd1823b55',
         cursorclass=DictCursor)
     with connection.cursor() as cursor:
-        cursor.execute("""SELECT vkid FROM users""")
+        cursor.execute("""SELECT vkid, thkruhm FROM users""")
         row = cursor.fetchall()
         for i in row:
             otheruser.append(i['vkid'])
