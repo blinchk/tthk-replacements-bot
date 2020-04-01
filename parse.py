@@ -6,6 +6,7 @@ class COVIDParser:
         data = urllib.request.urlopen(url).read()
         self.data = json.loads(data)
     def getdata():
-        covid = [self.data['confirmedCasesNumber'], self.data['testsAdministeredNumber'], self.data['recoveredNumber'], self.data['deceasedNumber'], self.data['activeCasesNumber']]
+        global data
+        covid = [data['confirmedCasesNumber'], data['testsAdministeredNumber'], data['recoveredNumber'], data['deceasedNumber'], data['activeCasesNumber']]
         print(covid)
         return covid
