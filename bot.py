@@ -52,7 +52,6 @@ keyboard.add_line()  # Переход на вторую строку
 keyboard.add_button('В какой я группе?', color=VkKeyboardColor.POSITIVE)
 keyboard.add_button('Изменить группу', color=VkKeyboardColor.NEGATIVE)
 keyboard.add_button('Рассылка', color=VkKeyboardColor.DEFAULT)
-keyboard.add_line()  # Переход на вторую строку
 
 
 
