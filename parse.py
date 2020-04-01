@@ -5,7 +5,7 @@ class COVIDParser:
         url = 'https://raw.githubusercontent.com/okestonia/koroonakaart/master/koroonakaart/src/data.json'
         data = urllib.request.urlopen(url).read()
         self.data = json.loads(data)
-    def getdata(self):
+    def getdata():
         covid = [self.data['confirmedCasesNumber'], self.data['testsAdministeredNumber'], self.data['recoveredNumber'], self.data['deceasedNumber'], self.data['activeCasesNumber']]
         print(covid)
         return covid
