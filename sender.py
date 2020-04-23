@@ -109,7 +109,7 @@ def sendeveryday(justtable):
             cursor.execute("""SELECT sendStatus FROM users WHERE `vkid`=%s;""" % (i))
             row = cursor.fetchone()
             sendStatus = row[0]
-            if sendStatus == 1 or sendStatus == "1":
+            if sendStatus == 1:
                 covid = parse.getdata()
                 write_msg(i, (random.getrandbits(31) * random.choice([-1, 1])),
                           f"🦠 COVID-19 в Эстонии:\n☣ {covid[0]} случаев заражения из 🧪 {covid[1]} тестов\n"
@@ -117,6 +117,7 @@ def sendeveryday(justtable):
                           f"⚠️В общественнах местах разрешено находится лишь вдвоём и держать дистанцию 2 метра от других людей. ⚠️"
                           f"TTHK закрыт с 16 марта, в связи с чрезвычайным положением в Эстонской Республике.")
             # getmuudatused(usergroup[i], i, justtable)
+            connection.close()
         else:
             pass
 
