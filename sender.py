@@ -108,7 +108,7 @@ def sendeveryday(justtable):
         with connection.cursor() as cursor:
             cursor.execute("""SELECT sendStatus FROM users WHERE `vkid`=%s;""" % (i))
             row = cursor.fetchone()
-            sendStatus = row['sendStatus']
+            sendStatus = row[0]
         if sendStatus == 1:
             covid = parse.getdata()
             write_msg(i, (random.getrandbits(31) * random.choice([-1, 1])),
