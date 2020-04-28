@@ -106,7 +106,7 @@ def sendeveryday(justtable):
             db='heroku_0ccfbccd1823b55',
             cursorclass=DictCursor)
         with connection.cursor() as cursor:
-            cursor.execute("""SELECT sendStatus FROM users WHERE `vkid`=%s;""" % (i))
+            cursor.execute("""SELECT sendStatus FROM users WHERE `vkid`=%s; """ % (i))
             row = cursor.fetchone()
             sendStatus = row[0]
             if sendStatus == 1:
@@ -116,10 +116,12 @@ def sendeveryday(justtable):
                           f"😷 {covid[5]} болеет на данный момент и 💉 {covid[2]} выздоровели\n☠ {covid[3]} человек умерло.\n\n"
                           f"⚠️В общественнах местах разрешено находится лишь вдвоём и держать дистанцию 2 метра от других людей. ⚠️"
                           f"TTHK закрыт с 16 марта, в связи с чрезвычайным положением в Эстонской Республике.")
+                connection.close()
             # getmuudatused(usergroup[i], i, justtable)
-            connection.close()
-        else:
-            pass
+            else:
+                connection.close()
+                pass
+
 
 while True:
     if time.strftime("%H:%M:%S", time.localtime()) == '10:30:00':
