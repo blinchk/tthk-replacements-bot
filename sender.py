@@ -33,7 +33,6 @@ def parsepage(table):
                 if cell.text not in ["\xa0", "Kuupäev", "Rühm", "Tund", "Õpetaja", "Ruum"]:
                     data = cell.text
                     muudatus.append(data)
-            # здесь есть полноценный список muudatus
             if muudatus != []:
                 muudatused.append(muudatus)
         else:
@@ -50,10 +49,8 @@ def openfromfile(usergroup):
     with connection.cursor() as cursor:
         cursor.execute("""SELECT * FROM USERS""")
         row = cursor.fetchall()
-#        print(row)
         for i in row:
-#            print(i)
-            usergroup[i['vkid']] = i['thkruhm']
+            usergroup[i[1]] = i[2]
     cursor.close()
     connection.close()
     return usergroup
@@ -117,7 +114,6 @@ def sendeveryday(justtable):
                           f"⚠️В общественнах местах разрешено находится лишь вдвоём и держать дистанцию 2 метра от других людей. ⚠️"
                           f"TTHK закрыт с 16 марта, в связи с чрезвычайным положением в Эстонской Республике.")
                 connection.close()
-            # getmuudatused(usergroup[i], i, justtable)
             else:
                 connection.close()
                 pass
