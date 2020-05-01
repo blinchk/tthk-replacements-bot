@@ -96,6 +96,7 @@ def sendeveryday(justtable):
     print("Запускаю рассылку:")
     print(time.strftime("%H:%M:%S"))
     for i in usergroup.keys():
+        print(i)
         connection = pymysql.connect(
             host='eu-cdbr-west-02.cleardb.net',
             user=mysql_l,
@@ -103,9 +104,9 @@ def sendeveryday(justtable):
             db='heroku_0ccfbccd1823b55',
             cursorclass=DictCursor)
         with connection.cursor() as cursor:
-            cursor.execute("""SELECT sendStatus FROM users WHERE `vkid`=%s; """ % (i))
+            cursor.execute("""SELECT * FROM users WHERE `vkid`=%s; """ % (i))
             row = cursor.fetchone()
-            sendStatus = row[0]
+            sendStatus = row[3]
             if sendStatus == 1:
                 covid = parse.getdata()
                 write_msg(i, (random.getrandbits(31) * random.choice([-1, 1])),
