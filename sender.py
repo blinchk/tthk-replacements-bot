@@ -47,7 +47,7 @@ def openfromfile(usergroup):
         db='heroku_0ccfbccd1823b55',
         cursorclass=DictCursor)
     with connection.cursor() as cursor:
-        cursor.execute("""SELECT * FROM USERS""")
+        cursor.execute("""SELECT * FROM USERS WHERE `sendStatus` = '1';""")
         row = cursor.fetchall()
         for i in row:
             usergroup[i[1]] = i[2]
@@ -97,27 +97,12 @@ def sendeveryday(justtable):
     print(time.strftime("%H:%M:%S"))
     for i in usergroup.keys():
         print(i)
-        connection = pymysql.connect(
-            host='eu-cdbr-west-02.cleardb.net',
-            user=mysql_l,
-            password=mysql_p,
-            db='heroku_0ccfbccd1823b55',
-            cursorclass=DictCursor)
-        with connection.cursor() as cursor:
-            cursor.execute("""SELECT * FROM users WHERE `vkid`=%s; """ % (i))
-            row = cursor.fetchone()
-            sendStatus = row[3]
-            if sendStatus == 1:
-                covid = parse.getdata()
-                write_msg(i, (random.getrandbits(31) * random.choice([-1, 1])),
-                          f"🦠 COVID-19 в Эстонии:\n☣ {covid[0]} случаев заражения из 🧪 {covid[1]} тестов\n"
-                          f"😷 {covid[5]} болеет на данный момент и 💉 {covid[2]} выздоровели\n☠ {covid[3]} человек умерло.\n\n"
-                          f"⚠️В общественнах местах разрешено находится лишь вдвоём и держать дистанцию 2 метра от других людей. ⚠️"
-                          f"TTHK закрыт с 16 марта, в связи с чрезвычайным положением в Эстонской Республике.")
-                connection.close()
-            else:
-                connection.close()
-                pass
+        covid = parse.getdata()
+        write_msg(i, (random.getrandbits(31) * random.choice([-1, 1])),
+                  f"🦠 COVID-19 в Эстонии:\n☣ {covid[0]} случаев заражения из 🧪 {covid[1]} тестов\n"
+                  f"😷 {covid[5]} болеет на данный момент и 💉 {covid[2]} выздоровели\n☠ {covid[3]} человек умерло.\n\n"
+                  f"⚠️В общественнах местах разрешено находится лишь вдвоём и держать дистанцию 2 метра от других людей. ⚠️"
+                  f"TTHK закрыт с 16 марта, в связи с чрезвычайным положением в Эстонской Республике.")
 
 
 while True:
