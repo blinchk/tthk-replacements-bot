@@ -50,7 +50,7 @@ def openfromfile(usergroup):
         cursor.execute("""SELECT * FROM USERS WHERE `sendStatus` = '1';""")
         row = cursor.fetchall()
         for i in row:
-            usergroup[i[1]] = i[2]
+            usergroup[i['vkid']] = i['thkruhm']
     cursor.close()
     connection.close()
     return usergroup
@@ -106,7 +106,7 @@ def sendeveryday(justtable):
 
 
 while True:
-    if time.strftime("%H:%M:%S", time.localtime()) == '10:30:00':
+    if time.strftime("%H:%M:%S", time.localtime()) == '12:00:00':
         r = requests.get('http://www.tthk.ee/tunniplaani-muudatused/')
         html_content = r.text
         soup = BeautifulSoup(html_content, 'html.parser')
