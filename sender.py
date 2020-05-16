@@ -106,7 +106,7 @@ def sendeveryday(justtable):
 
 
 while True:
-    if time.strftime("%H:%M:%S", time.localtime()) == '12:00:00':
+    if time.strftime("%H:%M:%S", time.localtime()) == '12:30:00':
         r = requests.get('http://www.tthk.ee/tunniplaani-muudatused/')
         html_content = r.text
         soup = BeautifulSoup(html_content, 'html.parser')
