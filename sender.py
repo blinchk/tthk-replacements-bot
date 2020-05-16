@@ -47,7 +47,7 @@ def openfromfile(usergroup):
         db='heroku_0ccfbccd1823b55',
         cursorclass=DictCursor)
     with connection.cursor() as cursor:
-        cursor.execute("""SELECT * FROM USERS WHERE `sendStatus` = '1';""")
+        cursor.execute("""SELECT vkid, thkruhm FROM USERS WHERE `sendStatus` = '1';""")
         row = cursor.fetchall()
         for i in row:
             usergroup[i['vkid']] = i['thkruhm']
