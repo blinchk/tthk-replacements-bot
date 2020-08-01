@@ -45,49 +45,50 @@ class Server:
             if event.type == VkEventType.MESSAGE_NEW:
                 if event.to_me:
                     if event.text.lower() == 'начать':  # Start command
-                        self.bot.sendKeyboard(keyboard=k.keyboard, id=event.user_id,
+                        self.bot.sendKeyboard(keyboard=k.keyboard, vkid=event.user_id,
                                               msg='Выберите вариант из списка ниже.')
                     elif event.text.lower() == 'covid-19':  # Returns COVID-19 data
-                        self.bot.sendMsg(id=event.user_id, msg=covid.getData())
+                        self.bot.sendMsg(vkid=event.user_id, msg=covid.getData())
                     elif event.text.lower() == 'по датам':  # Selection keyboard of the next 5 days
                         self.writedate.append(event.user_id)
-                        self.bot.sendKeyboard(keyboard=k.fiveDaysKeyboard, id=event.user_id,
+                        self.bot.sendKeyboard(keyboard=k.fiveDaysKeyboard, vkid=event.user_id,
                                               msg='Выберите дату из списка ниже:')
                     elif event.text.lower() == 'по дню недели':  # Selection keyboard of days of the week
                         self.writeweekday.append(event.user_id)
-                        self.bot.sendKeyboard(keyboard=k.weekDaysKeyboard, id=event.user_id,
+                        self.bot.sendKeyboard(keyboard=k.weekDaysKeyboard, vkid=event.user_id,
                                               msg='Выберите день недели из списка ниже:')
                     elif event.text.lower() == 'в какой я группе?':  # Return current user's group
-                        self.bot.sendMsg(id=event.user_id,
-                                         msg=f'Вы указали, что Ваша группа: {db.getUserGroup(id=event.user_id)}.\n'
+                        self.bot.sendMsg(vkid=event.user_id,
+                                         msg=f'Вы указали, что Ваша группа: {db.getUserGroup(vkid=event.user_id)}.\n'
                                              'Для того, чтобы изменить свою группу нажмите \"Изменить группу\".')
                     elif event.text.lower() == 'изменить группу':  # User can change group
-                        self.bot.sendMsg(id=event.user_id, msg="В какой группе вы находитесь?\n"
-                                                               "Для групп, которые делятся на подгруппы указывается только группа: MEHpv19 вместо MEHpv19-2.\n"
-                                                               "Укажите код вашей группы:")
+                        self.bot.sendMsg(vkid=event.user_id, msg="В какой группе вы находитесь?\n"
+                                                                 "Для групп, которые делятся на подгруппы указывается только группа: MEHpv19 вместо MEHpv19-2.\n"
+                                                                 "Укажите код вашей группы:")
                         self.writeyourgroup.append(event.user_id)
                     elif event.text.lower()[
                          -3:] in tc.getGroupList() and event.user_id in self.writeyourgroup:  # Receives group of the user
-                        db.setUserGroup(id=event.user_id, group=event.text)
-                        self.bot.sendMsg(id=event.user_id,
-                                         msg=f'Вы указали, что Ваша группа: {db.getUserGroup(id=event.user_id)}.')
+                        db.setUserGroup(vkid=event.user_id, group=event.text)
+                        self.bot.sendMsg(vkid=event.user_id,
+                                         msg=f'Вы указали, что Ваша группа: {db.getUserGroup(vkid=event.user_id)}.')
                         self.writeyourgroup.remove(event.user_id)
                     elif event.text.lower() == 'моя группа':
-                        self.bot.sendMsg(id=event.user_id, msg=c.makeChanges(db.getUserGroup(id=event.user_id)))
+                        self.bot.sendMsg(vkid=event.user_id, msg=c.makeChanges(db.getUserGroup(vkid=event.user_id)))
                     elif event.text.lower() == 'по группам':  # Changes by group
-                        self.bot.sendMsg(id=event.user_id, msg="Введите код группы, для которой нужно найти изменения:")
+                        self.bot.sendMsg(vkid=event.user_id,
+                                         msg="Введите код группы, для которой нужно найти изменения:")
                         self.writesearchgroup.append(event.user_id)
                     elif event.text.lower()[-3:] in tc.getGroupList() and event.user_id in self.writesearchgroup:
-                        self.bot.sendMsg(id=event.user_id, msg=c.makeChanges(event.text))
+                        self.bot.sendMsg(vkid=event.user_id, msg=c.makeChanges(event.text))
                         self.writesearchgroup.remove(event.user_id)
                     elif event.text in tc.keyboardNumDays and event.user_id in self.writeweekday:
-                        self.bot.sendMsg(id=event.user_id, msg=c.makeChanges(event.text))
+                        self.bot.sendMsg(vkid=event.user_id, msg=c.makeChanges(event.text))
                         self.writeweekday.remove(event.user_id)
                     elif event.text[-4:] == str(datetime.date.today().year) and event.user_id in self.writedate:
-                        self.bot.sendMsg(id=event.user_id, msg=c.makeChanges(event.text))
+                        self.bot.sendMsg(vkid=event.user_id, msg=c.makeChanges(event.text))
                         self.writedate.remove(event.user_id)
                     else:
-                        self.bot.sendMsg(id=event.user_id, msg="Данной команды не существует.")
+                        self.bot.sendMsg(vkid=event.user_id, msg="Данной команды не существует.")
             elif event.type == VkEventType.USER_TYPING:
                 print(f"Пользователь {event.user_id} пишет.")  # Console msg when user typing something
 
@@ -173,11 +174,11 @@ class Bot:
     def __init__(self, vk):
         self.vk = vk  # Getting VKApi options from server
 
-    def sendMsg(self, id, msg):  # Sending message without keyboard
-        self.vk.method('messages.send', {'user_id': id, 'random_id': get_random_id(), 'message': msg})
+    def sendMsg(self, vkid, msg):  # Sending message without keyboard
+        self.vk.method('messages.send', {'user_id': vkid, 'random_id': get_random_id(), 'message': msg})
 
-    def sendKeyboard(self, keyboard, id, msg):
-        self.vk.method('messages.send', {'user_id': id, 'random_id': get_random_id(), 'message': msg,
+    def sendKeyboard(self, keyboard, vkid, msg):
+        self.vk.method('messages.send', {'user_id': vkid, 'random_id': get_random_id(), 'message': msg,
                                          'keyboard': keyboard.get_keyboard()})  # Sending message with keyboard
 
 
@@ -192,35 +193,35 @@ class SQL:
                                           db='heroku_0ccfbccd1823b55',
                                           cursorclass=DictCursor)  # Database connection settings
 
-    def getUserGroup(self, id):
+    def getUserGroup(self, vkid):
         with self.connection.cursor() as cursor:  # Getting user's group at school from database
-            cursor.execute('''SELECT `thkruhm` FROM `users` WHERE (`vkid` = '%s')''' % id)
+            cursor.execute('''SELECT `thkruhm` FROM `users` WHERE (`vkid` = '%s')''' % vkid)
             row = cursor.fetchone()
             cursor.close()
             return row['thkruhm']
 
-    def setUserGroup(self, id, group):
-        usergroup = self.getUserGroup(id)
+    def setUserGroup(self, vkid, group):
+        usergroup = self.getUserGroup(vkid)
         with self.connection.cursor() as cursor:
             if len(usergroup) > 0:  # If group currently is specified by user
-                cursor.execute('''UPDATE `users` SET `thkruhm`='%s' WHERE `vkid`='%s' ''' % (group, id))
+                cursor.execute('''UPDATE `users` SET `thkruhm`='%s' WHERE `vkid`='%s' ''' % (group, vkid))
             else:  # If group isn't specified, user will be added to database
                 cursor.execute(
-                    '''INSERT INTO `users`(`vkid`, `thkruhm`, `sendStatus`) VALUES ('%s', '%s', 1)''' % (id, group))
+                    '''INSERT INTO `users`(`vkid`, `thkruhm`, `sendStatus`) VALUES ('%s', '%s', 1)''' % (vkid, group))
 
             cursor.close()
 
-    def sendStatus(self, id):
+    def sendStatus(self, vkid):
         with self.connection.cursor() as cursor:
             cursor.execute(
-                '''SELECT `sendStatus` FROM `users` WHERE (`vkid` = '%s')''' % id)  # Getting status of daily send
+                '''SELECT `sendStatus` FROM `users` WHERE (`vkid` = '%s')''' % vkid)  # Getting status of daily send
             row = cursor.fetchone()
             sendstatus = row['sendStatus']
             if sendStatus == 1:
                 cursor.execute(
-                    '''UPDATE `users` SET `sendStatus`=0 WHERE `vkid`='%s' ''' % id)  # Updating statud of daily send
+                    '''UPDATE `users` SET `sendStatus`=0 WHERE `vkid`='%s' ''' % vkid)  # Updating statud of daily send
             else:
-                cursor.execute('''UPDATE `users` SET `sendStatus`=1 WHERE `vkid`='%s' ''' % id)
+                cursor.execute('''UPDATE `users` SET `sendStatus`=1 WHERE `vkid`='%s' ''' % vkid)
 
             cursor.close()
 
