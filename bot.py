@@ -1,16 +1,18 @@
 # Connecting vk_api
 # Connecting time tools
 import datetime
+import json
 # Connecting tools of deploy
 import os
 # Connecting parsing tools
 import re
+import urllib
 
-# Connecting pyMySQL
-import pymysql
 import requests
 import vk_api
 from bs4 import BeautifulSoup
+# Connecting pyMySQL
+# import pymysql
 from pymysql.cursors import DictCursor
 from vk_api.keyboard import VkKeyboard, VkKeyboardColor
 from vk_api.longpoll import VkLongPoll, VkEventType
