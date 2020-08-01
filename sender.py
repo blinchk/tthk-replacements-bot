@@ -23,8 +23,8 @@ def write_msg(user_id, random_id, message):
 
 def parsepage(table):
     muudatused = []
-    for i in range(len(table)):
-        my_table = table[i]
+    for item in table:
+        my_table = item
         rows = my_table.find_all('tr')
         for row in rows:
             muudatus = []
@@ -68,7 +68,7 @@ def makemuudatused(i, forshow):
         forshow.append(f"🗓 {i[0]} Дата: {i[1]}\n🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n🏠 Самостоятельная работа дома\n")
     elif len(i) > 5 and i[5].lower() in "iseseisev töö":
         forshow.append(f"🗓 {i[0]} Дата: {i[1]}\n🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n📋 Самостоятельная работа\n")
-    elif len(i) > 5 and (i[5].lower() == "" or i[5].lower() == " "):
+    elif len(i) > 5 and i[5].lower() in ["", " "]:
         forshow.append(f"🗓 {i[0]} Дата: {i[1]}\n🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n👨‍🏫 Преподаватель: {i[4]}\n")
     else:
         forshow.append(f"🗓 В {i[0]} Дата: {i[1]}\n🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n")
@@ -81,14 +81,12 @@ def getmuudatused(setgroup, user, justtable):
         print(i)
         if setgroup.lower() in i[2].lower():
             makemuudatused(i, forshow)
-    if len(forshow) > 0:
+    if forshow:
         userfname = (vk.method('users.get', {'user_ids': user, 'fields': 'first_name'})[0])["first_name"]
         kogutunniplaan = f"Доброе утро, {userfname}! Для группы 🦆 {setgroup} на данный момент следующие изменения в расписании:\n"
         for w in forshow:
             kogutunniplaan += f"{w}\n"
         write_msg(user, (random.getrandbits(31) * random.choice([-1, 1])), kogutunniplaan)
-    elif len(forshow) == 0:
-        pass
 
 def sendeveryday(justtable):
     usergroup = {}

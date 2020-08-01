@@ -90,8 +90,6 @@ class Server:
                         self.bot.sendMsg(id=event.user_id, msg="Данной команды не существует.")
             elif event.type == VkEventType.USER_TYPING:
                 print(f"Пользователь {event.user_id} пишет.")  # Console msg when user typing something
-            else:
-                pass
 
 
 class TimeCatcher:
@@ -150,7 +148,7 @@ class Keyboard:
         for i in range(5):
             if i == 0:
                 color = VkKeyboardColor.POSITIVE
-            elif (tc.datelist[i])[0] == 'L' or (tc.datelist[i])[0] == 'P':
+            elif (tc.datelist[i])[0] in ['L', 'P']:
                 color = VkKeyboardColor.NEGATIVE
             else:
                 color = VkKeyboardColor.DEFAULT
@@ -162,7 +160,7 @@ class Keyboard:
         for i in tc.keyboardNumDays:
             if tc.keyboardNumDays.index(i) == tc.todayWeekDay():
                 color = VkKeyboardColor.POSITIVE
-            elif tc.keyboardNumDays.index(i) == 5 or tc.keyboardNumDays.index(i) == 6:
+            elif tc.keyboardNumDays.index(i) in [5, 6]:
                 color = VkKeyboardColor.NEGATIVE
             else:
                 color = VkKeyboardColor.DEFAULT
@@ -206,11 +204,11 @@ class SQL:
         with self.connection.cursor() as cursor:
             if len(usergroup) > 0:  # If group currently is specified by user
                 cursor.execute('''UPDATE `users` SET `thkruhm`='%s' WHERE `vkid`='%s' ''' % (group, id))
-                cursor.close()
             else:  # If group isn't specified, user will be added to database
                 cursor.execute(
                     '''INSERT INTO `users`(`vkid`, `thkruhm`, `sendStatus`) VALUES ('%s', '%s', 1)''' % (id, group))
-                cursor.close()
+
+            cursor.close()
 
     def sendStatus(self, id):
         with self.connection.cursor() as cursor:
@@ -221,10 +219,10 @@ class SQL:
             if sendStatus == 1:
                 cursor.execute(
                     '''UPDATE `users` SET `sendStatus`=0 WHERE `vkid`='%s' ''' % id)  # Updating statud of daily send
-                cursor.close()
             else:
                 cursor.execute('''UPDATE `users` SET `sendStatus`=1 WHERE `vkid`='%s' ''' % id)
-                cursor.close()
+
+            cursor.close()
 
 
 class Changes:
@@ -237,8 +235,8 @@ class Changes:
         soup = BeautifulSoup(html, 'html.parser')
         table = soup.findChildren('table')
         changes = []
-        for i in range(len(table)):
-            my_table = table[i]
+        for item in table:
+            my_table = item
             rows = my_table.find_all('tr')
             for row in rows:
                 change = []
@@ -256,7 +254,24 @@ class Changes:
 
     def convertChanges(self, i, date):
         changeList = []
-        if date == True:
+        if date == False:
+            if len(i) == 6:
+                changeList.append(f"🦆 Группа: {i[2]} ⏰ Урок: {i[3]} \n👨‍🏫 Преподаватель: {i[4]}\nКабинет: {i[5]}\n")
+            elif len(i) > 2 and i[3].lower() in "jääb ära":
+                changeList.append(f"🦆 {i[2]}\n❌ Не состоится\n")
+            elif len(i) > 4 and i[4].lower() in "jääb ära":
+                changeList.append(f"🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n❌ Не состоится\n")
+            elif len(i) > 4 and i[4].lower() in "söögivahetund":
+                changeList.append(f"🦆 Группа: {i[2]}\n ⏰ Урок: {i[3]}\n🆒 Обеденный перерыв\n")
+            elif len(i) > 5 and i[5].lower() in "iseseisev töö kodus":
+                changeList.append(f"🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n🏠 Самостоятельная работа дома\n")
+            elif len(i) > 5 and i[5].lower() in "iseseisev töö":
+                changeList.append(f"🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n📋 Самостоятельная работа\n")
+            elif len(i) > 5 and i[5].lower() in ["", " "]:
+                changeList.append(f"🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n👨‍🏫 Преподаватель: {i[4]}\n")
+            else:
+                changeList.append(f"🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n")
+        elif date == True:
             if len(i) == 6:
                 changeList.append(
                     f"🗓 {i[0]} Дата: {i[1]}\n🦆 Группа: {i[2]} ⏰ Урок: {i[3]} \n👨‍🏫 Преподаватель: {i[4]}\nКабинет: {i[5]}\n")
@@ -273,30 +288,11 @@ class Changes:
             elif len(i) > 5 and i[5].lower() in "iseseisev töö":
                 changeList.append(
                     f"🗓 {i[0]} Дата: {i[1]}\n🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n📋 Самостоятельная работа\n")
-            elif len(i) > 5 and (i[5].lower() == "" or i[5].lower() == " "):
+            elif len(i) > 5 and i[5].lower() in ["", " "]:
                 changeList.append(
                     f"🗓 {i[0]} Дата: {i[1]}\n🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n👨‍🏫 Преподаватель: {i[4]}\n")
             else:
                 changeList.append(f"🗓 В {i[0]} Дата: {i[1]}\n🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n")
-        elif date == False:
-            if len(i) == 6:
-                changeList.append(f"🦆 Группа: {i[2]} ⏰ Урок: {i[3]} \n👨‍🏫 Преподаватель: {i[4]}\nКабинет: {i[5]}\n")
-            elif len(i) > 2 and i[3].lower() in "jääb ära":
-                changeList.append(f"🦆 {i[2]}\n❌ Не состоится\n")
-            elif len(i) > 4 and i[4].lower() in "jääb ära":
-                changeList.append(f"🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n❌ Не состоится\n")
-            elif len(i) > 4 and i[4].lower() in "söögivahetund":
-                changeList.append(f"🦆 Группа: {i[2]}\n ⏰ Урок: {i[3]}\n🆒 Обеденный перерыв\n")
-            elif len(i) > 5 and i[5].lower() in "iseseisev töö kodus":
-                changeList.append(f"🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n🏠 Самостоятельная работа дома\n")
-            elif len(i) > 5 and i[5].lower() in "iseseisev töö":
-                changeList.append(f"🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n📋 Самостоятельная работа\n")
-            elif len(i) > 5 and (i[5].lower() == "" or i[5].lower() == " "):
-                changeList.append(f"🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n👨‍🏫 Преподаватель: {i[4]}\n")
-            else:
-                changeList.append(f"🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n")
-        else:
-            pass
         return changeList
 
     def makeChanges(self, data):
@@ -314,8 +310,6 @@ class Changes:
                 return refChanges
             elif len(changeList) == 0:  # Message if there are no replacements
                 return f"Для группы 🦆 {data} на данный момент изменений в расписании нет."
-            else:
-                pass
         elif data[-4:] == str(datetime.date.today().year):
             data = re.split(r':\s', data)
             data = data[1]
@@ -329,8 +323,6 @@ class Changes:
                 return refChanges
             elif len(changeList) == 0:
                 return f"В данный момент нет изменний в расписании на 🗓 {data}."
-            else:
-                pass
         elif data in tc.keyboardNumDays:
             for line in changes:
                 if line[0] in data:
@@ -342,10 +334,6 @@ class Changes:
                 return refChanges
             elif len(changeList) == 0:
                 return f"В данный момент изменений в расписании нет на 🗓 {tc.dayOfWeek[data]}."
-            else:
-                pass
-        else:
-            pass
 
 
 class COVID:
