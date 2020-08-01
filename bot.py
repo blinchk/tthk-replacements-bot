@@ -87,6 +87,8 @@ class Server:
                     elif event.text[-4:] == str(datetime.date.today().year) and event.user_id in self.writedate:
                         self.bot.sendMsg(vkid=event.user_id, msg=c.makeChanges(event.text))
                         self.writedate.remove(event.user_id)
+                    elif event.text.lower() == 'рассылка':
+                        self.bot.sendMsg(vkid=event.user_id, msg='Рассылка.')
                     else:
                         self.bot.sendMsg(vkid=event.user_id, msg="Данной команды не существует.")
             elif event.type == VkEventType.USER_TYPING:
