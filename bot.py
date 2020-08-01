@@ -153,7 +153,8 @@ class Keyboard:
                 color = VkKeyboardColor.NEGATIVE
             else:
                 color = VkKeyboardColor.DEFAULT
-            if i > 0: self.fiveDaysKeyboard.add_line()
+            if i > 0:
+                self.fiveDaysKeyboard.add_line()
             self.fiveDaysKeyboard.add_button(
                 f"{(tc.datelist[i])[0]}: {(tc.datelist[i])[1]}.{(tc.datelist[i])[2]}.{(tc.datelist[i])[3]}", color)
         # Keyboard with days of week
@@ -165,7 +166,8 @@ class Keyboard:
                 color = VkKeyboardColor.NEGATIVE
             else:
                 color = VkKeyboardColor.DEFAULT
-            if i == 'R': self.weekDaysKeyboard.add_line()
+            if i == 'R':
+                self.weekDaysKeyboard.add_line()
             self.weekDaysKeyboard.add_button(i, color=color)
 
 
@@ -195,7 +197,7 @@ class SQL:
 
     def getUserGroup(self, vkid):
         with self.connection.cursor() as cursor:  # Getting user's group at school from database
-            cursor.execute('''SELECT `thkruhm` FROM `users` WHERE (`vkid` = '%s')''' % vkid)
+            cursor.execute(pymysql.escape_string('''SELECT `thkruhm` FROM `users` WHERE (`vkid` = '%s')''' % vkid))
             row = cursor.fetchone()
             cursor.close()
             return row['thkruhm']
@@ -204,24 +206,25 @@ class SQL:
         usergroup = self.getUserGroup(vkid)
         with self.connection.cursor() as cursor:
             if len(usergroup) > 0:  # If group currently is specified by user
-                cursor.execute('''UPDATE `users` SET `thkruhm`='%s' WHERE `vkid`='%s' ''' % (group, vkid))
-            else:  # If group isn't specified, user will be added to database
                 cursor.execute(
-                    '''INSERT INTO `users`(`vkid`, `thkruhm`, `sendStatus`) VALUES ('%s', '%s', 1)''' % (vkid, group))
+                    pymysql.escape_string('''UPDATE `users` SET `thkruhm`='%s' WHERE `vkid`='%s' ''' % (group, vkid)))
+            else:  # If group isn't specified, user will be added to database
+                cursor.execute(pymysql.escape_string(
+                    '''INSERT INTO `users`(`vkid`, `thkruhm`, `sendStatus`) VALUES ('%s', '%s', 1)''' % (vkid, group)))
 
             cursor.close()
 
     def sendStatus(self, vkid):
         with self.connection.cursor() as cursor:
-            cursor.execute(
-                '''SELECT `sendStatus` FROM `users` WHERE (`vkid` = '%s')''' % vkid)  # Getting status of daily send
+            cursor.execute(pymysql.escape_string(
+                '''SELECT `sendStatus` FROM `users` WHERE (`vkid` = '%s')''' % vkid))  # Getting status of daily send
             row = cursor.fetchone()
             sendstatus = row['sendStatus']
             if sendStatus == 1:
-                cursor.execute(
-                    '''UPDATE `users` SET `sendStatus`=0 WHERE `vkid`='%s' ''' % vkid)  # Updating statud of daily send
+                cursor.execute(pymysql.escape_string(
+                    '''UPDATE `users` SET `sendStatus`=0 WHERE `vkid`='%s' ''' % vkid))  # Updating statud of daily send
             else:
-                cursor.execute('''UPDATE `users` SET `sendStatus`=1 WHERE `vkid`='%s' ''' % vkid)
+                cursor.execute(pymysql.escape_string('''UPDATE `users` SET `sendStatus`=1 WHERE `vkid`='%s' ''' % vkid))
 
             cursor.close()
 
@@ -249,8 +252,6 @@ class Changes:
                         change.append(data)
                 if change != []:
                     changes.append(change)
-            else:
-                continue
         return changes
 
     def convertChanges(self, i, date):
@@ -344,7 +345,7 @@ class COVID:
         else:
             raise ValueError from None
         with urllib.request.urlopen(req) as response:
-            the_page = response.read()
+            data = response.read()
         data = json.loads(data)  # json module loads from the link
         covid = [data['confirmedCasesNumber'], data['testsAdministeredNumber'], data['recoveredNumber'],
                  data['deceasedNumber'], data['activeCasesNumber']]  # Getting correct rows.

@@ -2,13 +2,12 @@ import os
 import random
 import time
 
+import parse
 import pymysql
 import requests
 import vk_api
 from bs4 import BeautifulSoup
 from pymysql.cursors import DictCursor
-
-import parse
 
 print("Sender launched")
 
@@ -35,8 +34,6 @@ def parsepage(table):
                     muudatus.append(data)
             if muudatus != []:
                 muudatused.append(muudatus)
-        else:
-            continue
     return muudatused
 
 def openfromfile(usergroup):
