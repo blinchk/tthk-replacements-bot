@@ -210,8 +210,8 @@ class SQL:
         with self.connection.cursor() as cursor:
             if len(usergroup) > 0:  # If group currently is specified by user
                 query = ''' UPDATE `users` SET `thkruhm`='%s' WHERE `vkid`='%s' '''
-                cursor.execute(pymysql.escape_string(query), (group, vkid)))
-                else:  # If group isn't specified, user will be added to database
+                cursor.execute(pymysql.escape_string(query), (group, vkid))
+            else:  # If group isn't specified, user will be added to database
                 sql = '''INSERT INTO `users`(`vkid`, `thkruhm`, `sendStatus`) VALUES ('%s', '%s', 1)'''
                 cursor.execute(pymysql.escape_string(query), (vkid, group))
                 connection.commit()
