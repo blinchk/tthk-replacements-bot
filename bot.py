@@ -27,7 +27,7 @@ class Server:
 
     def __init__(self, api_token):
         self.vk = vk_api.VkApi(token=api_token)
-        self.longpoll = VkLongPoll(self.vk)
+        self.longpoll = VkLongPoll(self.vk)  # API, that makes possible get messages.
         self.bot = Bot(self.vk)
         self.writeyourgroup = []
         self.writesearchgroup = []
@@ -35,7 +35,7 @@ class Server:
         self.writedate = []
 
     def start(self):
-        print("Bot successfully deployed and started.")
+        print("Bot successfully deployed and started.")  # Console message when bot deployed.
         k = Keyboard()
         tc = TimeCatcher()
         db = SQL()
@@ -44,36 +44,37 @@ class Server:
         for event in self.longpoll.listen():
             if event.type == VkEventType.MESSAGE_NEW:
                 if event.to_me:
-                    if event.text.lower() == 'начать':
+                    if event.text.lower() == 'начать':  # Start command
                         self.bot.sendKeyboard(keyboard=k.keyboard, id=event.user_id,
                                               msg='Выберите вариант из списка ниже.')
-                    elif event.text.lower() == 'covid-19':
+                    elif event.text.lower() == 'covid-19':  # Returns COVID-19 data
                         self.bot.sendMsg(id=event.user_id, msg=covid.getData())
-                    elif event.text.lower() == 'по датам':
+                    elif event.text.lower() == 'по датам':  # Selection keyboard of the next 5 days
                         self.writedate.append(event.user_id)
                         self.bot.sendKeyboard(keyboard=k.fiveDaysKeyboard, id=event.user_id,
                                               msg='Выберите дату из списка ниже:')
-                    elif event.text.lower() == 'по дню недели':
+                    elif event.text.lower() == 'по дню недели':  # Selection keyboard of days of the week
                         self.writeweekday.append(event.user_id)
                         self.bot.sendKeyboard(keyboard=k.weekDaysKeyboard, id=event.user_id,
                                               msg='Выберите день недели из списка ниже:')
-                    elif event.text.lower() == 'в какой я группе?':
+                    elif event.text.lower() == 'в какой я группе?':  # Return current user's group
                         self.bot.sendMsg(id=event.user_id,
                                          msg=f'Вы указали, что Ваша группа: {db.getUserGroup(id=event.user_id)}.\n'
                                              'Для того, чтобы изменить свою группу нажмите \"Изменить группу\".')
-                    elif event.text.lower() == 'изменить группу':
+                    elif event.text.lower() == 'изменить группу':  # User can change group
                         self.bot.sendMsg(id=event.user_id, msg="В какой группе вы находитесь?\n"
                                                                "Для групп, которые делятся на подгруппы указывается только группа: MEHpv19 вместо MEHpv19-2.\n"
                                                                "Укажите код вашей группы:")
                         self.writeyourgroup.append(event.user_id)
-                    elif event.text.lower()[-3:] in tc.getGroupList() and event.user_id in self.writeyourgroup:
+                    elif event.text.lower()[
+                         -3:] in tc.getGroupList() and event.user_id in self.writeyourgroup:  # Receives group of the user
                         db.setUserGroup(id=event.user_id, group=event.text)
                         self.bot.sendMsg(id=event.user_id,
                                          msg=f'Вы указали, что Ваша группа: {db.getUserGroup(id=event.user_id)}.')
                         self.writeyourgroup.remove(event.user_id)
                     elif event.text.lower() == 'моя группа':
                         self.bot.sendMsg(id=event.user_id, msg=c.makeChanges(db.getUserGroup(id=event.user_id)))
-                    elif event.text.lower() == 'по группам':
+                    elif event.text.lower() == 'по группам':  # Changes by group
                         self.bot.sendMsg(id=event.user_id, msg="Введите код группы, для которой нужно найти изменения:")
                         self.writesearchgroup.append(event.user_id)
                     elif event.text.lower()[-3:] in tc.getGroupList() and event.user_id in self.writesearchgroup:
@@ -88,7 +89,7 @@ class Server:
                     else:
                         self.bot.sendMsg(id=event.user_id, msg="Данной команды не существует.")
             elif event.type == VkEventType.USER_TYPING:
-                print(f"Пользователь {event.user_id} пишет.")
+                print(f"Пользователь {event.user_id} пишет.")  # Console msg when user typing something
             else:
                 pass
 
@@ -96,19 +97,19 @@ class Server:
 class TimeCatcher:
 
     def __init__(self):
-        self.keyboardNumDays = ['E', 'T', 'K', 'N', 'R', 'L', 'P']
+        self.keyboardNumDays = ['E', 'T', 'K', 'N', 'R', 'L', 'P']  # Days of the week in Estonian language
         self.dayOfWeek = {'E': 'Понедельник',
                           'T': 'Вторник',
                           'K': 'Среда',
                           'N': 'Четверг',
                           'R': 'Пятница',
                           'L': 'Суббота',
-                          'P': "Воскресенье"}
+                          'P': "Воскресенье"}  # Days of the week in Russian langauage from Estonian
         self.datelist = []
-        for i in range(5):  # Taking
+        for i in range(5):  # Taking days of the week and dates for the next 5 days
             x = datetime.date.today() + datetime.timedelta(hours=2) + datetime.timedelta(days=i)
             self.datelist.append([self.keyboardNumDays[x.weekday()], x.day, x.month, x.year])
-        for i in self.datelist:
+        for i in self.datelist:  # Dates in Estonia stated with zeros in single-digit numbers
             if i[1] < 10:
                 i[1] = str(i[1])
                 i[1] = '0' + i[1]
@@ -116,10 +117,10 @@ class TimeCatcher:
                 i[2] = str(i[2])
                 i[2] = '0' + i[2]
 
-    def todayWeekDay(self):
+    def todayWeekDay(self):  # Getting today's day of the week
         return (datetime.date.today() + datetime.timedelta(hours=2)).weekday()
 
-    def getGroupList(self):
+    def getGroupList(self):  # Group list for 2017-2020 year
         groupList = []
         yearnow = datetime.date.today().year
         for i in range(int(str(yearnow)[:-2]) - 3, int(str(yearnow)[:-2]) + 1, 1):
@@ -131,7 +132,7 @@ class TimeCatcher:
 class Keyboard:
 
     def __init__(self):
-        # Default keyboard
+        # Default keyboard from start
         self.keyboard = VkKeyboard(one_time=False, inline=False)
         self.keyboard.add_button('Моя группа', color=VkKeyboardColor.PRIMARY)
         self.keyboard.add_button('В какой я группе?', color=VkKeyboardColor.POSITIVE)
@@ -143,7 +144,7 @@ class Keyboard:
         self.keyboard.add_button('COVID-19', color=VkKeyboardColor.NEGATIVE)
         self.keyboard.add_button('Изменить группу', color=VkKeyboardColor.NEGATIVE)
         self.keyboard.add_button('Рассылка', color=VkKeyboardColor.DEFAULT)
-        # fiveDaysKeyboard
+        # Keyboard for next five days
         self.fiveDaysKeyboard = VkKeyboard(one_time=False, inline=True)
         tc = TimeCatcher()
         for i in range(5):
@@ -156,7 +157,7 @@ class Keyboard:
             if i > 0: self.fiveDaysKeyboard.add_line()
             self.fiveDaysKeyboard.add_button(
                 f"{(tc.datelist[i])[0]}: {(tc.datelist[i])[1]}.{(tc.datelist[i])[2]}.{(tc.datelist[i])[3]}", color)
-        # weekDaysKeyboard
+        # Keyboard with days of week
         self.weekDaysKeyboard = VkKeyboard(one_time=False, inline=True)
         for i in tc.keyboardNumDays:
             if tc.keyboardNumDays.index(i) == tc.todayWeekDay():
@@ -172,29 +173,29 @@ class Keyboard:
 class Bot:
 
     def __init__(self, vk):
-        self.vk = vk
+        self.vk = vk  # Getting VKApi options from server
 
-    def sendMsg(self, id, msg):
+    def sendMsg(self, id, msg):  # Sending message without keyboard
         self.vk.method('messages.send', {'user_id': id, 'random_id': get_random_id(), 'message': msg})
 
     def sendKeyboard(self, keyboard, id, msg):
         self.vk.method('messages.send', {'user_id': id, 'random_id': get_random_id(), 'message': msg,
-                                         'keyboard': keyboard.get_keyboard()})
+                                         'keyboard': keyboard.get_keyboard()})  # Sending message with keyboard
 
 
 class SQL:
 
     def __init__(self):
         mysql_l = os.environ['MYSQL_LOGIN']
-        mysql_p = os.environ["MYSQL_PASS"]
+        mysql_p = os.environ["MYSQL_PASS"]  # Getting login and password from service there bot is deployed
         self.connection = pymysql.connect(host='eu-cdbr-west-02.cleardb.net',
                                           user=mysql_l,
                                           password=mysql_p,
                                           db='heroku_0ccfbccd1823b55',
-                                          cursorclass=DictCursor)
+                                          cursorclass=DictCursor)  # Database connection settings
 
     def getUserGroup(self, id):
-        with self.connection.cursor() as cursor:
+        with self.connection.cursor() as cursor:  # Getting user's group at school from database
             cursor.execute('''SELECT `thkruhm` FROM `users` WHERE (`vkid` = '%s')''' % id)
             row = cursor.fetchone()
             cursor.close()
@@ -203,21 +204,23 @@ class SQL:
     def setUserGroup(self, id, group):
         usergroup = self.getUserGroup(id)
         with self.connection.cursor() as cursor:
-            if len(usergroup) > 0:
+            if len(usergroup) > 0:  # If group currently is specified by user
                 cursor.execute('''UPDATE `users` SET `thkruhm`='%s' WHERE `vkid`='%s' ''' % (group, id))
                 cursor.close()
-            else:
+            else:  # If group isn't specified, user will be added to database
                 cursor.execute(
                     '''INSERT INTO `users`(`vkid`, `thkruhm`, `sendStatus`) VALUES ('%s', '%s', 1)''' % (id, group))
                 cursor.close()
 
     def sendStatus(self, id):
         with self.connection.cursor() as cursor:
-            cursor.execute('''SELECT `sendStatus` FROM `users` WHERE (`vkid` = '%s')''' % id)
+            cursor.execute(
+                '''SELECT `sendStatus` FROM `users` WHERE (`vkid` = '%s')''' % id)  # Getting status of daily send
             row = cursor.fetchone()
             sendstatus = row['sendStatus']
             if sendStatus == 1:
-                cursor.execute('''UPDATE `users` SET `sendStatus`=0 WHERE `vkid`='%s' ''' % id)
+                cursor.execute(
+                    '''UPDATE `users` SET `sendStatus`=0 WHERE `vkid`='%s' ''' % id)  # Updating statud of daily send
                 cursor.close()
             else:
                 cursor.execute('''UPDATE `users` SET `sendStatus`=1 WHERE `vkid`='%s' ''' % id)
@@ -229,7 +232,7 @@ class Changes:
         pass
 
     def parseChanges(self):
-        r = requests.get('http://www.tthk.ee/tunniplaani-muudatused/')
+        r = requests.get('http://www.tthk.ee/tunniplaani-muudatused/')  # Schools's site
         html = r.text
         soup = BeautifulSoup(html, 'html.parser')
         table = soup.findChildren('table')
@@ -241,7 +244,8 @@ class Changes:
                 change = []
                 cells = row.find_all('td')
                 for cell in cells:
-                    if cell.text not in ["\xa0", "Kuupäev", "Rühm", "Tund", "Õpetaja", "Ruum"]:
+                    if cell.text not in ["\xa0", "Kuupäev", "Rühm", "Tund", "Õpetaja",
+                                         "Ruum"]:  # Rows, that we don't need
                         data = cell.text
                         change.append(data)
                 if change != []:
@@ -297,18 +301,18 @@ class Changes:
 
     def makeChanges(self, data):
         tc = TimeCatcher()
-        changes = self.parseChanges()
+        changes = self.parseChanges()  # Changes in array from the school website
         changeList = []
-        if data[-3:] in tc.getGroupList():
+        if data[-3:] in tc.getGroupList():  # Group for 4 years (like 2017-2020)
             for line in changes:
                 if line[2].lower() in data.lower():
-                    changeList = self.makeChanges(line, True)
+                    changeList = self.makeChanges(line, True)  # Takes converted lines of changes from makeChanges func
             if len(changeList) > 0:
-                refChanges = f"Для группы 🦆 {data} на данный момент следующие изменения в расписании:\n"
+                refChanges = f"Для группы 🦆 {data} на данный момент следующие изменения в расписании:\n"  # Head of the message
                 for i in changeList:
                     refChanges += f"{i}\n"
                 return refChanges
-            elif len(changeList) == 0:
+            elif len(changeList) == 0:  # Message if there are no replacements
                 return f"Для группы 🦆 {data} на данный момент изменений в расписании нет."
             else:
                 pass
@@ -346,17 +350,17 @@ class Changes:
 
 class COVID:
     def __init__(self):
-        self.url = 'https://raw.githubusercontent.com/okestonia/koroonakaart/master/koroonakaart/src/data.json'
+        self.url = 'https://raw.githubusercontent.com/okestonia/koroonakaart/master/koroonakaart/src/data.json'  # Link for JSON
 
     def getData(self):
-        data = urllib.request.urlopen(self.url).read()
-        data = json.loads(data)
+        data = urllib.request.urlopen(self.url).read()  # Receiving the file from a link
+        data = json.loads(data)  # json module loads from the link
         covid = [data['confirmedCasesNumber'], data['testsAdministeredNumber'], data['recoveredNumber'],
-                 data['deceasedNumber'], data['activeCasesNumber']]
+                 data['deceasedNumber'], data['activeCasesNumber']]  # Getting correct rows.
         covid = f"🦠 COVID-19 в Эстонии:\n☣ {covid[0]} случаев заражения из 🧪 {covid[1]} тестов.\n😷 {covid[4]} болеет на данный момент и 💉 {covid[2]} выздоровели\n☠ {covid[3]} человек умерло.\n"
         return covid
 
 
 access_token = os.environ["ACCESS_TOKEN"]
-server = Server(access_token)  # token will be here
+server = Server(access_token)  # Access token for VKApi
 server.start()
