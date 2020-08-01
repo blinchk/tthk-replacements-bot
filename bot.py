@@ -309,8 +309,7 @@ class Changes:
                 for i in changeList:
                     refChanges += f"{i}\n"
                 return refChanges
-            elif len(changeList) == 0:  # Message if there are no replacements
-                return f"Для группы 🦆 {data} на данный момент изменений в расписании нет."
+            return f"Для группы 🦆 {data} на данный момент изменений в расписании нет."
         elif data[-4:] == str(datetime.date.today().year):
             data = re.split(r':\s', data)
             data = data[1]
@@ -322,8 +321,7 @@ class Changes:
                 for i in changeList:
                     refChanges += f"{i}\n"
                 return refChanges
-            elif len(changeList) == 0:
-                return f"В данный момент нет изменний в расписании на 🗓 {data}."
+            return f"В данный момент нет изменний в расписании на 🗓 {data}."
         elif data in tc.keyboardNumDays:
             for line in changes:
                 if line[0] in data:
@@ -333,8 +331,7 @@ class Changes:
                 for i in forshow:
                     refChanges += f"{i}\n"
                 return refChanges
-            elif len(changeList) == 0:
-                return f"В данный момент изменений в расписании нет на 🗓 {tc.dayOfWeek[data]}."
+            return f"В данный момент изменений в расписании нет на 🗓 {tc.dayOfWeek[data]}."
 
 
 class COVID:
