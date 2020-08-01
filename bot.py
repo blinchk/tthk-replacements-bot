@@ -80,7 +80,7 @@ class Server:
                     elif event.text[-4:] == str(datetime.date.today().year) and event.user_id in self.writedate:
                         self.bot.sendMsg(id=event.user_id, msg=c.makeChanges(event.text))
                         self.writedate.remove(event.user_id)
-                    elif event.text.lower() == 'COVID-19':
+                    elif event.text.lower() == 'covid-19':
                         self.bot.sendMsg(id=event.user_id, msg=COVID.getdata())
                     else:
                         self.bot.sendMsg(id=event.user_id, msg="Данной команды не существует.")
