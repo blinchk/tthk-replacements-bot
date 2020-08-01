@@ -42,6 +42,7 @@ class Server:
         for event in self.longpoll.listen():
             if event.type == VkEventType.MESSAGE_NEW:
                 if event.to_me:
+                    print(event.text)
                     if event.text.lower() == 'начать':
                         self.bot.sendKeyboard(keyboard=k.keyboard, id=event.user_id,
                                               msg='Выберите вариант из списка ниже.')
