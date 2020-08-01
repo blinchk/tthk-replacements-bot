@@ -339,7 +339,11 @@ class COVID:
         self.url = 'https://raw.githubusercontent.com/okestonia/koroonakaart/master/koroonakaart/src/data.json'  # Link for JSON
 
     def getData(self):
-        with urllib.request.urlopen(self.url) as response:
+        if self.url.lower().startswith('http'):
+            req = urllib.request.Request(url)
+        else:
+            raise ValueError from None
+        with urllib.request.urlopen(req) as response:
             the_page = response.read()
         data = json.loads(data)  # json module loads from the link
         covid = [data['confirmedCasesNumber'], data['testsAdministeredNumber'], data['recoveredNumber'],
