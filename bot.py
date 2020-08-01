@@ -41,7 +41,6 @@ class Server:
         for event in self.longpoll.listen():
             if event.type == VkEventType.MESSAGE_NEW:
                 if event.to_me:
-                    print(self.writeweekday)
                     if event.text.lower() == 'начать':
                         self.bot.sendKeyboard(keyboard=k.keyboard, id=event.user_id,
                                               msg='Выберите вариант из списка ниже.')
@@ -299,7 +298,6 @@ class Changes:
         changeList = []
         if data[-3:] in tc.getGroupList():
             for line in changes:
-                print(line)
                 if line[2].lower() in data.lower():
                     changeList = self.makeChanges(line, True)
             if len(changeList) > 0:
@@ -352,7 +350,6 @@ class COVID:
         data = json.loads(data)
         covid = [data['confirmedCasesNumber'], data['testsAdministeredNumber'], data['recoveredNumber'],
                  data['deceasedNumber'], data['activeCasesNumber']]
-        print(data)
         return data
 
 
