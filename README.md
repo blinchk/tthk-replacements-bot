@@ -7,3 +7,5 @@ Rostislav Konovalov, Nikolas Laus.
 TARpv19, Tallinna Tööstushariduskeskus.
 
 For donations: paypal.me/blinchk
+
+[![forthebadge made-with-python](http://ForTheBadge.com/images/badges/made-with-python.svg)](https://www.python.org/)
