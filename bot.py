@@ -38,6 +38,7 @@ class Server:
         tc = TimeCatcher()
         db = SQL()
         c = Changes()
+        covid = COVID()
         for event in self.longpoll.listen():
             if event.type == VkEventType.MESSAGE_NEW:
                 if event.to_me:
@@ -81,7 +82,7 @@ class Server:
                         self.bot.sendMsg(id=event.user_id, msg=c.makeChanges(event.text))
                         self.writedate.remove(event.user_id)
                     elif event.text.lower() == 'covid-19':
-                        self.bot.sendMsg(id=event.user_id, msg=COVID.getdata())
+                        self.bot.sendMsg(id=event.user_id, msg=covid.getData())
                     else:
                         self.bot.sendMsg(id=event.user_id, msg="Данной команды не существует.")
             elif event.type == VkEventType.USER_TYPING:
@@ -345,7 +346,7 @@ class COVID:
     def __init__(self):
         self.url = 'https://raw.githubusercontent.com/okestonia/koroonakaart/master/koroonakaart/src/data.json'
 
-    def getdata(self):
+    def getData(self):
         data = urllib.request.urlopen(self.url).read()
         data = json.loads(data)
         covid = [data['confirmedCasesNumber'], data['testsAdministeredNumber'], data['recoveredNumber'],
