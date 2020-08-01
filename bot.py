@@ -254,7 +254,7 @@ class Changes:
 
     def convertChanges(self, i, date):
         changeList = []
-        if date == False:
+        if date is False:
             if len(i) == 6:
                 changeList.append(f"🦆 Группа: {i[2]} ⏰ Урок: {i[3]} \n👨‍🏫 Преподаватель: {i[4]}\nКабинет: {i[5]}\n")
             elif len(i) > 2 and i[3].lower() in "jääb ära":
@@ -271,7 +271,7 @@ class Changes:
                 changeList.append(f"🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n👨‍🏫 Преподаватель: {i[4]}\n")
             else:
                 changeList.append(f"🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n")
-        elif date == True:
+        else:
             if len(i) == 6:
                 changeList.append(
                     f"🗓 {i[0]} Дата: {i[1]}\n🦆 Группа: {i[2]} ⏰ Урок: {i[3]} \n👨‍🏫 Преподаватель: {i[4]}\nКабинет: {i[5]}\n")
