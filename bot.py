@@ -135,13 +135,13 @@ class Keyboard:
         # Default keyboard
         self.keyboard = VkKeyboard(one_time=False, inline=False)
         self.keyboard.add_button('Моя группа', color=VkKeyboardColor.PRIMARY)
-        self.keyboard.add_button('COVID-19', color=VkKeyboardColor.NEGATIVE)
+        self.keyboard.add_button('В какой я группе?', color=VkKeyboardColor.POSITIVE)
         self.keyboard.add_line()
         self.keyboard.add_button('По датам', color=VkKeyboardColor.DEFAULT)
         self.keyboard.add_button('По дню недели', color=VkKeyboardColor.DEFAULT)
         self.keyboard.add_button('По группам', color=VkKeyboardColor.DEFAULT)
         self.keyboard.add_line()  # Переход на вторую строку
-        self.keyboard.add_button('В какой я группе?', color=VkKeyboardColor.POSITIVE)
+        self.keyboard.add_button('COVID-19', color=VkKeyboardColor.NEGATIVE)
         self.keyboard.add_button('Изменить группу', color=VkKeyboardColor.NEGATIVE)
         self.keyboard.add_button('Рассылка', color=VkKeyboardColor.DEFAULT)
         # fiveDaysKeyboard
@@ -354,10 +354,7 @@ class COVID:
         data = json.loads(data)
         covid = [data['confirmedCasesNumber'], data['testsAdministeredNumber'], data['recoveredNumber'],
                  data['deceasedNumber'], data['activeCasesNumber']]
-        covid = f"🦠 COVID-19 в Эстонии:\n☣ {covid[0]} случаев заражения из 🧪 {covid[1]} тестов\n"
-        f"😷 {covid[5]} болеет на данный момент и 💉 {covid[2]} выздоровели\n☠ {covid[3]} человек умерло.\n\n"
-        f"⚠️В общественнах местах разрешено находится лишь вдвоём и держать дистанцию 2 метра от других людей. ⚠️"
-        f"TTHK закрыт с 16 марта, в связи с чрезвычайным положением в Эстонской Республике."
+        covid = f"🦠 COVID-19 в Эстонии:\n☣ {covid[0]} случаев заражения из 🧪 {covid[1]} тестов.\n😷 {covid[5]} болеет на данный момент и 💉 {covid[2]} выздоровели\n☠ {covid[3]} человек умерло.\n\n"
         return covid
 
 
