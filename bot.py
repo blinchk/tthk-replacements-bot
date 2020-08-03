@@ -198,8 +198,7 @@ class SQL:
 
     def getUserGroup(self, vkid):
         with self.connection.cursor() as cursor:  # Getting user's group at school from database
-            print("SELECT `thkruhm` FROM `users` WHERE (`vkid` = '%s')", (vkid,))
-            cursor.execute(query)
+            cursor.execute("SELECT `thkruhm` FROM `users` WHERE `vkid` = %s", (vkid,))
             row = cursor.fetchone()
             print(row)
             cursor.close()
@@ -217,8 +216,7 @@ class SQL:
 
     def sendStatus(self, vkid):
         with self.connection.cursor() as cursor:
-            query = '''SELECT sendStatus FROM users WHERE (vkid = %s)'''  # Getting status of daily send
-            cursor.execute(pymysql.escape_string(query))
+            cursor.execute("SELECT sendStatus FROM users WHERE vkid = %s", (vkid,))
             row = cursor.fetchone()
             sendstatus = row['sendStatus']
             if sendStatus == 1:
