@@ -56,9 +56,13 @@ class Server:
                         self.bot.sendKeyboard(keyboard=k.weekDaysKeyboard, vkid=event.user_id,
                                               msg='Выберите день недели из списка ниже:')
                     elif event.text.lower() == 'в какой я группе?':  # Return current user's group
-                        self.bot.sendMsg(vkid=event.user_id,
-                                         msg=f'Вы указали, что Ваша группа: {db.getUserGroup(vkid=event.user_id)}.\n'
-                                             'Для того, чтобы изменить свою группу нажмите \"Изменить группу\".')
+                        if db.getUserGroup(vkid=event.user_id) != None:
+                            self.bot.sendMsg(vkid=event.user_id,
+                                             msg=f'Вы указали, что Ваша группа: {db.getUserGroup(vkid=event.user_id)}.\n'
+                                                 'Для того, чтобы изменить свою группу нажмите \"Изменить группу\".')
+                        else:
+                            self.bot.sendMsg(vkid=event.user_id,
+                                             msg=f'Вы не указали группу. Нажмите кнопку \"Изменить группу\" и введите её.')
                     elif event.text.lower() == 'изменить группу':  # User can change group
                         self.bot.sendMsg(vkid=event.user_id, msg="В какой группе вы находитесь?\n"
                                                                  "Для групп, которые делятся на подгруппы указывается "
@@ -72,7 +76,11 @@ class Server:
                                          msg=f'Вы указали, что Ваша группа: {db.getUserGroup(vkid=event.user_id)}.')
                         self.writeyourgroup.remove(event.user_id)
                     elif event.text.lower() == 'моя группа':
-                        self.bot.sendMsg(vkid=event.user_id, msg=c.makeChanges(db.getUserGroup(vkid=event.user_id)))
+                        if db.getUserGroup(vkid=event.user_id) != None:
+                            self.bot.sendMsg(vkid=event.user_id, msg=c.makeChanges(db.getUserGroup(vkid=event.user_id)))
+                        else:
+                            self.bot.sendMsg(vkid=event.user_id,
+                                             msg=f'Вы не указали группу. Нажмите кнопку \"Изменить группу\" и введите её.')
                     elif event.text.lower() == 'по группам':  # Changes by group
                         self.bot.sendMsg(vkid=event.user_id,
                                          msg="Введите код группы, для которой нужно найти изменения:")
@@ -200,8 +208,9 @@ class SQL:
         with self.connection.cursor() as cursor:  # Getting user's group at school from database
             cursor.execute("SELECT `thkruhm` FROM `users` WHERE `vkid` = %s", (vkid,))
             row = cursor.fetchone()
-            print(row)
             cursor.close()
+            if row == None:
+                return None
             return row['thkruhm']
 
     def setUserGroup(self, vkid, group):
@@ -348,6 +357,7 @@ class COVID:
                     f"болеет на данный момент и 💉 {covid[2]} выздоровели\n☠ {covid[3]} человек умерло.\n"
             return covid
         raise ValueError from None
+
 
 access_token = os.environ["ACCESS_TOKEN"]
 server = Server(access_token)  # Access token for VKApi
