@@ -134,7 +134,6 @@ class TimeCatcher:
     def todayWeekDay(self):  # Getting today's day of the week
         return (datetime.date.today() + datetime.timedelta(hours=2)).weekday()
 
-    @staticmethod
     def getGroupList(self):  # Group list for 2017-2020 year
         groupList = []
         yearnow = datetime.date.today().year
