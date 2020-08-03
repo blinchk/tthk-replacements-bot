@@ -221,7 +221,7 @@ class SQL:
 
     def sendStatus(self, vkid):
         with self.connection.cursor() as cursor:
-            query = '''SELECT sendStatus FROM users WHERE (vkid = %s)''' % vkid  # Getting status of daily send
+            query = '''SELECT sendStatus FROM users WHERE (vkid = %s)'''  # Getting status of daily send
             cursor.execute(pymysql.escape_string(query))
             row = cursor.fetchone()
             sendstatus = row['sendStatus']
@@ -318,7 +318,7 @@ class Changes:
                     refChanges += f"{i}\n"
                 return refChanges
             return f"Для группы 🦆 {data} на данный момент изменений в расписании нет."
-        elif data[-4:] == str(datetime.date.today().year):
+        if data[-4:] == str(datetime.date.today().year):
             data = re.split(r':\s', data)
             data = data[1]
             for line in changes:
@@ -330,7 +330,7 @@ class Changes:
                     refChanges += f"{i}\n"
                 return refChanges
             return f"В данный момент нет изменний в расписании на 🗓 {data}."
-        elif data in tc.keyboardNumDays:
+        if data in tc.keyboardNumDays:
             for line in changes:
                 if line[0] in data:
                     changeList = self.makeChanges(line, False)
@@ -358,8 +358,7 @@ class COVID:
             covid = f"🦠 COVID-19 в Эстонии:\n☣ {covid[0]} случаев заражения из 🧪 {covid[1]} тестов.\n😷 {covid[4]}" \
                     f"болеет на данный момент и 💉 {covid[2]} выздоровели\n☠ {covid[3]} человек умерло.\n"
             return covid
-        else:
-            raise ValueError from None
+        raise ValueError from None
 
 access_token = os.environ["ACCESS_TOKEN"]
 server = Server(access_token)  # Access token for VKApi
