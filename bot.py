@@ -1,12 +1,10 @@
 # Connecting vk_api
 # Connecting time tools
 import datetime
-import json
 # Connecting tools of deploy
 import os
 # Connecting parsing tools
 import re
-import urllib
 
 # Connecting pyMySQL
 import pymysql
@@ -58,22 +56,34 @@ class Server:
                         self.bot.sendKeyboard(keyboard=k.weekDaysKeyboard, vkid=event.user_id,
                                               msg='Выберите день недели из списка ниже:')
                     elif event.text.lower() == 'в какой я группе?':  # Return current user's group
-                        self.bot.sendMsg(vkid=event.user_id,
-                                         msg=f'Вы указали, что Ваша группа: {db.getUserGroup(vkid=event.user_id)}.\n'
-                                             'Для того, чтобы изменить свою группу нажмите \"Изменить группу\".')
+                        if db.getUserGroup(vkid=event.user_id) is not None:
+                            self.bot.sendMsg(vkid=event.user_id,
+                                             msg=f'Вы указали, что Ваша группа:'
+                                                 f' {db.getUserGroup(vkid=event.user_id)}.\n'
+                                                 'Для того, чтобы изменить свою группу нажмите \"Изменить группу\".')
+                        else:
+                            self.bot.sendMsg(vkid=event.user_id,
+                                             msg=f'Вы не указали группу. Нажмите кнопку '
+                                                 f'\"Изменить группу\" и введите её.')
                     elif event.text.lower() == 'изменить группу':  # User can change group
                         self.bot.sendMsg(vkid=event.user_id, msg="В какой группе вы находитесь?\n"
-                                                                 "Для групп, которые делятся на подгруппы указывается только группа: MEHpv19 вместо MEHpv19-2.\n"
+                                                                 "Для групп, которые делятся на подгруппы указывается "
+                                                                 "только группа: MEHpv19 вместо MEHpv19-2.\n"
                                                                  "Укажите код вашей группы:")
                         self.writeyourgroup.append(event.user_id)
                     elif event.text.lower()[
-                         -3:] in tc.getGroupList() and event.user_id in self.writeyourgroup:  # Receives group of the user
+                         -3:] in tc.getGroupList() and event.user_id in self.writeyourgroup:
+                        # Receives group of the user
                         db.setUserGroup(vkid=event.user_id, group=event.text)
                         self.bot.sendMsg(vkid=event.user_id,
                                          msg=f'Вы указали, что Ваша группа: {db.getUserGroup(vkid=event.user_id)}.')
                         self.writeyourgroup.remove(event.user_id)
                     elif event.text.lower() == 'моя группа':
-                        self.bot.sendMsg(vkid=event.user_id, msg=c.makeChanges(db.getUserGroup(vkid=event.user_id)))
+                        if db.getUserGroup(vkid=event.user_id) is not None:
+                            self.bot.sendMsg(vkid=event.user_id, msg=c.makeChanges(db.getUserGroup(vkid=event.user_id)))
+                        else:
+                            self.bot.sendMsg(vkid=event.user_id,
+                                             msg=f'Вы не указали группу. Нажмите кнопку \"Изменить группу\" и введите её.')
                     elif event.text.lower() == 'по группам':  # Changes by group
                         self.bot.sendMsg(vkid=event.user_id,
                                          msg="Введите код группы, для которой нужно найти изменения:")
@@ -88,7 +98,10 @@ class Server:
                         self.bot.sendMsg(vkid=event.user_id, msg=c.makeChanges(event.text))
                         self.writedate.remove(event.user_id)
                     elif event.text.lower() == 'рассылка':
-                        self.bot.sendMsg(vkid=event.user_id, msg='Рассылка.')
+                        if db.getUserGroup(vkid=event.user_id) is not None:
+                            self.bot.sendMsg(vkid=event.user_id, msg=db.sendStatus(vkid=event.user_id))
+                        else:
+                            self.bot.sendMsg(vkid=event.user_id, msg='Укажите сначала вашу группу.')
                     else:
                         self.bot.sendMsg(vkid=event.user_id, msg="Данной команды не существует.")
             elif event.type == VkEventType.USER_TYPING:
@@ -121,6 +134,7 @@ class TimeCatcher:
     def todayWeekDay(self):  # Getting today's day of the week
         return (datetime.date.today() + datetime.timedelta(hours=2)).weekday()
 
+    @staticmethod
     def getGroupList(self):  # Group list for 2017-2020 year
         groupList = []
         yearnow = datetime.date.today().year
@@ -189,48 +203,56 @@ class Bot:
 class SQL:
 
     def __init__(self):
-        mysql_l = os.environ['MYSQL_LOGIN']
-        mysql_p = os.environ["MYSQL_PASS"]  # Getting login and password from service there bot is deployed
-        self.connection = pymysql.connect(host='eu-cdbr-west-02.cleardb.net',
-                                          user=mysql_l,
-                                          password=mysql_p,
-                                          db='heroku_0ccfbccd1823b55',
-                                          cursorclass=DictCursor)  # Database connection settings
+        self.mysql_l = os.environ['MYSQL_LOGIN']
+        self.mysql_p = os.environ["MYSQL_PASS"]  # Getting login and password from service there bot is deployed
+
+    def getConnection(self):
+        return pymysql.connect(host='eu-cdbr-west-02.cleardb.net',
+                               user=self.mysql_l,
+                               password=self.mysql_p,
+                               db='heroku_0ccfbccd1823b55',
+                               cursorclass=DictCursor)  # Database connection settings
 
     def getUserGroup(self, vkid):
-        with self.connection.cursor() as cursor:  # Getting user's group at school from database
-            query = '''SELECT `thkruhm` FROM `users` WHERE (`vkid` = '%s')'''
-            cursor.execute(pymysql.escape_string(query), (vkid,))
+        conn = self.getConnection()
+        with conn.cursor() as cursor:  # Getting user's group at school from database
+            cursor.execute("SELECT `thkruhm` FROM `users` WHERE `vkid` = %s", (vkid,))
             row = cursor.fetchone()
             cursor.close()
+            conn.close()
+            if row is None:
+                return None
             return row['thkruhm']
 
     def setUserGroup(self, vkid, group):
+        conn = self.getConnection()
         usergroup = self.getUserGroup(vkid)
-        with self.connection.cursor() as cursor:
-            if len(usergroup) > 0:  # If group currently is specified by user
-                query = ''' UPDATE `users` SET `thkruhm`='%s' WHERE `vkid`='%s' '''
-                cursor.execute(pymysql.escape_string(query), (group, vkid))
+        with conn.cursor() as cursor:
+            if usergroup is not None:  # If group currently is specified by user
+                cursor.execute("UPDATE `users` SET `thkruhm`=%s WHERE `vkid`=%s", (group, vkid))
             else:  # If group isn't specified, user will be added to database
-                sql = '''INSERT INTO `users`(`vkid`, `thkruhm`, `sendStatus`) VALUES ('%s', '%s', 1)'''
-                cursor.execute(pymysql.escape_string(query), (vkid, group))
-                connection.commit()
-                cursor.close()
+                cursor.execute("INSERT INTO `users`(`vkid`, `thkruhm`, `sendStatus`) VALUES (%s, %s, 1)", (vkid, group))
+            conn.commit()
+            cursor.close()
+            conn.close()
 
     def sendStatus(self, vkid):
-        with self.connection.cursor() as cursor:
-            query = '''SELECT `sendStatus` FROM `users` WHERE (`vkid` = '%s')'''  # Getting status of daily send
-            cursor.execute(pymysql.escape_string(sql), (vkid,))
+        conn = self.getConnection()
+        with conn.cursor() as cursor:
+            cursor.execute("SELECT sendStatus FROM users WHERE vkid = %s", (vkid,))
             row = cursor.fetchone()
             sendstatus = row['sendStatus']
-            if sendStatus == 1:
-                query = '''UPDATE `users` SET `sendStatus`=0 WHERE `vkid`='%s' '''  # Updating statud of daily send
-                cursor.execute(pymysql.escape_string(sql), (vkid,))
-            else:
-                query = '''UPDATE `users` SET `sendStatus`=1 WHERE `vkid`='%s' '''
-                cursor.execute(pymysql.escape_string(sql), (vkid,))
-            connection.commit()
+            if sendstatus == 1:
+                cursor.execute("UPDATE `users` SET `sendStatus`=0 WHERE vkid=%s", (vkid,))
+                conn.commit()
+                cursor.close()
+                conn.close()
+                return "Рассылка была успешно выключена."
+            cursor.execute("UPDATE `users` SET `sendStatus`=1 WHERE `vkid`=%s", (vkid,))
+            conn.commit()
             cursor.close()
+            conn.close()
+            return "Рассылка была успешно включена."
 
 
 class Changes:
@@ -315,7 +337,7 @@ class Changes:
                     refChanges += f"{i}\n"
                 return refChanges
             return f"Для группы 🦆 {data} на данный момент изменений в расписании нет."
-        elif data[-4:] == str(datetime.date.today().year):
+        if data[-4:] == str(datetime.date.today().year):
             data = re.split(r':\s', data)
             data = data[1]
             for line in changes:
@@ -327,13 +349,13 @@ class Changes:
                     refChanges += f"{i}\n"
                 return refChanges
             return f"В данный момент нет изменний в расписании на 🗓 {data}."
-        elif data in tc.keyboardNumDays:
+        if data in tc.keyboardNumDays:
             for line in changes:
                 if line[0] in data:
                     changeList = self.makeChanges(line, False)
             if len(changeList) > 0:
                 refChanges = f"В учебном заведении на 🗓 {tc.dayOfWeek[data]} следующие изменения в расписании:\n"
-                for i in forshow:
+                for i in changes:
                     refChanges += f"{i}\n"
                 return refChanges
             return f"В данный момент изменений в расписании нет на 🗓 {tc.dayOfWeek[data]}."
@@ -342,20 +364,20 @@ class Changes:
 
 class COVID:
     def __init__(self):
-        self.url = 'https://raw.githubusercontent.com/okestonia/koroonakaart/master/koroonakaart/src/data.json'  # Link for JSON
+        self.url = 'https://raw.githubusercontent.com/okestonia/koroonakaart/master/koroonakaart/src/data.json'
+        # Link for JSON
 
     def getData(self):
         if self.url.lower().startswith('http'):
-            req = urllib.request.Request(url)
-            with urllib.request.urlopen(req) as response:
-                data = response.read()
-            data = json.loads(data)  # json module loads from the link
+            r = requests.get(self.url)
+            data = r.json()  # json module loads from the link
             covid = [data['confirmedCasesNumber'], data['testsAdministeredNumber'], data['recoveredNumber'],
                      data['deceasedNumber'], data['activeCasesNumber']]  # Getting correct rows.
-            covid = f"🦠 COVID-19 в Эстонии:\n☣ {covid[0]} случаев заражения из 🧪 {covid[1]} тестов.\n😷 {covid[4]} болеет на данный момент и 💉 {covid[2]} выздоровели\n☠ {covid[3]} человек умерло.\n"
+            covid = f"🦠 COVID-19 в Эстонии:\n☣ {covid[0]} случаев заражения из 🧪 {covid[1]} тестов.\n😷 {covid[4]} " \
+                    f"болеет на данный момент и 💉 {covid[2]} выздоровели\n☠ {covid[3]} человек умерло.\n"
             return covid
-        else:
-            raise ValueError from None
+        raise ValueError from None
+
 
 access_token = os.environ["ACCESS_TOKEN"]
 server = Server(access_token)  # Access token for VKApi
