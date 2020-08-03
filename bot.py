@@ -56,7 +56,7 @@ class Server:
                         self.bot.sendKeyboard(keyboard=k.weekDaysKeyboard, vkid=event.user_id,
                                               msg='Выберите день недели из списка ниже:')
                     elif event.text.lower() == 'в какой я группе?':  # Return current user's group
-                        if db.getUserGroup(vkid=event.user_id) != None:
+                        if db.getUserGroup(vkid=event.user_id) is not None:
                             self.bot.sendMsg(vkid=event.user_id,
                                              msg=f'Вы указали, что Ваша группа: {db.getUserGroup(vkid=event.user_id)}.\n'
                                                  'Для того, чтобы изменить свою группу нажмите \"Изменить группу\".')
@@ -76,7 +76,7 @@ class Server:
                                          msg=f'Вы указали, что Ваша группа: {db.getUserGroup(vkid=event.user_id)}.')
                         self.writeyourgroup.remove(event.user_id)
                     elif event.text.lower() == 'моя группа':
-                        if db.getUserGroup(vkid=event.user_id) != None:
+                        if db.getUserGroup(vkid=event.user_id) is not None:
                             self.bot.sendMsg(vkid=event.user_id, msg=c.makeChanges(db.getUserGroup(vkid=event.user_id)))
                         else:
                             self.bot.sendMsg(vkid=event.user_id,
@@ -209,7 +209,7 @@ class SQL:
             cursor.execute("SELECT `thkruhm` FROM `users` WHERE `vkid` = %s", (vkid,))
             row = cursor.fetchone()
             cursor.close()
-            if row == None:
+            if row is None:
                 return None
             return row['thkruhm']
 
