@@ -200,8 +200,8 @@ class SQL:
 
     def getUserGroup(self, vkid):
         with self.connection.cursor() as cursor:  # Getting user's group at school from database
-            query = '''SELECT `thkruhm` FROM `users` WHERE (`vkid` = '%s')''' % vkid
-            print(pymysql.escape_string(query))
+            query = '''SELECT `thkruhm` FROM `users` WHERE (`vkid` = '%s')'''
+            print(query, pymysql.escape_string(vkid))
             cursor.execute(query)
             row = cursor.fetchone()
             cursor.close()
@@ -211,11 +211,11 @@ class SQL:
         usergroup = self.getUserGroup(vkid)
         with self.connection.cursor() as cursor:
             if len(usergroup) > 0:  # If group currently is specified by user
-                query = ''' UPDATE `users` SET `thkruhm`=%s WHERE `vkid`=%s''' % group, vkid
-                cursor.execute(pymysql.escape_string(query))
+                query = ''' UPDATE `users` SET `thkruhm`=%s WHERE `vkid`=%s'''
+                cursor.execute(query, pymysql.escape_string(group, vkid))
             else:  # If group isn't specified, user will be added to database
-                query = '''INSERT INTO `users`(`vkid`, `thkruhm`, `sendStatus`) VALUES (%s, %s, 1)''' % vkid, group
-                cursor.execute(pymysql.escape_string(query))
+                query = '''INSERT INTO `users`(`vkid`, `thkruhm`, `sendStatus`) VALUES (%s, %s, 1)'''
+                cursor.execute(query.pymysql.escape_string(vkid, group))
                 connection.commit()
                 cursor.close()
 
@@ -226,11 +226,11 @@ class SQL:
             row = cursor.fetchone()
             sendstatus = row['sendStatus']
             if sendStatus == 1:
-                query = '''UPDATE `users` SET `sendStatus`=0 WHERE vkid=%s''' % vkid  # Updating statud of daily send
-                cursor.execute(pymysql.escape_string(query))
+                query = '''UPDATE `users` SET `sendStatus`=0 WHERE vkid=%s'''  # Updating statud of daily send
+                cursor.execute(query, pymysql.escape_string(vkid))
             else:
-                query = '''UPDATE `users` SET `sendStatus`=1 WHERE `vkid`=%s''' % vkid
-                cursor.execute(pymysql.escape_string(query))
+                query = '''UPDATE `users` SET `sendStatus`=1 WHERE `vkid`=%s'''
+                cursor.execute(query, pymysql.escape_string(vkid))
                 pymysql.escape_string()
             connection.commit()
             cursor.close()
