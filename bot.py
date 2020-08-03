@@ -96,9 +96,10 @@ class Server:
                         self.writedate.remove(event.user_id)
                     elif event.text.lower() == 'рассылка':
                         if db.getUserGroup(vkid=event.user_id) is not None:
-                            self.bot.sendMsg(vkid=event.user_id, msg='Укажите сначала вашу группу.')
-                        else:
                             self.bot.sendMsg(vkid=event.user_id, msg=db.sendStatus(vkid=event.user_id))
+                        else:
+                            self.bot.sendMsg(vkid=event.user_id, msg='Укажите сначала вашу группу.')
+
                     else:
                         self.bot.sendMsg(vkid=event.user_id, msg="Данной команды не существует.")
             elif event.type == VkEventType.USER_TYPING:
