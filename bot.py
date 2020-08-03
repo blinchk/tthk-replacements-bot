@@ -337,6 +337,7 @@ class Changes:
                     refChanges += f"{i}\n"
                 return refChanges
             return f"В данный момент изменений в расписании нет на 🗓 {tc.dayOfWeek[data]}."
+        return "Нет изменений в расписании по запросу, который вы ввели."
 
 
 class COVID:
@@ -346,16 +347,15 @@ class COVID:
     def getData(self):
         if self.url.lower().startswith('http'):
             req = urllib.request.Request(url)
+            with urllib.request.urlopen(req) as response:
+                data = response.read()
+            data = json.loads(data)  # json module loads from the link
+            covid = [data['confirmedCasesNumber'], data['testsAdministeredNumber'], data['recoveredNumber'],
+                     data['deceasedNumber'], data['activeCasesNumber']]  # Getting correct rows.
+            covid = f"🦠 COVID-19 в Эстонии:\n☣ {covid[0]} случаев заражения из 🧪 {covid[1]} тестов.\n😷 {covid[4]} болеет на данный момент и 💉 {covid[2]} выздоровели\n☠ {covid[3]} человек умерло.\n"
+            return covid
         else:
             raise ValueError from None
-        with urllib.request.urlopen(req) as response:
-            data = response.read()
-        data = json.loads(data)  # json module loads from the link
-        covid = [data['confirmedCasesNumber'], data['testsAdministeredNumber'], data['recoveredNumber'],
-                 data['deceasedNumber'], data['activeCasesNumber']]  # Getting correct rows.
-        covid = f"🦠 COVID-19 в Эстонии:\n☣ {covid[0]} случаев заражения из 🧪 {covid[1]} тестов.\n😷 {covid[4]} болеет на данный момент и 💉 {covid[2]} выздоровели\n☠ {covid[3]} человек умерло.\n"
-        return covid
-
 
 access_token = os.environ["ACCESS_TOKEN"]
 server = Server(access_token)  # Access token for VKApi
