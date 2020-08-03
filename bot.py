@@ -63,7 +63,8 @@ class Server:
                                              'Для того, чтобы изменить свою группу нажмите \"Изменить группу\".')
                     elif event.text.lower() == 'изменить группу':  # User can change group
                         self.bot.sendMsg(vkid=event.user_id, msg="В какой группе вы находитесь?\n"
-                                                                 "Для групп, которые делятся на подгруппы указывается только группа: MEHpv19 вместо MEHpv19-2.\n"
+                                                                 "Для групп, которые делятся на подгруппы указывается "
+                                                                 "только группа: MEHpv19 вместо MEHpv19-2.\n"
                                                                  "Укажите код вашей группы:")
                         self.writeyourgroup.append(event.user_id)
                     elif event.text.lower()[
@@ -356,7 +357,8 @@ class COVID:
             data = json.loads(data)  # json module loads from the link
             covid = [data['confirmedCasesNumber'], data['testsAdministeredNumber'], data['recoveredNumber'],
                      data['deceasedNumber'], data['activeCasesNumber']]  # Getting correct rows.
-            covid = f"🦠 COVID-19 в Эстонии:\n☣ {covid[0]} случаев заражения из 🧪 {covid[1]} тестов.\n😷 {covid[4]} болеет на данный момент и 💉 {covid[2]} выздоровели\n☠ {covid[3]} человек умерло.\n"
+            covid = f"🦠 COVID-19 в Эстонии:\n☣ {covid[0]} случаев заражения из 🧪 {covid[1]} тестов.\n😷 {covid[4]}" \
+                    f"болеет на данный момент и 💉 {covid[2]} выздоровели\n☠ {covid[3]} человек умерло.\n"
             return covid
         else:
             raise ValueError from None
