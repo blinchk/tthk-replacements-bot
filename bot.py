@@ -196,35 +196,42 @@ class Bot:
 class SQL:
 
     def __init__(self):
-        mysql_l = os.environ['MYSQL_LOGIN']
-        mysql_p = os.environ["MYSQL_PASS"]  # Getting login and password from service there bot is deployed
-        self.connection = pymysql.connect(host='eu-cdbr-west-02.cleardb.net',
-                                          user=mysql_l,
-                                          password=mysql_p,
-                                          db='heroku_0ccfbccd1823b55',
-                                          cursorclass=DictCursor)  # Database connection settings
+        self.mysql_l = os.environ['MYSQL_LOGIN']
+        self.mysql_p = os.environ["MYSQL_PASS"]  # Getting login and password from service there bot is deployed
+
+    def getConnection(self):
+        return pymysql.connect(host='eu-cdbr-west-02.cleardb.net',
+                               user=self.mysql_l,
+                               password=self.mysql_p,
+                               db='heroku_0ccfbccd1823b55',
+                               cursorclass=DictCursor)  # Database connection settings
 
     def getUserGroup(self, vkid):
-        with self.connection.cursor() as cursor:  # Getting user's group at school from database
+        conn = self.getConnection()
+        with conn.cursor() as cursor:  # Getting user's group at school from database
             cursor.execute("SELECT `thkruhm` FROM `users` WHERE `vkid` = %s", (vkid,))
             row = cursor.fetchone()
             cursor.close()
+            conn.close()
             if row is None:
                 return None
             return row['thkruhm']
 
     def setUserGroup(self, vkid, group):
+        conn = self.getConnection()
         usergroup = self.getUserGroup(vkid)
-        with self.connection.cursor() as cursor:
+        with conn.cursor() as cursor:
             if len(usergroup) > 0:  # If group currently is specified by user
                 cursor.execute("UPDATE `users` SET `thkruhm`=%s WHERE `vkid`=%s", (group, vkid))
             else:  # If group isn't specified, user will be added to database
                 cursor.execute("INSERT INTO `users`(`vkid`, `thkruhm`, `sendStatus`) VALUES (%s, %s, 1)", (vkid, group))
-            connection.commit()
+            conn.commit()
             cursor.close()
+            conn.close()
 
     def sendStatus(self, vkid):
-        with self.connection.cursor() as cursor:
+        conn = self.getConnection()
+        with conn.cursor() as cursor:
             cursor.execute("SELECT sendStatus FROM users WHERE vkid = %s", (vkid,))
             row = cursor.fetchone()
             sendstatus = row['sendStatus']
@@ -232,8 +239,9 @@ class SQL:
                 cursor.execute("UPDATE `users` SET `sendStatus`=0 WHERE vkid=%s", (vkid,))
             else:
                 cursor.execute("UPDATE `users` SET `sendStatus`=1 WHERE `vkid`=%s", (vkid,))
-            connection.commit()
+            conn.commit()
             cursor.close()
+            conn.close()
 
 
 class Changes:
