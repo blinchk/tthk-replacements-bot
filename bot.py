@@ -201,8 +201,8 @@ class SQL:
             query = '''SELECT `thkruhm` FROM `users` WHERE (`vkid` = '%s')'''
             print(query, [vkid, ])
             cursor.execute(query)
-            print(row)
             row = cursor.fetchone()
+            print(row)
             cursor.close()
             return row['thkruhm']
 
