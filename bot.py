@@ -58,11 +58,13 @@ class Server:
                     elif event.text.lower() == 'в какой я группе?':  # Return current user's group
                         if db.getUserGroup(vkid=event.user_id) is not None:
                             self.bot.sendMsg(vkid=event.user_id,
-                                             msg=f'Вы указали, что Ваша группа: {db.getUserGroup(vkid=event.user_id)}.\n'
+                                             msg=f'Вы указали, что Ваша группа:'
+                                                 f' {db.getUserGroup(vkid=event.user_id)}.\n'
                                                  'Для того, чтобы изменить свою группу нажмите \"Изменить группу\".')
                         else:
                             self.bot.sendMsg(vkid=event.user_id,
-                                             msg=f'Вы не указали группу. Нажмите кнопку \"Изменить группу\" и введите её.')
+                                             msg=f'Вы не указали группу. Нажмите кнопку '
+                                                 f'\"Изменить группу\" и введите её.')
                     elif event.text.lower() == 'изменить группу':  # User can change group
                         self.bot.sendMsg(vkid=event.user_id, msg="В какой группе вы находитесь?\n"
                                                                  "Для групп, которые делятся на подгруппы указывается "
@@ -70,7 +72,8 @@ class Server:
                                                                  "Укажите код вашей группы:")
                         self.writeyourgroup.append(event.user_id)
                     elif event.text.lower()[
-                         -3:] in tc.getGroupList() and event.user_id in self.writeyourgroup:  # Receives group of the user
+                         -3:] in tc.getGroupList() and event.user_id in self.writeyourgroup:
+                        # Receives group of the user
                         db.setUserGroup(vkid=event.user_id, group=event.text)
                         self.bot.sendMsg(vkid=event.user_id,
                                          msg=f'Вы указали, что Ваша группа: {db.getUserGroup(vkid=event.user_id)}.')
@@ -131,6 +134,7 @@ class TimeCatcher:
     def todayWeekDay(self):  # Getting today's day of the week
         return (datetime.date.today() + datetime.timedelta(hours=2)).weekday()
 
+    @staticmethod
     def getGroupList(self):  # Group list for 2017-2020 year
         groupList = []
         yearnow = datetime.date.today().year
@@ -351,7 +355,7 @@ class Changes:
                     changeList = self.makeChanges(line, False)
             if len(changeList) > 0:
                 refChanges = f"В учебном заведении на 🗓 {tc.dayOfWeek[data]} следующие изменения в расписании:\n"
-                for i in forshow:
+                for i in changes:
                     refChanges += f"{i}\n"
                 return refChanges
             return f"В данный момент изменений в расписании нет на 🗓 {tc.dayOfWeek[data]}."
@@ -360,7 +364,8 @@ class Changes:
 
 class COVID:
     def __init__(self):
-        self.url = 'https://raw.githubusercontent.com/okestonia/koroonakaart/master/koroonakaart/src/data.json'  # Link for JSON
+        self.url = 'https://raw.githubusercontent.com/okestonia/koroonakaart/master/koroonakaart/src/data.json'
+        # Link for JSON
 
     def getData(self):
         if self.url.lower().startswith('http'):
