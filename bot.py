@@ -201,6 +201,7 @@ class SQL:
     def getUserGroup(self, vkid):
         with self.connection.cursor() as cursor:  # Getting user's group at school from database
             query = '''SELECT `thkruhm` FROM `users` WHERE (`vkid` = '%s')''' % vkid
+            print(pymysql.escape_string(query))
             cursor.execute(query)
             row = cursor.fetchone()
             cursor.close()
