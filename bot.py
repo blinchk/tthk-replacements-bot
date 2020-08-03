@@ -198,8 +198,7 @@ class SQL:
 
     def getUserGroup(self, vkid):
         with self.connection.cursor() as cursor:  # Getting user's group at school from database
-            query = '''SELECT `thkruhm` FROM `users` WHERE (`vkid` = '%s')'''
-            print(query, [vkid, ])
+            print("SELECT `thkruhm` FROM `users` WHERE (`vkid` = '%s')", (vkid,))
             cursor.execute(query)
             row = cursor.fetchone()
             print(row)
@@ -210,13 +209,11 @@ class SQL:
         usergroup = self.getUserGroup(vkid)
         with self.connection.cursor() as cursor:
             if len(usergroup) > 0:  # If group currently is specified by user
-                query = ''' UPDATE `users` SET `thkruhm`=%s WHERE `vkid`=%s'''
-                cursor.execute(query, [group, vkid])
+                cursor.execute("UPDATE `users` SET `thkruhm`=%s WHERE `vkid`=%s", (group, vkid))
             else:  # If group isn't specified, user will be added to database
-                query = '''INSERT INTO `users`(`vkid`, `thkruhm`, `sendStatus`) VALUES (%s, %s, 1)'''
-                cursor.execute(query, [vkid, group])
-                connection.commit()
-                cursor.close()
+                cursor.execute("INSERT INTO `users`(`vkid`, `thkruhm`, `sendStatus`) VALUES (%s, %s, 1)", (vkid, group))
+            connection.commit()
+            cursor.close()
 
     def sendStatus(self, vkid):
         with self.connection.cursor() as cursor:
@@ -225,12 +222,9 @@ class SQL:
             row = cursor.fetchone()
             sendstatus = row['sendStatus']
             if sendStatus == 1:
-                query = '''UPDATE `users` SET `sendStatus`=0 WHERE vkid=%s'''  # Updating statud of daily send
-                cursor.execute(query, [vkid, ])
+                cursor.execute("UPDATE `users` SET `sendStatus`=0 WHERE vkid=%s", (vkid,))
             else:
-                query = '''UPDATE `users` SET `sendStatus`=1 WHERE `vkid`=%s'''
-                cursor.execute(query, [vkid, ])
-                pymysql.escape_string()
+                cursor.execute("UPDATE `users` SET `sendStatus`=1 WHERE `vkid`=%s", (vkid,))
             connection.commit()
             cursor.close()
 
