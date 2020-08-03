@@ -95,7 +95,10 @@ class Server:
                         self.bot.sendMsg(vkid=event.user_id, msg=c.makeChanges(event.text))
                         self.writedate.remove(event.user_id)
                     elif event.text.lower() == 'рассылка':
-                        self.bot.sendMsg(vkid=event.user_id, msg='Рассылка.')
+                        if db.getUserGroup(vkid=event.user_id) is not None:
+                            self.bot.sendMsg(vkid=event.user_id, msg='Укажите сначала вашу группу.')
+                        else:
+                            self.bot.sendMsg(vkid=event.user_id, msg=db.sendStatus(vkid=event.user_id))
                     else:
                         self.bot.sendMsg(vkid=event.user_id, msg="Данной команды не существует.")
             elif event.type == VkEventType.USER_TYPING:
@@ -221,7 +224,7 @@ class SQL:
         conn = self.getConnection()
         usergroup = self.getUserGroup(vkid)
         with conn.cursor() as cursor:
-            if len(usergroup) > 0:  # If group currently is specified by user
+            if usergroup is not None:  # If group currently is specified by user
                 cursor.execute("UPDATE `users` SET `thkruhm`=%s WHERE `vkid`=%s", (group, vkid))
             else:  # If group isn't specified, user will be added to database
                 cursor.execute("INSERT INTO `users`(`vkid`, `thkruhm`, `sendStatus`) VALUES (%s, %s, 1)", (vkid, group))
@@ -235,13 +238,17 @@ class SQL:
             cursor.execute("SELECT sendStatus FROM users WHERE vkid = %s", (vkid,))
             row = cursor.fetchone()
             sendstatus = row['sendStatus']
-            if sendStatus == 1:
+            if sendstatus == 1:
                 cursor.execute("UPDATE `users` SET `sendStatus`=0 WHERE vkid=%s", (vkid,))
-            else:
-                cursor.execute("UPDATE `users` SET `sendStatus`=1 WHERE `vkid`=%s", (vkid,))
+                conn.commit()
+                cursor.close()
+                conn.close()
+                return "Рассылка была успешно выключена."
+            cursor.execute("UPDATE `users` SET `sendStatus`=1 WHERE `vkid`=%s", (vkid,))
             conn.commit()
             cursor.close()
             conn.close()
+            return "Рассылка была успешно включена."
 
 
 class Changes:
