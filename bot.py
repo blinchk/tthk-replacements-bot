@@ -99,7 +99,6 @@ class Server:
                             self.bot.sendMsg(vkid=event.user_id, msg=db.sendStatus(vkid=event.user_id))
                         else:
                             self.bot.sendMsg(vkid=event.user_id, msg='Укажите сначала вашу группу.')
-
                     else:
                         self.bot.sendMsg(vkid=event.user_id, msg="Данной команды не существует.")
             elif event.type == VkEventType.USER_TYPING:
@@ -369,7 +368,7 @@ class COVID:
             data = r.json()  # json module loads from the link
             covid = [data['confirmedCasesNumber'], data['testsAdministeredNumber'], data['recoveredNumber'],
                      data['deceasedNumber'], data['activeCasesNumber']]  # Getting correct rows.
-            covid = f"🦠 COVID-19 в Эстонии:\n☣ {covid[0]} случаев заражения из 🧪 {covid[1]} тестов.\n😷 {covid[4]}" \
+            covid = f"🦠 COVID-19 в Эстонии:\n☣ {covid[0]} случаев заражения из 🧪 {covid[1]} тестов.\n😷 {covid[4]} " \
                     f"болеет на данный момент и 💉 {covid[2]} выздоровели\n☠ {covid[3]} человек умерло.\n"
             return covid
         raise ValueError from None
