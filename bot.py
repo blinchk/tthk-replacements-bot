@@ -1,12 +1,10 @@
 # Connecting vk_api
 # Connecting time tools
 import datetime
-import json
 # Connecting tools of deploy
 import os
 # Connecting parsing tools
 import re
-import urllib
 
 # Connecting pyMySQL
 import pymysql
@@ -349,10 +347,8 @@ class COVID:
 
     def getData(self):
         if self.url.lower().startswith('http'):
-            req = urllib.request.Request(url)
-            with urllib.request.urlopen(req) as response:
-                data = response.read()
-            data = json.loads(data)  # json module loads from the link
+            r = requests.get(self.url)
+            data = r.json()  # json module loads from the link
             covid = [data['confirmedCasesNumber'], data['testsAdministeredNumber'], data['recoveredNumber'],
                      data['deceasedNumber'], data['activeCasesNumber']]  # Getting correct rows.
             covid = f"🦠 COVID-19 в Эстонии:\n☣ {covid[0]} случаев заражения из 🧪 {covid[1]} тестов.\n😷 {covid[4]}" \
