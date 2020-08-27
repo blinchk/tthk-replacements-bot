@@ -2,7 +2,6 @@ import os
 import random
 import time
 
-import parse
 import pymysql
 import requests
 import vk_api
@@ -16,14 +15,13 @@ mysql_p = os.environ["MYSQL_PASS"]
 access_token = os.environ["ACCESS_TOKEN"]
 vk = vk_api.VkApi(token=access_token)
 
-
 def write_msg(user_id, random_id, message):
     vk.method('messages.send', {'user_id': user_id, 'random_id': random_id, 'message': message})
 
 def parsepage(table):
     muudatused = []
-    for item in table:
-        my_table = item
+    for i in range(len(table)):
+        my_table = table[i]
         rows = my_table.find_all('tr')
         for row in rows:
             muudatus = []
@@ -32,8 +30,11 @@ def parsepage(table):
                 if cell.text not in ["\xa0", "Kuupäev", "Rühm", "Tund", "Õpetaja", "Ruum"]:
                     data = cell.text
                     muudatus.append(data)
+            # здесь есть полноценный список muudatus
             if muudatus != []:
                 muudatused.append(muudatus)
+        else:
+            continue
     return muudatused
 
 def openfromfile(usergroup):
@@ -44,9 +45,11 @@ def openfromfile(usergroup):
         db='heroku_0ccfbccd1823b55',
         cursorclass=DictCursor)
     with connection.cursor() as cursor:
-        cursor.execute("""SELECT vkid, thkruhm FROM USERS WHERE `sendStatus` = '1';""")
+        cursor.execute("""SELECT * FROM USERS""")
         row = cursor.fetchall()
+        #        print(row)
         for i in row:
+            #            print(i)
             usergroup[i['vkid']] = i['thkruhm']
     cursor.close()
     connection.close()
@@ -65,7 +68,7 @@ def makemuudatused(i, forshow):
         forshow.append(f"🗓 {i[0]} Дата: {i[1]}\n🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n🏠 Самостоятельная работа дома\n")
     elif len(i) > 5 and i[5].lower() in "iseseisev töö":
         forshow.append(f"🗓 {i[0]} Дата: {i[1]}\n🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n📋 Самостоятельная работа\n")
-    elif len(i) > 5 and i[5].lower() in ["", " "]:
+    elif len(i) > 5 and (i[5].lower() == "" or i[5].lower() == " "):
         forshow.append(f"🗓 {i[0]} Дата: {i[1]}\n🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n👨‍🏫 Преподаватель: {i[4]}\n")
     else:
         forshow.append(f"🗓 В {i[0]} Дата: {i[1]}\n🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n")
@@ -75,15 +78,16 @@ def getmuudatused(setgroup, user, justtable):
     forshow = []
     muudatused = parsepage(justtable)
     for i in muudatused:
-        print(i)
         if setgroup.lower() in i[2].lower():
             makemuudatused(i, forshow)
-    if forshow:
+    if len(forshow) > 0:
         userfname = (vk.method('users.get', {'user_ids': user, 'fields': 'first_name'})[0])["first_name"]
         kogutunniplaan = f"Доброе утро, {userfname}! Для группы 🦆 {setgroup} на данный момент следующие изменения в расписании:\n"
         for w in forshow:
             kogutunniplaan += f"{w}\n"
         write_msg(user, (random.getrandbits(31) * random.choice([-1, 1])), kogutunniplaan)
+    elif len(forshow) == 0:
+        pass
 
 def sendeveryday(justtable):
     usergroup = {}
@@ -91,17 +95,12 @@ def sendeveryday(justtable):
     print("Запускаю рассылку:")
     print(time.strftime("%H:%M:%S"))
     for i in usergroup.keys():
-        print(i)
-        covid = parse.getdata()
-        write_msg(i, (random.getrandbits(31) * random.choice([-1, 1])),
-                  f"🦠 COVID-19 в Эстонии:\n☣ {covid[0]} случаев заражения из 🧪 {covid[1]} тестов\n"
-                  f"😷 {covid[5]} болеет на данный момент и 💉 {covid[2]} выздоровели\n☠ {covid[3]} человек умерло.\n\n"
-                  f"⚠️В общественнах местах разрешено находится лишь вдвоём и держать дистанцию 2 метра от других людей. ⚠️"
-                  f"TTHK закрыт с 16 марта, в связи с чрезвычайным положением в Эстонской Республике.")
-
+        getmuudatused(usergroup[i], i, justtable)
 
 while True:
-    if time.strftime("%H:%M:%S", time.localtime()) == '12:30:00':
+    if time.strftime("%H:%M:%S", time.localtime()) == '05:00:00' and time.strftime("%w", time.localtime()) in ['1', '2',
+                                                                                                               '3', '4',
+                                                                                                               '5']:
         r = requests.get('http://www.tthk.ee/tunniplaani-muudatused/')
         html_content = r.text
         soup = BeautifulSoup(html_content, 'html.parser')
