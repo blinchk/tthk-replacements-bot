@@ -15,8 +15,10 @@ mysql_p = os.environ["MYSQL_PASS"]
 access_token = os.environ["ACCESS_TOKEN"]
 vk = vk_api.VkApi(token=access_token)
 
+
 def write_msg(user_id, random_id, message):
     vk.method('messages.send', {'user_id': user_id, 'random_id': random_id, 'message': message})
+
 
 def parsepage(table):
     muudatused = []

@@ -1,7 +1,5 @@
 # Connecting vk_api
 # Connecting time tools
-# Multi-threading
-import asyncio
 import datetime
 # Connecting tools of deploy
 import os
@@ -30,7 +28,7 @@ class Server:
         self.writeweekday = []
         self.writedate = []
 
-    async def start(self):
+    def start(self):
         print("Bot successfully deployed and started.")  # Console message when bot deployed.
         k = Keyboard()
         tc = TimeCatcher()
@@ -378,13 +376,6 @@ class COVID:
             return covid
         raise ValueError from None
 
-
-class Sender:
-    def __init__(self):
-        self.sql
-
-
 access_token = os.environ["ACCESS_TOKEN"]
 server = Server(access_token)  # Access token for VKApi
-botloop = asyncio.get_event_loop()
-botloop.run_forever()
+server.start()
