@@ -325,7 +325,7 @@ class Changes:
         if data[-3:] in tc.getGroupList():  # Group for 4 years (like 2017-2020)
             for line in changes:
                 if line[2].lower() in data.lower():
-                    changeList = self.makeChanges(line, True)  # Takes converted lines of changes from makeChanges func
+                    changeList = self.convertChanges(line, True)  # Takes converted lines of changes from makeChanges func
             if len(changeList) > 0:
                 refChanges = f"Для группы 🦆 {data} на данный момент следующие изменения в расписании:\n"  # Head of the message
                 for i in changeList:
@@ -340,7 +340,7 @@ class Changes:
                 data = data[0]
             for line in changes:
                 if line[1] == data:
-                    changeList = self.makeChanges(line, False)
+                    changeList = self.convertChanges(line, False)
             if len(changeList) > 0:
                 refChanges = f"В учебном заведении на 🗓 {data} следующие изменения в расписании:\n"
                 for i in changeList:
@@ -350,7 +350,7 @@ class Changes:
         if data in tc.keyboardNumDays:
             for line in changes:
                 if line[0] in data:
-                    changeList = self.makeChanges(line, False)
+                    changeList = self.convertChanges(line, False)
             if len(changeList) > 0:
                 refChanges = f"В учебном заведении на 🗓 {tc.dayOfWeek[data]} следующие изменения в расписании:\n"
                 for i in changes:
