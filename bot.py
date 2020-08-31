@@ -276,46 +276,40 @@ class Changes:
         return changes
 
     def convertChanges(self, i, date):
-        changeList = []
         if date is False:
             if len(i) == 6:
-                changeList = (f"🦆 Группа: {i[2]} ⏰ Урок: {i[3]} \n👨‍🏫 Преподаватель: {i[4]}\nКабинет: {i[5]}\n")
+                changeList = f"🦆 Группа: {i[2]} ⏰ Урок: {i[3]} \n👨‍🏫 Преподаватель: {i[4]}\nКабинет: {i[5]}\n"
             elif len(i) > 2 and i[3].lower() in "jääb ära":
-                changeList = (f"🦆 {i[2]}\n❌ Не состоится\n")
+                changeList = f"🦆 {i[2]}\n❌ Не состоится\n"
             elif len(i) > 4 and i[4].lower() in "jääb ära":
-                changeList = (f"🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n❌ Не состоится\n")
+                changeList = f"🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n❌ Не состоится\n"
             elif len(i) > 4 and i[4].lower() in "söögivahetund":
-                changeList = (f"🦆 Группа: {i[2]}\n ⏰ Урок: {i[3]}\n🆒 Обеденный перерыв\n")
+                changeList = f"🦆 Группа: {i[2]}\n ⏰ Урок: {i[3]}\n🆒 Обеденный перерыв\n"
             elif len(i) > 5 and i[5].lower() in "iseseisev töö kodus":
-                changeList = (f"🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n🏠 Самостоятельная работа дома\n")
+                changeList = f"🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n🏠 Самостоятельная работа дома\n"
             elif len(i) > 5 and i[5].lower() in "iseseisev töö":
-                changeList = (f"🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n📋 Самостоятельная работа\n")
+                changeList = f"🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n📋 Самостоятельная работа\n"
             elif len(i) > 5 and i[5].lower() in ["", " "]:
-                changeList = (f"🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n👨‍🏫 Преподаватель: {i[4]}\n")
+                changeList = f"🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n👨‍🏫 Преподаватель: {i[4]}\n"
             else:
-                changeList = (f"🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n")
+                changeList = f"🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n"
         else:
             if len(i) == 6:
-                changeList = (
-                    f"🗓 {i[0]} Дата: {i[1]}\n🦆 Группа: {i[2]} ⏰ Урок: {i[3]} \n👨‍🏫 Преподаватель: {i[4]}\nКабинет: {i[5]}\n")
+                changeList = f"🗓 {i[0]} Дата: {i[1]}\n🦆 Группа: {i[2]} ⏰ Урок: {i[3]} \n👨‍🏫 Преподаватель: {i[4]}\nКабинет: {i[5]}\n"
             elif len(i) > 2 and i[3].lower() in "jääb ära":
-                changeList = (f"🗓 {i[0]} Дата: {i[1]}\n🦆 {i[2]}\n❌ Не состоится\n")
+                changeList = f"🗓 {i[0]} Дата: {i[1]}\n🦆 {i[2]}\n❌ Не состоится\n"
             elif len(i) > 4 and i[4].lower() in "jääb ära":
-                changeList = (f"🗓 {i[0]} Дата: {i[1]}\n🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n❌ Не состоится\n")
+                changeList = f"🗓 {i[0]} Дата: {i[1]}\n🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n❌ Не состоится\n"
             elif len(i) > 4 and i[4].lower() in "söögivahetund":
-                changeList = (
-                    f"🗓 {i[0]} Дата: {i[1]}\n🦆 Группа: {i[2]}\n ⏰ Урок: {i[3]}\n🆒 Обеденный перерыв\n")
+                changeList = f"🗓 {i[0]} Дата: {i[1]}\n🦆 Группа: {i[2]}\n ⏰ Урок: {i[3]}\n🆒 Обеденный перерыв\n"
             elif len(i) > 5 and i[5].lower() in "iseseisev töö kodus":
-                changeList = (
-                    f"🗓 {i[0]} Дата: {i[1]}\n🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n🏠 Самостоятельная работа дома\n")
+                changeList = f"🗓 {i[0]} Дата: {i[1]}\n🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n🏠 Самостоятельная работа дома\n"
             elif len(i) > 5 and i[5].lower() in "iseseisev töö":
-                changeList = (
-                    f"🗓 {i[0]} Дата: {i[1]}\n🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n📋 Самостоятельная работа\n")
+                changeList = f"🗓 {i[0]} Дата: {i[1]}\n🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n📋 Самостоятельная работа\n"
             elif len(i) > 5 and i[5].lower() in ["", " "]:
-                changeList = (
-                    f"🗓 {i[0]} Дата: {i[1]}\n🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n👨‍🏫 Преподаватель: {i[4]}\n")
+                changeList = f"🗓 {i[0]} Дата: {i[1]}\n🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n👨‍🏫 Преподаватель: {i[4]}\n"
             else:
-                changeList = (f"🗓 В {i[0]} Дата: {i[1]}\n🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n")
+                changeList = f"🗓 В {i[0]} Дата: {i[1]}\n🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n"
         return changeList
 
     def makeChanges(self, data):
@@ -325,7 +319,8 @@ class Changes:
         if data[-3:] in tc.getGroupList():  # Group for 4 years (like 2017-2020)
             for line in changes:
                 if line[2].lower() in data.lower():
-                    changeList = self.convertChanges(line, True)  # Takes converted lines of changes from makeChanges func
+                    changeList.append(
+                        self.convertChanges(line, True))  # Takes converted lines of changes from makeChanges func
             if len(changeList) > 0:
                 refChanges = f"Для группы 🦆 {data} на данный момент следующие изменения в расписании:\n"  # Head of the message
                 for i in changeList:
@@ -334,10 +329,13 @@ class Changes:
             return f"Для группы 🦆 {data} на данный момент изменений в расписании нет."
         if data[-4:] == str(datetime.date.today().year):
             data = re.split(r':\s', data)
-            data = data[1] if len(data) > 1 else data[0]
+            if len(data) > 1:
+                data = data[1]
+            else:
+                data = data[0]
             for line in changes:
                 if line[1] == data:
-                    changeList = self.convertChanges(line, False)
+                    changeList.append(self.convertChanges(line, False))
             if len(changeList) > 0:
                 refChanges = f"В учебном заведении на 🗓 {data} следующие изменения в расписании:\n"
                 for i in changeList:
@@ -347,10 +345,10 @@ class Changes:
         if data in tc.keyboardNumDays:
             for line in changes:
                 if line[0] in data:
-                    changeList = self.convertChanges(line, False)
+                    changeList.append(self.convertChanges(line, False))
             if len(changeList) > 0:
                 refChanges = f"В учебном заведении на 🗓 {tc.dayOfWeek[data]} следующие изменения в расписании:\n"
-                for i in changes:
+                for i in changeList:
                     refChanges += f"{i}\n"
                 return refChanges
             return f"В данный момент изменений в расписании нет на 🗓 {tc.dayOfWeek[data]}."
