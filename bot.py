@@ -334,10 +334,7 @@ class Changes:
             return f"Для группы 🦆 {data} на данный момент изменений в расписании нет."
         if data[-4:] == str(datetime.date.today().year):
             data = re.split(r':\s', data)
-            if len(data) > 1:
-                data = data[1]
-            else:
-                data = data[0]
+            data = data[1] if len(data) > 1 else data[0]
             for line in changes:
                 if line[1] == data:
                     changeList = self.convertChanges(line, False)
