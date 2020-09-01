@@ -47,7 +47,7 @@ def openfromfile(usergroup):
         db='heroku_0ccfbccd1823b55',
         cursorclass=DictCursor)
     with connection.cursor() as cursor:
-        cursor.execute("""SELECT * FROM USERS""")
+        cursor.execute("""SELECT * FROM USERS WHERE sendStatus=1""")
         row = cursor.fetchall()
         #        print(row)
         for i in row:
@@ -100,7 +100,7 @@ def sendeveryday(justtable):
         getmuudatused(usergroup[i], i, justtable)
 
 while True:
-    if time.strftime("%H:%M:%S", time.localtime()) == '05:00:00' and time.strftime("%w", time.localtime()) in ['1', '2',
+    if time.strftime("%H:%M:%S", time.localtime()) == '04:00:00' and time.strftime("%w", time.localtime()) in ['1', '2',
                                                                                                                '3', '4',
                                                                                                                '5']:
         r = requests.get('http://www.tthk.ee/tunniplaani-muudatused/')
