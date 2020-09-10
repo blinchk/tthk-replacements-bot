@@ -47,10 +47,10 @@ class Server:
                         self.bot.sendKeyboard(keyboard=Keyboard.weekDaysKeyboard, vkid=event.user_id,
                                               msg='Выберите день недели из списка ниже:')
                     elif event.text.lower() == 'в какой я группе?':  # Return current user's group
-                        if db.getUserGroup(vkid=event.user_id) is not None:
+                        if SQL.getUserGroup(vkid=event.user_id) is not None:
                             self.bot.sendMsg(vkid=event.user_id,
                                              msg=f'Вы указали, что Ваша группа:'
-                                                 f' {db.getUserGroup(vkid=event.user_id)}.\n'
+                                                 f' {SQL.getUserGroup(vkid=event.user_id)}.\n'
                                                  'Для того, чтобы изменить свою группу нажмите \"Изменить группу\".')
                         else:
                             self.bot.sendMsg(vkid=event.user_id,
@@ -65,13 +65,13 @@ class Server:
                     elif event.text.lower()[
                          -3:] in TimeCatcher.getGroupList() and event.user_id in self.writeyourgroup:
                         # Receives group of the user
-                        db.setUserGroup(vkid=event.user_id, group=event.text)
+                        SQL.setUserGroup(vkid=event.user_id, group=event.text)
                         self.bot.sendMsg(vkid=event.user_id,
-                                         msg=f'Вы указали, что Ваша группа: {db.getUserGroup(vkid=event.user_id)}.')
+                                         msg=f'Вы указали, что Ваша группа: {SQL.getUserGroup(vkid=event.user_id)}.')
                         self.writeyourgroup.remove(event.user_id)
                     elif event.text.lower() == 'моя группа':
-                        if db.getUserGroup(vkid=event.user_id) is not None:
-                            self.bot.sendMsg(vkid=event.user_id, msg=Changes.makeChanges(db.getUserGroup(vkid=event.user_id)))
+                        if SQL.getUserGroup(vkid=event.user_id) is not None:
+                            self.bot.sendMsg(vkid=event.user_id, msg=Changes.makeChanges(SQL.getUserGroup(vkid=event.user_id)))
                         else:
                             self.bot.sendMsg(vkid=event.user_id,
                                              msg=f'Вы не указали группу. Нажмите кнопку \"Изменить группу\" и введите её.')
@@ -89,8 +89,8 @@ class Server:
                         self.bot.sendMsg(vkid=event.user_id, msg=Changes.makeChanges(event.text))
                         self.writedate.remove(event.user_id)
                     elif event.text.lower() == 'рассылка':
-                        if db.getUserGroup(vkid=event.user_id) is not None:
-                            self.bot.sendMsg(vkid=event.user_id, msg=db.sendStatus(vkid=event.user_id))
+                        if SQL.getUserGroup(vkid=event.user_id) is not None:
+                            self.bot.sendMsg(vkid=event.user_id, msg=SQL.sendStatus(vkid=event.user_id))
                         else:
                             self.bot.sendMsg(vkid=event.user_id, msg='Укажите сначала вашу группу.')
                     else:
