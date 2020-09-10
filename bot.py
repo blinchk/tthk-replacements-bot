@@ -122,10 +122,10 @@ class TimeCatcher:
                 i[2] = str(i[2])
                 i[2] = '0' + i[2]
 
-    def todayWeekDay(self):  # Getting today's day of the week
+    def todayWeekDay():  # Getting today's day of the week
         return (datetime.date.today() + datetime.timedelta(hours=2)).weekday()
 
-    def getGroupList(self):  # Group list for 2017-2020 year
+    def getGroupList():  # Group list for 2017-2020 year
         groupList = []
         yearnow = datetime.date.today().year
         for i in range(int(str(yearnow)[:-2]) - 3, int(str(yearnow)[:-2]) + 1, 1):
@@ -203,7 +203,7 @@ class SQL:
                                db='heroku_0ccfbccd1823b55',
                                cursorclass=DictCursor)  # Database connection settings
 
-    def getUserGroup(self, vkid):
+    def getUserGroup(vkid):
         conn = self.getConnection()
         with conn.cursor() as cursor:  # Getting user's group at school from database
             cursor.execute("SELECT `thkruhm` FROM `users` WHERE `vkid` = %s", (vkid,))
@@ -214,7 +214,7 @@ class SQL:
                 return None
             return row['thkruhm']
 
-    def setUserGroup(self, vkid, group):
+    def setUserGroup(vkid, group):
         conn = self.getConnection()
         usergroup = self.getUserGroup(vkid)
         with conn.cursor() as cursor:
@@ -226,7 +226,7 @@ class SQL:
             cursor.close()
             conn.close()
 
-    def sendStatus(self, vkid):
+    def sendStatus(vkid):
         conn = self.getConnection()
         with conn.cursor() as cursor:
             cursor.execute("SELECT sendStatus FROM users WHERE vkid = %s", (vkid,))
