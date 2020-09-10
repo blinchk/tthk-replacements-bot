@@ -40,13 +40,13 @@ keyboard = VkKeyboard(one_time=False, inline=False)
 WeekDayskeyboard = VkKeyboard(one_time=False, inline=True)
 FiveDayskeyboard = VkKeyboard(one_time=False, inline=True)
 
-keyboard.add_button('Изменения моей группы', color=VkKeyboardColor.PRIMARY)
+keyboard.add_button('Моя группа', color=VkKeyboardColor.PRIMARY)
 keyboard.add_line()
-keyboard.add_button('Изменения по датам', color=VkKeyboardColor.DEFAULT)
+keyboard.add_button('По датам', color=VkKeyboardColor.DEFAULT)
 keyboard.add_line()
-keyboard.add_button('Изменения по дню недели', color=VkKeyboardColor.DEFAULT)
+keyboard.add_button('По дню недели', color=VkKeyboardColor.DEFAULT)
 keyboard.add_line()  # Переход на вторую строку
-keyboard.add_button('Изменения по группам', color=VkKeyboardColor.DEFAULT)
+keyboard.add_button('По группам', color=VkKeyboardColor.DEFAULT)
 keyboard.add_line()  # Переход на вторую строку
 keyboard.add_button('В какой я группе?', color=VkKeyboardColor.POSITIVE)
 keyboard.add_button('Изменить группу', color=VkKeyboardColor.NEGATIVE)
@@ -347,7 +347,7 @@ for event in longpoll.listen():
                 if uid in usergroup.keys():
                     write_msg(event.user_id, event.random_id,
                               f"Вы указали, что Ваша группа: {usergroup[uid]}.\nДля того, чтобы изменить свою группу нажмите \"Изменить группу\".")
-            elif event.text.lower() == "изменения моей группы":
+            elif event.text.lower() == "моя группа":
                 usergroup = openfromfile(usergroup)
                 if uid not in usergroup.keys():
                     write_msg(event.user_id, event.random_id, "У вас не указан код группы.")
@@ -356,11 +356,11 @@ for event in longpoll.listen():
                     writeyourgroup[uid] = 1
                 if uid in usergroup.keys():
                     lastmuudatused = getmuudatused(usergroup[uid], event.user_id)
-            elif event.text.lower() == "изменения по датам":
+            elif event.text.lower() == "по датам":
                 send_datekeyboard(event.peer_id, event.random_id,
                                   f"Выберите дату, которую желаете найти или укажите в формате ДД.ММ.ГГГГ:")
                 writeyourdate[uid] = 1
-            elif event.text.lower() == "изменения по дню недели":
+            elif event.text.lower() == "по дню недели":
                 send_weekkeyboard(event.peer_id, event.random_id,
                                   "Выберите день недели с помощью клавиатуры: E, T, K, N, R, L, P.")
                 writeyourweekday[uid] = 1
