@@ -30,26 +30,21 @@ class Server:
 
     def start(self):
         print("Bot successfully deployed and started.")  # Console message when bot deployed.
-        k = Keyboard()
-        tc = TimeCatcher()
-        db = SQL()
-        c = Changes()
-        covid = COVID()
         for event in self.longpoll.listen():
             if event.type == VkEventType.MESSAGE_NEW:
                 if event.to_me:
                     if event.text.lower() == 'начать':  # Start command
-                        self.bot.sendKeyboard(keyboard=k.keyboard, vkid=event.user_id,
+                        self.bot.sendKeyboard(keyboard=Keyboard.keyboard, vkid=event.user_id,
                                               msg='Выберите вариант из списка ниже.')
                     elif event.text.lower() == 'covid-19':  # Returns COVID-19 data
-                        self.bot.sendMsg(vkid=event.user_id, msg=covid.getData())
+                        self.bot.sendMsg(vkid=event.user_id, msg=COVID.getData())
                     elif event.text.lower() == 'по датам':  # Selection keyboard of the next 5 days
                         self.writedate.append(event.user_id)
-                        self.bot.sendKeyboard(keyboard=k.fiveDaysKeyboard, vkid=event.user_id,
+                        self.bot.sendKeyboard(keyboard=Keyboard.fiveDaysKeyboard, vkid=event.user_id,
                                               msg='Выберите дату из списка ниже:')
                     elif event.text.lower() == 'по дню недели':  # Selection keyboard of days of the week
                         self.writeweekday.append(event.user_id)
-                        self.bot.sendKeyboard(keyboard=k.weekDaysKeyboard, vkid=event.user_id,
+                        self.bot.sendKeyboard(keyboard=Keyboard.weekDaysKeyboard, vkid=event.user_id,
                                               msg='Выберите день недели из списка ниже:')
                     elif event.text.lower() == 'в какой я группе?':  # Return current user's group
                         if db.getUserGroup(vkid=event.user_id) is not None:
@@ -68,7 +63,7 @@ class Server:
                                                                  "Укажите код вашей группы:")
                         self.writeyourgroup.append(event.user_id)
                     elif event.text.lower()[
-                         -3:] in tc.getGroupList() and event.user_id in self.writeyourgroup:
+                         -3:] in TimeCatcher.getGroupList() and event.user_id in self.writeyourgroup:
                         # Receives group of the user
                         db.setUserGroup(vkid=event.user_id, group=event.text)
                         self.bot.sendMsg(vkid=event.user_id,
@@ -76,7 +71,7 @@ class Server:
                         self.writeyourgroup.remove(event.user_id)
                     elif event.text.lower() == 'моя группа':
                         if db.getUserGroup(vkid=event.user_id) is not None:
-                            self.bot.sendMsg(vkid=event.user_id, msg=c.makeChanges(db.getUserGroup(vkid=event.user_id)))
+                            self.bot.sendMsg(vkid=event.user_id, msg=Changes.makeChanges(db.getUserGroup(vkid=event.user_id)))
                         else:
                             self.bot.sendMsg(vkid=event.user_id,
                                              msg=f'Вы не указали группу. Нажмите кнопку \"Изменить группу\" и введите её.')
@@ -84,14 +79,14 @@ class Server:
                         self.bot.sendMsg(vkid=event.user_id,
                                          msg="Введите код группы, для которой нужно найти изменения:")
                         self.writesearchgroup.append(event.user_id)
-                    elif event.text.lower()[-3:] in tc.getGroupList() and event.user_id in self.writesearchgroup:
-                        self.bot.sendMsg(vkid=event.user_id, msg=c.makeChanges(event.text))
+                    elif event.text.lower()[-3:] in TimeCatcher.getGroupList() and event.user_id in self.writesearchgroup:
+                        self.bot.sendMsg(vkid=event.user_id, msg=Changes.makeChanges(event.text))
                         self.writesearchgroup.remove(event.user_id)
-                    elif event.text in tc.keyboardNumDays and event.user_id in self.writeweekday:
-                        self.bot.sendMsg(vkid=event.user_id, msg=c.makeChanges(event.text))
+                    elif event.text in TimeCatcher.keyboardNumDays and event.user_id in self.writeweekday:
+                        self.bot.sendMsg(vkid=event.user_id, msg=Changes.makeChanges(event.text))
                         self.writeweekday.remove(event.user_id)
                     elif event.text[-4:] == str(datetime.date.today().year) and event.user_id in self.writedate:
-                        self.bot.sendMsg(vkid=event.user_id, msg=c.makeChanges(event.text))
+                        self.bot.sendMsg(vkid=event.user_id, msg=Changes.makeChanges(event.text))
                         self.writedate.remove(event.user_id)
                     elif event.text.lower() == 'рассылка':
                         if db.getUserGroup(vkid=event.user_id) is not None:
@@ -156,24 +151,23 @@ class Keyboard:
         self.keyboard.add_button('Рассылка', color=VkKeyboardColor.DEFAULT)
         # Keyboard for next five days
         self.fiveDaysKeyboard = VkKeyboard(one_time=False, inline=True)
-        tc = TimeCatcher()
         for i in range(5):
             if i == 0:
                 color = VkKeyboardColor.POSITIVE
-            elif (tc.datelist[i])[0] in ['L', 'P']:
+            elif (TimeCatcher.datelist[i])[0] in ['L', 'P']:
                 color = VkKeyboardColor.NEGATIVE
             else:
                 color = VkKeyboardColor.DEFAULT
             if i > 0:
                 self.fiveDaysKeyboard.add_line()
             self.fiveDaysKeyboard.add_button(
-                f"{(tc.datelist[i])[0]}: {(tc.datelist[i])[1]}.{(tc.datelist[i])[2]}.{(tc.datelist[i])[3]}", color)
+                f"{(TimeCatcher.datelist[i])[0]}: {(TimeCatcher.datelist[i])[1]}.{(TimeCatcher.datelist[i])[2]}.{(TimeCatcher.datelist[i])[3]}", color)
         # Keyboard with days of week
         self.weekDaysKeyboard = VkKeyboard(one_time=False, inline=True)
-        for i in tc.keyboardNumDays:
-            if tc.keyboardNumDays.index(i) == tc.todayWeekDay():
+        for i in TimeCatcher.keyboardNumDays:
+            if TimeCatcher.keyboardNumDays.index(i) == TimeCatcher.todayWeekDay():
                 color = VkKeyboardColor.POSITIVE
-            elif tc.keyboardNumDays.index(i) in [5, 6]:
+            elif TimeCatcher.keyboardNumDays.index(i) in [5, 6]:
                 color = VkKeyboardColor.NEGATIVE
             else:
                 color = VkKeyboardColor.DEFAULT
@@ -198,13 +192,14 @@ class Bot:
 class SQL:
 
     def __init__(self):
-        self.mysql_l = os.environ['MYSQL_LOGIN']
-        self.mysql_p = os.environ["MYSQL_PASS"]  # Getting login and password from service there bot is deployed
+        pass
 
     def getConnection(self):
+        mysql_l = os.environ['MYSQL_LOGIN']
+        mysql_p = os.environ["MYSQL_PASS"]  # Getting login and password from service there bot is deployed
         return pymysql.connect(host='eu-cdbr-west-02.cleardb.net',
-                               user=self.mysql_l,
-                               password=self.mysql_p,
+                               user=mysql_l,
+                               password=mysql_p,
                                db='heroku_0ccfbccd1823b55',
                                cursorclass=DictCursor)  # Database connection settings
 
@@ -313,12 +308,11 @@ class Changes:
         return changeList
 
     def makeChanges(self, data):
-        tc = TimeCatcher()
         changes = self.parseChanges()  # Changes in array from the school website
         changeList = []
-        if data[-3:] in tc.getGroupList():  # Group for 4 years (like 2017-2020)
+        if data[-3:] in TimeCatcher.getGroupList():  # Group for 4 years (like 2017-2020)
             for line in changes:
-                if line[2].lower() in data.lower():
+                if data.lower() in line[2].lower():
                     changeList.append(
                         self.convertChanges(line, True))  # Takes converted lines of changes from makeChanges func
             if len(changeList) > 0:
@@ -334,7 +328,7 @@ class Changes:
             else:
                 data = data[0]
             for line in changes:
-                if line[1] == data:
+                if data.lower() in line[2].lower():
                     changeList.append(self.convertChanges(line, False))
             if len(changeList) > 0:
                 refChanges = f"В учебном заведении на 🗓 {data} следующие изменения в расписании:\n"
@@ -342,16 +336,16 @@ class Changes:
                     refChanges += f"{i}\n"
                 return refChanges
             return f"В данный момент нет изменний в расписании на 🗓 {data}."
-        if data in tc.keyboardNumDays:
+        if data in TimeCatcher.keyboardNumDays:
             for line in changes:
-                if line[0] in data:
+                if data.lower() in line[0].lower():
                     changeList.append(self.convertChanges(line, False))
             if len(changeList) > 0:
-                refChanges = f"В учебном заведении на 🗓 {tc.dayOfWeek[data]} следующие изменения в расписании:\n"
+                refChanges = f"В учебном заведении на 🗓 {TimeCatcher.dayOfWeek[data]} следующие изменения в расписании:\n"
                 for i in changeList:
                     refChanges += f"{i}\n"
                 return refChanges
-            return f"В данный момент изменений в расписании нет на 🗓 {tc.dayOfWeek[data]}."
+            return f"В данный момент изменений в расписании нет на 🗓 {TimeCatcher.dayOfWeek[data]}."
         return "Нет изменений в расписании по запросу, который вы ввели."
 
 
