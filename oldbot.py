@@ -315,7 +315,7 @@ for event in longpoll.listen():
                           "В какой группе вы находитесь?Для групп, которые делятся на подгруппы указывается только группа: MEHpv19 вместо MEHpv19-2.\nУкажите код вашей группы: ")
                 writeyourgroup[uid] = 1
                 writesearchgroup[uid] = 0
-            elif event.text[-3:].lower() in ['v19', 'v18', 'v17', 'e19', 'e18',
+            elif event.text[-3:].lower() in ['v20','e20','v19', 'v18', 'v17', 'e19', 'e18',
                                              'e17'] and uid in writeyourgroup.keys() and writeyourgroup[uid] == 1:
                 otheruser = []
                 group = event.text
@@ -328,12 +328,12 @@ for event in longpoll.listen():
                 write_msg(event.user_id, event.random_id, f"Введите код группы, для которой нужно найти изменения: ")
                 writeyourgroup[uid] = 0
                 writesearchgroup[uid] = 1
-            elif event.text[-3:].lower() in ['v19', 'v18', 'v17', 'e19', 'e18',
+            elif event.text[-3:].lower() in ['v20','e20','v19', 'v18', 'v17', 'e19', 'e18',
                                              'e17'] and uid in writesearchgroup.keys() and writesearchgroup[uid] == 1:
                 setgroup = event.text
                 lastmuudatused = getmuudatused(setgroup, event.user_id)
                 writesearchgroup[uid] = 0
-            elif event.text[-3:].lower() in ['v19', 'v18', 'v17', 'e19', 'e18',
+            elif event.text[-3:].lower() in ['v20', 'e20', 'v19', 'v18', 'v17', 'e19', 'e18',
                                              'e17'] and uid in writeyourgroup.keys() and writeyourgroup[uid] == 0:
                 write_msg(event.user_id, event.random_id,
                           f"Для того, чтобы указать группу предварительно нажмите Изменить группу.")
