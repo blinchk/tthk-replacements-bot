@@ -100,7 +100,7 @@ def sendeveryday(justtable):
         getmuudatused(usergroup[i], i, justtable)
 
 while True:
-    if time.strftime("%H:%M:%S", time.localtime()) == '05:00:00' and time.strftime("%w", time.localtime()) in ['1', '2',
+    if time.strftime("%H:%M:%S", time.localtime()) == '05:20:00' and time.strftime("%w", time.localtime()) in ['1', '2',
                                                                                                                '3', '4',
                                                                                                                '5']:
         r = requests.get('http://www.tthk.ee/tunniplaani-muudatused/')

@@ -52,6 +52,7 @@ keyboard.add_button('В какой я группе?', color=VkKeyboardColor.POSI
 keyboard.add_button('Изменить группу', color=VkKeyboardColor.NEGATIVE)
 keyboard.add_line()  # Переход на вторую строку
 keyboard.add_button("Поддержать проект", color=VkKeyboardColor.DEFAULT)
+keyboard.add_button("Рассылка", color=VkKeyboardColor.NEGATIVE)
 
 
 def numdayweek():
@@ -155,6 +156,29 @@ def updatefile(usergroup):
     connection.commit()
     connection.close()
     return usergroup
+
+def sendStatus(vkid):
+    connection = pymysql.connect(
+        host='eu-cdbr-west-02.cleardb.net',
+        user=mysql_l,
+        password=mysql_p,
+        db='heroku_0ccfbccd1823b55',
+        cursorclass=DictCursor)
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT sendStatus FROM users WHERE vkid = %s", (vkid,))
+        row = cursor.fetchone()
+        sendstatus = row['sendStatus']
+        if sendstatus == 1:
+            cursor.execute("UPDATE `users` SET `sendStatus`=0 WHERE vkid=%s", (vkid,))
+            connection.commit()
+            cursor.close()
+            connection.close()
+            return "Рассылка была успешно выключена."
+        cursor.execute("UPDATE `users` SET `sendStatus`=1 WHERE `vkid`=%s", (vkid,))
+        connection.commit()
+        cursor.close()
+        connection.close()
+        return "Рассылка была успешно включена."
 
 
 def write_msg(user_id, random_id, message):
@@ -360,6 +384,8 @@ for event in longpoll.listen():
                 send_datekeyboard(event.peer_id, event.random_id,
                                   f"Выберите дату, которую желаете найти или укажите в формате ДД.ММ.ГГГГ:")
                 writeyourdate[uid] = 1
+            elif event.text.lower() == "рассылка":
+                write_msg(event.user_id, event.random_id, sendStatus(event.user_id))
             elif event.text.lower() == "по дню недели":
                 send_weekkeyboard(event.peer_id, event.random_id,
                                   "Выберите день недели с помощью клавиатуры: E, T, K, N, R, L, P.")
