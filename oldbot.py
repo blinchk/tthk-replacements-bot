@@ -239,17 +239,17 @@ def makemuudatused(i, forshow, kuupaev):
     if kuupaev == False:
         if len(i) == 6:
             forshow.append(f"🦆 Группа: {i[2]} ⏰ Урок: {i[3]} \n👨‍🏫 Преподаватель: {i[4]}\nКабинет: {i[5]}\n")
-        elif len(i) > 2 and i[3].receivedMsgText() in "jääb ära":
+        elif len(i) > 2 and i[3].lower() in "jääb ära":
             forshow.append(f"🦆 {i[2]}\n❌ Не состоится\n")
-        elif len(i) > 4 and i[4].receivedMsgText() in "jääb ära":
+        elif len(i) > 4 and i[4].lower() in "jääb ära":
             forshow.append(f"🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n❌ Не состоится\n")
-        elif len(i) > 4 and i[4].receivedMsgText() in "söögivahetund":
+        elif len(i) > 4 and i[4].lower() in "söögivahetund":
             forshow.append(f"🦆 Группа: {i[2]}\n ⏰ Урок: {i[3]}\n🆒 Обеденный перерыв\n")
-        elif len(i) > 5 and i[5].receivedMsgText() in "iseseisev töö kodus":
+        elif len(i) > 5 and i[5].lower() in "iseseisev töö kodus":
             forshow.append(f"🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n🏠 Самостоятельная работа дома\n")
-        elif len(i) > 5 and i[5].receivedMsgText() in "iseseisev töö":
+        elif len(i) > 5 and i[5].lower() in "iseseisev töö":
             forshow.append(f"🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n📋 Самостоятельная работа\n")
-        elif len(i) > 5 and i[5].receivedMsgText() in ["", " "]:
+        elif len(i) > 5 and i[5].lower() in ["", " "]:
             forshow.append(f"🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n👨‍🏫 Преподаватель: {i[4]}\n")
         else:
             forshow.append(f"🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n")
@@ -257,18 +257,18 @@ def makemuudatused(i, forshow, kuupaev):
         if len(i) == 6:
             forshow.append(
                 f"🗓 {i[0]} Дата: {i[1]}\n🦆 Группа: {i[2]} ⏰ Урок: {i[3]} \n👨‍🏫 Преподаватель: {i[4]}\nКабинет: {i[5]}\n")
-        elif len(i) > 2 and i[3].receivedMsgText() in "jääb ära":
+        elif len(i) > 2 and i[3].lower() in "jääb ära":
             forshow.append(f"🗓 {i[0]} Дата: {i[1]}\n🦆 {i[2]}\n❌ Не состоится\n")
-        elif len(i) > 4 and i[4].receivedMsgText() in "jääb ära":
+        elif len(i) > 4 and i[4].lower() in "jääb ära":
             forshow.append(f"🗓 {i[0]} Дата: {i[1]}\n🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n❌ Не состоится\n")
-        elif len(i) > 4 and i[4].receivedMsgText() in "söögivahetund":
+        elif len(i) > 4 and i[4].lower() in "söögivahetund":
             forshow.append(f"🗓 {i[0]} Дата: {i[1]}\n🦆 Группа: {i[2]}\n ⏰ Урок: {i[3]}\n🆒 Обеденный перерыв\n")
-        elif len(i) > 5 and i[5].receivedMsgText() in "iseseisev töö kodus":
+        elif len(i) > 5 and i[5].lower() in "iseseisev töö kodus":
             forshow.append(
                 f"🗓 {i[0]} Дата: {i[1]}\n🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n🏠 Самостоятельная работа дома\n")
-        elif len(i) > 5 and i[5].receivedMsgText() in "iseseisev töö":
+        elif len(i) > 5 and i[5].lower() in "iseseisev töö":
             forshow.append(f"🗓 {i[0]} Дата: {i[1]}\n🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n📋 Самостоятельная работа\n")
-        elif len(i) > 5 and i[5].receivedMsgText() in ["", " "]:
+        elif len(i) > 5 and i[5].lower() in ["", " "]:
             forshow.append(f"🗓 {i[0]} Дата: {i[1]}\n🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n👨‍🏫 Преподаватель: {i[4]}\n")
         else:
             forshow.append(f"🗓 В {i[0]} Дата: {i[1]}\n🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n")
@@ -279,7 +279,7 @@ def getmuudatused(setgroup, user):
     forshow = []
     muudatused = parsepage()
     for i in muudatused:
-        if setgroup.receivedMsgText() in i[2].receivedMsgText():
+        if setgroup.lower() in i[2].lower:
             makemuudatused(i, forshow, True)
     if forshow:
         kogutunniplaan = f"Для группы 🦆 {setgroup} на данный момент следующие изменения в расписании:\n"
@@ -395,10 +395,10 @@ for event in longpoll.listen():
                 writeyourweekday[uid] == 1:
             getmuudatusedweekly(event.user_id, event.text)
             writeyourweekday[uid] = 0
-        elif receivedMsgText[-5:].receivedMsgText() in ['.2020', '.2021', '.2022', '.2023', '.2024', '.2025',
+        elif receivedMsgText[-5:] in ['.2020', '.2021', '.2022', '.2023', '.2024', '.2025',
                                                    '.2026'] and uid in writeyourdate.keys() and writeyourdate[
             uid] == 1:
-            if receivedMsgText[1] == ":":
+            if event.text[1] == ":":
                 enddatetosearch = re.split(r':\s', event.text)
                 newmuudatused = getmuudatusedall(event.user_id, enddatetosearch[1])
             else:
