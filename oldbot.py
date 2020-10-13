@@ -326,7 +326,7 @@ for event in longpoll.listen():
     usergroup = {}
     if event.type == VkEventType.MESSAGE_NEW and event.to_me:
         uid = str(event.user_id)
-        receivedMsgText = event.text.receivedMsgText()
+        receivedMsgText = event.text.lower()
         if receivedMsgText in ["начать", 'start']:
             usergroup = openfromfile(usergroup)
             send_keyboard(event.peer_id, event.random_id, "Выберите вариант из клаиватуры ниже.")
@@ -395,10 +395,10 @@ for event in longpoll.listen():
                 writeyourweekday[uid] == 1:
             getmuudatusedweekly(event.user_id, event.text)
             writeyourweekday[uid] = 0
-        elif event.text[-5:].receivedMsgText() in ['.2020', '.2021', '.2022', '.2023', '.2024', '.2025',
+        elif receivedMsgText[-5:].receivedMsgText() in ['.2020', '.2021', '.2022', '.2023', '.2024', '.2025',
                                                    '.2026'] and uid in writeyourdate.keys() and writeyourdate[
             uid] == 1:
-            if event.text[1] == ":":
+            if receivedMsgText[1] == ":":
                 enddatetosearch = re.split(r':\s', event.text)
                 newmuudatused = getmuudatusedall(event.user_id, enddatetosearch[1])
             else:
