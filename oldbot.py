@@ -279,7 +279,7 @@ def getmuudatused(setgroup, user):
     forshow = []
     muudatused = parsepage()
     for i in muudatused:
-        if setgroup.lower() in i[2].lower:
+        if setgroup.lower() in i[2].lower():
             makemuudatused(i, forshow, True)
     if forshow:
         kogutunniplaan = f"Для группы 🦆 {setgroup} на данный момент следующие изменения в расписании:\n"
