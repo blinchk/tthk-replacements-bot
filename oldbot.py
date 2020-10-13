@@ -3,6 +3,7 @@ import datetime
 import os
 import re
 import time
+
 import pymysql
 import requests
 import vk_api as vkapi
@@ -216,8 +217,8 @@ def parsepage():
     soup = BeautifulSoup(html_content, 'html.parser')
     table = soup.findChildren('table')
     muudatused = []
-    for i in range(len(table)):
-        my_table = table[i]
+    for item in table:
+        my_table = item
         rows = my_table.find_all('tr')
         for row in rows:
             muudatus = []
@@ -235,42 +236,42 @@ def parsepage():
 
 
 def makemuudatused(i, forshow, kuupaev):
-    if kuupaev == True:
-        if len(i) == 6:
-            forshow.append(
-                f"🗓 {i[0]} Дата: {i[1]}\n🦆 Группа: {i[2]} ⏰ Урок: {i[3]} \n👨‍🏫 Преподаватель: {i[4]}\nКабинет: {i[5]}\n")
-        elif len(i) > 2 and i[3].lower() in "jääb ära":
-            forshow.append(f"🗓 {i[0]} Дата: {i[1]}\n🦆 {i[2]}\n❌ Не состоится\n")
-        elif len(i) > 4 and i[4].lower() in "jääb ära":
-            forshow.append(f"🗓 {i[0]} Дата: {i[1]}\n🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n❌ Не состоится\n")
-        elif len(i) > 4 and i[4].lower() in "söögivahetund":
-            forshow.append(f"🗓 {i[0]} Дата: {i[1]}\n🦆 Группа: {i[2]}\n ⏰ Урок: {i[3]}\n🆒 Обеденный перерыв\n")
-        elif len(i) > 5 and i[5].lower() in "iseseisev töö kodus":
-            forshow.append(
-                f"🗓 {i[0]} Дата: {i[1]}\n🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n🏠 Самостоятельная работа дома\n")
-        elif len(i) > 5 and i[5].lower() in "iseseisev töö":
-            forshow.append(f"🗓 {i[0]} Дата: {i[1]}\n🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n📋 Самостоятельная работа\n")
-        elif len(i) > 5 and (i[5].lower() == "" or i[5].lower() == " "):
-            forshow.append(f"🗓 {i[0]} Дата: {i[1]}\n🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n👨‍🏫 Преподаватель: {i[4]}\n")
-        else:
-            forshow.append(f"🗓 В {i[0]} Дата: {i[1]}\n🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n")
     if kuupaev == False:
         if len(i) == 6:
             forshow.append(f"🦆 Группа: {i[2]} ⏰ Урок: {i[3]} \n👨‍🏫 Преподаватель: {i[4]}\nКабинет: {i[5]}\n")
-        elif len(i) > 2 and i[3].lower() in "jääb ära":
+        elif len(i) > 2 and i[3].receivedMsgText() in "jääb ära":
             forshow.append(f"🦆 {i[2]}\n❌ Не состоится\n")
-        elif len(i) > 4 and i[4].lower() in "jääb ära":
+        elif len(i) > 4 and i[4].receivedMsgText() in "jääb ära":
             forshow.append(f"🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n❌ Не состоится\n")
-        elif len(i) > 4 and i[4].lower() in "söögivahetund":
+        elif len(i) > 4 and i[4].receivedMsgText() in "söögivahetund":
             forshow.append(f"🦆 Группа: {i[2]}\n ⏰ Урок: {i[3]}\n🆒 Обеденный перерыв\n")
-        elif len(i) > 5 and i[5].lower() in "iseseisev töö kodus":
+        elif len(i) > 5 and i[5].receivedMsgText() in "iseseisev töö kodus":
             forshow.append(f"🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n🏠 Самостоятельная работа дома\n")
-        elif len(i) > 5 and i[5].lower() in "iseseisev töö":
+        elif len(i) > 5 and i[5].receivedMsgText() in "iseseisev töö":
             forshow.append(f"🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n📋 Самостоятельная работа\n")
-        elif len(i) > 5 and (i[5].lower() == "" or i[5].lower() == " "):
+        elif len(i) > 5 and i[5].receivedMsgText() in ["", " "]:
             forshow.append(f"🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n👨‍🏫 Преподаватель: {i[4]}\n")
         else:
             forshow.append(f"🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n")
+    elif kuupaev == True:
+        if len(i) == 6:
+            forshow.append(
+                f"🗓 {i[0]} Дата: {i[1]}\n🦆 Группа: {i[2]} ⏰ Урок: {i[3]} \n👨‍🏫 Преподаватель: {i[4]}\nКабинет: {i[5]}\n")
+        elif len(i) > 2 and i[3].receivedMsgText() in "jääb ära":
+            forshow.append(f"🗓 {i[0]} Дата: {i[1]}\n🦆 {i[2]}\n❌ Не состоится\n")
+        elif len(i) > 4 and i[4].receivedMsgText() in "jääb ära":
+            forshow.append(f"🗓 {i[0]} Дата: {i[1]}\n🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n❌ Не состоится\n")
+        elif len(i) > 4 and i[4].receivedMsgText() in "söögivahetund":
+            forshow.append(f"🗓 {i[0]} Дата: {i[1]}\n🦆 Группа: {i[2]}\n ⏰ Урок: {i[3]}\n🆒 Обеденный перерыв\n")
+        elif len(i) > 5 and i[5].receivedMsgText() in "iseseisev töö kodus":
+            forshow.append(
+                f"🗓 {i[0]} Дата: {i[1]}\n🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n🏠 Самостоятельная работа дома\n")
+        elif len(i) > 5 and i[5].receivedMsgText() in "iseseisev töö":
+            forshow.append(f"🗓 {i[0]} Дата: {i[1]}\n🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n📋 Самостоятельная работа\n")
+        elif len(i) > 5 and i[5].receivedMsgText() in ["", " "]:
+            forshow.append(f"🗓 {i[0]} Дата: {i[1]}\n🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n👨‍🏫 Преподаватель: {i[4]}\n")
+        else:
+            forshow.append(f"🗓 В {i[0]} Дата: {i[1]}\n🦆 Группа: {i[2]} ⏰ Урок: {i[3]}\n")
     return forshow
 
 
@@ -278,9 +279,9 @@ def getmuudatused(setgroup, user):
     forshow = []
     muudatused = parsepage()
     for i in muudatused:
-        if setgroup.lower() in i[2].lower():
+        if setgroup.receivedMsgText() in i[2].receivedMsgText():
             makemuudatused(i, forshow, True)
-    if len(forshow) > 0:
+    if forshow:
         kogutunniplaan = f"Для группы 🦆 {setgroup} на данный момент следующие изменения в расписании:\n"
         for w in forshow:
             kogutunniplaan += f"{w}\n"
@@ -295,7 +296,7 @@ def getmuudatusedall(user, date):
     for i in muudatused:
         if i[1] == date:
             makemuudatused(i, forshow, False)
-    if len(forshow) > 0:
+    if forshow:
         kogutunniplaan = f"В учебном заведении на 🗓 {date} следующие изменения в расписании:\n"
         for w in forshow:
             kogutunniplaan += f"{w}\n"
@@ -310,7 +311,7 @@ def getmuudatusedweekly(user, weekday):
     for i in muudatused:
         if i[0] == weekday:
             makemuudatused(i, forshow, False)
-    if len(forshow) > 0:
+    if forshow:
         kogutunniplaan = f"В учебном заведении на 🗓 {DayOfWeek[weekday]} следующие изменения в расписании:\n"
         for w in forshow:
             kogutunniplaan += f"{w}\n"
@@ -323,86 +324,87 @@ def getmuudatusedweekly(user, weekday):
 longpoll = VkLongPoll(vk)
 for event in longpoll.listen():
     usergroup = {}
-    if event.type == VkEventType.MESSAGE_NEW:
-        if event.to_me:
-            uid = str(event.user_id)
-            if event.text.lower() == "начать" or event.text.lower() == 'start':
-                usergroup = openfromfile(usergroup)
-                send_keyboard(event.peer_id, event.random_id, "Выберите вариант из клаиватуры ниже.")
-                if uid not in usergroup.keys():
-                    write_msg(event.user_id, event.random_id,
-                              "У вас не указан код группы, напишите его сообщением снизу без подгруппы. Пример: вместо MEHpv19-2 или LOGApv19-1 - напишите MEHpv19 или LOGApv19.")
-                    writeyourgroup[uid] = 1
-            elif event.text.lower() == "указать группу" or event.text.lower() == "изменить группу":
-                usergroup = openfromfile(usergroup)
+    if event.type == VkEventType.MESSAGE_NEW and event.to_me:
+        uid = str(event.user_id)
+        receivedMsgText = event.text.receivedMsgText()
+        if receivedMsgText in ["начать", 'start']:
+            usergroup = openfromfile(usergroup)
+            send_keyboard(event.peer_id, event.random_id, "Выберите вариант из клаиватуры ниже.")
+            if uid not in usergroup.keys():
                 write_msg(event.user_id, event.random_id,
-                          "В какой группе вы находитесь?Для групп, которые делятся на подгруппы указывается только группа: MEHpv19 вместо MEHpv19-2.\nУкажите код вашей группы: ")
+                          "У вас не указан код группы, напишите его сообщением снизу без подгруппы. Пример: вместо MEHpv19-2 или LOGApv19-1 - напишите MEHpv19 или LOGApv19.")
                 writeyourgroup[uid] = 1
-                writesearchgroup[uid] = 0
-            elif event.text[-3:].lower() in ['v20','e20','v19', 'v18', 'v17', 'e19', 'e18',
-                                             'e17'] and uid in writeyourgroup.keys() and writeyourgroup[uid] == 1:
-                otheruser = []
-                group = event.text
-                usergroup[str(event.user_id)] = group
-                usergroup = updatefile(usergroup)
-                usergroup = openfromfile(usergroup)
-                write_msg(event.user_id, event.random_id, f"Вы указали, что Ваша группа: {usergroup[uid]}.")
-                writeyourgroup[uid] = 0
-            elif event.text.lower() == "изменения по группам":
-                write_msg(event.user_id, event.random_id, f"Введите код группы, для которой нужно найти изменения: ")
-                writeyourgroup[uid] = 0
-                writesearchgroup[uid] = 1
-            elif event.text[-3:].lower() in ['v20','e20','v19', 'v18', 'v17', 'e19', 'e18',
-                                             'e17'] and uid in writesearchgroup.keys() and writesearchgroup[uid] == 1:
-                setgroup = event.text
-                lastmuudatused = getmuudatused(setgroup, event.user_id)
-                writesearchgroup[uid] = 0
-            elif event.text[-3:].lower() in ['v20', 'e20', 'v19', 'v18', 'v17', 'e19', 'e18',
-                                             'e17'] and uid in writeyourgroup.keys() and writeyourgroup[uid] == 0:
+        elif receivedMsgText in ["указать группу", "изменить группу"]:
+            usergroup = openfromfile(usergroup)
+            write_msg(event.user_id, event.random_id,
+                      "В какой группе вы находитесь?Для групп, которые делятся на подгруппы указывается только группа: MEHpv19 вместо MEHpv19-2.\nУкажите код вашей группы: ")
+            writeyourgroup[uid] = 1
+            writesearchgroup[uid] = 0
+        elif receivedMsgText[-3:] in ['v20', 'e20', 'v19', 'v18', 'v17', 'e19', 'e18',
+                                      'e17'] and uid in writeyourgroup.keys() and writeyourgroup[uid] == 1:
+            otheruser = []
+            group = event.text
+            usergroup[str(event.user_id)] = group
+            usergroup = updatefile(usergroup)
+            usergroup = openfromfile(usergroup)
+            write_msg(event.user_id, event.random_id, f"Вы указали, что Ваша группа: {usergroup[uid]}.")
+            writeyourgroup[uid] = 0
+        elif receivedMsgText == "изменения по группам":
+            write_msg(event.user_id, event.random_id, f"Введите код группы, для которой нужно найти изменения: ")
+            writeyourgroup[uid] = 0
+            writesearchgroup[uid] = 1
+        elif receivedMsgText[-3:] in ['v20', 'e20', 'v19', 'v18', 'v17', 'e19', 'e18',
+                                      'e17'] and uid in writesearchgroup.keys() and writesearchgroup[uid] == 1:
+            setgroup = event.text
+            lastmuudatused = getmuudatused(setgroup, event.user_id)
+            writesearchgroup[uid] = 0
+        elif receivedMsgText[-3:] in ['v20', 'e20', 'v19', 'v18', 'v17', 'e19', 'e18',
+                                      'e17'] and uid in writeyourgroup.keys() and writeyourgroup[uid] == 0:
+            write_msg(event.user_id, event.random_id,
+                      f"Для того, чтобы указать группу предварительно нажмите Изменить группу.")
+        elif receivedMsgText == "в какой я группе?":
+            usergroup = openfromfile(usergroup)
+            if uid not in usergroup.keys():
+                write_msg(event.user_id, event.random_id, "У вас не указан код группы.")
                 write_msg(event.user_id, event.random_id,
-                          f"Для того, чтобы указать группу предварительно нажмите Изменить группу.")
-            elif event.text.lower() == "в какой я группе?":
-                usergroup = openfromfile(usergroup)
-                if uid not in usergroup.keys():
-                    write_msg(event.user_id, event.random_id, "У вас не указан код группы.")
-                    write_msg(event.user_id, event.random_id,
-                              "В какой группе вы находитесь?\nУкажите код вашей группы: ")
-                    writeyourgroup[uid] = 1
-                if uid in usergroup.keys():
-                    write_msg(event.user_id, event.random_id,
-                              f"Вы указали, что Ваша группа: {usergroup[uid]}.\nДля того, чтобы изменить свою группу нажмите \"Изменить группу\".")
-            elif event.text.lower() == "моя группа":
-                usergroup = openfromfile(usergroup)
-                if uid not in usergroup.keys():
-                    write_msg(event.user_id, event.random_id, "У вас не указан код группы.")
-                    write_msg(event.user_id, event.random_id,
-                              "В какой группе вы находитесь?\nУкажите код вашей группы: ")
-                    writeyourgroup[uid] = 1
-                if uid in usergroup.keys():
-                    lastmuudatused = getmuudatused(usergroup[uid], event.user_id)
-            elif event.text.lower() == "по датам":
-                send_datekeyboard(event.peer_id, event.random_id,
-                                  f"Выберите дату, которую желаете найти или укажите в формате ДД.ММ.ГГГГ:")
-                writeyourdate[uid] = 1
-            elif event.text.lower() == "рассылка":
-                write_msg(event.user_id, event.random_id, sendStatus(event.user_id))
-            elif event.text.lower() == "по дню недели":
-                send_weekkeyboard(event.peer_id, event.random_id,
-                                  "Выберите день недели с помощью клавиатуры: E, T, K, N, R, L, P.")
-                writeyourweekday[uid] = 1
-            elif event.text.upper() in ['E', 'T', 'K', 'N', 'R', 'L', 'P'] and uid in writeyourweekday.keys() and \
-                    writeyourweekday[uid] == 1:
-                getmuudatusedweekly(event.user_id, event.text)
-                writeyourweekday[uid] = 0
-            elif event.text[-5:].lower() in ['.2020', '.2021', '.2022', '.2023', '.2024', '.2025',
-                                             '.2026'] and uid in writeyourdate.keys() and writeyourdate[uid] == 1:
-                if event.text[1] == ":":
-                    enddatetosearch = re.split(r':\s', event.text)
-                    newmuudatused = getmuudatusedall(event.user_id, enddatetosearch[1])
-                else:
-                    newmuudatused = getmuudatusedall(event.user_id, event.text)
-                writeyourdate[uid] = 0
-            elif event.text.lower() == "поддержать проект":
-                write_msg(event.peer_id, event.random_id, "https://www.paypal.me/blinchk")
+                          "В какой группе вы находитесь?\nУкажите код вашей группы: ")
+                writeyourgroup[uid] = 1
+            if uid in usergroup.keys():
+                write_msg(event.user_id, event.random_id,
+                          f"Вы указали, что Ваша группа: {usergroup[uid]}.\nДля того, чтобы изменить свою группу нажмите \"Изменить группу\".")
+        elif receivedMsgText == "моя группа":
+            usergroup = openfromfile(usergroup)
+            if uid not in usergroup.keys():
+                write_msg(event.user_id, event.random_id, "У вас не указан код группы.")
+                write_msg(event.user_id, event.random_id,
+                          "В какой группе вы находитесь?\nУкажите код вашей группы: ")
+                writeyourgroup[uid] = 1
+            if uid in usergroup.keys():
+                lastmuudatused = getmuudatused(usergroup[uid], event.user_id)
+        elif receivedMsgText == "по датам":
+            send_datekeyboard(event.peer_id, event.random_id,
+                              f"Выберите дату, которую желаете найти или укажите в формате ДД.ММ.ГГГГ:")
+            writeyourdate[uid] = 1
+        elif receivedMsgText == "рассылка":
+            write_msg(event.user_id, event.random_id, sendStatus(event.user_id))
+        elif receivedMsgText == "по дню недели":
+            send_weekkeyboard(event.peer_id, event.random_id,
+                              "Выберите день недели с помощью клавиатуры: E, T, K, N, R, L, P.")
+            writeyourweekday[uid] = 1
+        elif receivedMsgText.upper() in ['E', 'T', 'K', 'N', 'R', 'L', 'P'] and uid in writeyourweekday.keys() and \
+                writeyourweekday[uid] == 1:
+            getmuudatusedweekly(event.user_id, event.text)
+            writeyourweekday[uid] = 0
+        elif event.text[-5:].receivedMsgText() in ['.2020', '.2021', '.2022', '.2023', '.2024', '.2025',
+                                                   '.2026'] and uid in writeyourdate.keys() and writeyourdate[
+            uid] == 1:
+            if event.text[1] == ":":
+                enddatetosearch = re.split(r':\s', event.text)
+                newmuudatused = getmuudatusedall(event.user_id, enddatetosearch[1])
             else:
-                write_msg(event.user_id, event.random_id, f"Данной команды не существует")
+                newmuudatused = getmuudatusedall(event.user_id, event.text)
+            writeyourdate[uid] = 0
+        elif receivedMsgText == "поддержать проект":
+            write_msg(event.peer_id, event.random_id, "https://www.paypal.me/blinchk")
+        else:
+            write_msg(event.user_id, event.random_id, f"Данной команды не существует")
