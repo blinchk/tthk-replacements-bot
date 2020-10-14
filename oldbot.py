@@ -151,7 +151,7 @@ def updatefile(usergroup):
                     usergroup[i], i))
             else:
                 cursor.execute(
-                    """INSERT INTO `heroku_0ccfbccd1823b55`.`users`(`vkid`, `thkruhm`) VALUES ('%s', '%s');""" % (
+                    """INSERT INTO `heroku_0ccfbccd1823b55`.`users`(`vkid`, `thkruhm`, `sendStatus`) VALUES ('%s', '%s', 1);""" % (
                         i, usergroup[i]))
         cursor.close()
     connection.commit()
@@ -166,7 +166,7 @@ def sendStatus(vkid):
         db='heroku_0ccfbccd1823b55',
         cursorclass=DictCursor)
     with connection.cursor() as cursor:
-        cursor.execute("SELECT sendStatus FROM users WHERE vkid = %s", (vkid,))
+        cursor.execute("SELECT `sendStatus` FROM `users` WHERE vkid = %s", (vkid,))
         row = cursor.fetchone()
         sendstatus = row['sendStatus']
         if sendstatus == 1:
