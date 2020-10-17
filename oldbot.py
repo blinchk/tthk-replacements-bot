@@ -181,6 +181,8 @@ def sendStatus(vkid):
             cursor.close()
             connection.close()
             return "Рассылка была успешно включена."
+        cursor.close()
+        connection.close()
         return "Укажите сначала группу, чтобы управлять рассылкой."
 
 

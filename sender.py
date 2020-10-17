@@ -59,7 +59,8 @@ def openfromfile(usergroup):
 
 def makemuudatused(i, forshow):
     if len(i) == 6:
-        forshow.append(f"🗓 {i[0]} Дата: {i[1]}\n🦆 Группа: {i[2]} ⏰ Урок: {i[3]} \n👨‍🏫 Преподаватель: {i[4]}\nКабинет: {i[5]}\n")
+        forshow.append(f"🗓 {i[0]} Дата: {i[1]}\n🦆 Группа: {i[2]} ⏰ Урок: {i[3]} \n👨‍🏫 Преподаватель: {i[4]}\n"
+                       f"Кабинет: {i[5]}\n")
     elif len(i) > 2 and i[3].lower() in "jääb ära":
         forshow.append(f"🗓 {i[0]} Дата: {i[1]}\n🦆 {i[2]}\n❌ Не состоится\n")
     elif len(i) > 4 and i[4].lower() in "jääb ära":
@@ -80,11 +81,12 @@ def getmuudatused(setgroup, user, justtable):
     forshow = []
     muudatused = parsepage(justtable)
     for i in muudatused:
-        if setgroup.lower() in i[2].lower():
+        if setgroup.lower() in i[2].lower() and time.strftime("%d.%m.%Y") in i[1]:
             makemuudatused(i, forshow)
     if len(forshow) > 0:
         userfname = (vk.method('users.get', {'user_ids': user, 'fields': 'first_name'})[0])["first_name"]
-        kogutunniplaan = f"Доброе утро, {userfname}! Для группы 🦆 {setgroup} на данный момент следующие изменения в расписании:\n"
+        kogutunniplaan = f"Доброе утро, {userfname}! Для группы 🦆 {setgroup} на данный момент следующие изменения в " \
+                         f"расписании:\n"
         for w in forshow:
             kogutunniplaan += f"{w}\n"
         write_msg(user, (random.getrandbits(31) * random.choice([-1, 1])), kogutunniplaan)
