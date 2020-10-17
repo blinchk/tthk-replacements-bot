@@ -124,7 +124,7 @@ def openfromfile(usergroup):
         db='heroku_0ccfbccd1823b55',
         cursorclass=DictCursor)
     with connection.cursor() as cursor:
-        cursor.execute("""SELECT * FROM USERS""")
+        cursor.execute("""SELECT * FROM users""")
         row = cursor.fetchall()
         for i in row:
             usergroup[i['vkid']] = i['thkruhm']
@@ -169,17 +169,19 @@ def sendStatus(vkid):
         cursor.execute("SELECT `sendStatus` FROM `users` WHERE vkid = %s", (vkid,))
         row = cursor.fetchone()
         sendstatus = row['sendStatus']
-        if sendstatus == 1:
-            cursor.execute("UPDATE `users` SET `sendStatus`=0 WHERE vkid=%s", (vkid,))
+        if sendstatus != None:
+            if sendstatus == 1:
+                cursor.execute("UPDATE `users` SET `sendStatus`=0 WHERE vkid=%s", (vkid,))
+                connection.commit()
+                cursor.close()
+                connection.close()
+                return "Рассылка была успешно выключена."
+            cursor.execute("UPDATE `users` SET `sendStatus`=1 WHERE `vkid`=%s", (vkid,))
             connection.commit()
             cursor.close()
             connection.close()
-            return "Рассылка была успешно выключена."
-        cursor.execute("UPDATE `users` SET `sendStatus`=1 WHERE `vkid`=%s", (vkid,))
-        connection.commit()
-        cursor.close()
-        connection.close()
-        return "Рассылка была успешно включена."
+            return "Рассылка была успешно включена."
+        return "Укажите сначала группу, чтобы управлять рассылкой."
 
 
 def write_msg(user_id, random_id, message):
